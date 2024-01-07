@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="58a3e39ba95bd0f35846aa1f39aa4cb2574295e1">
+<index version="1" name="StevieKeys JSFX" commit="01092521a55cf54b18b0c9514e8b5504673b055c">
   <category name="Example">
     <reapack name="cfillion_Hello world.lua" type="script" desc="Hello world">
       <metadata>
@@ -18,6 +18,13 @@ Markdown
       </metadata>
       <version name="1.0" author="cfillion" time="2021-01-04T23:30:32Z">
         <source main="main">https://github.com/cfillion/reapack-repository-template/raw/58a3e39ba95bd0f35846aa1f39aa4cb2574295e1/Example/cfillion_Hello%20world.lua</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Saturation">
+    <reapack name="Odd n Even saturation.jsfx" type="effect" desc="Odd n Even Saturation">
+      <version name="1.3" time="2024-01-07T23:43:24Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/cf9bfa09f532b773e8d071fdfe1b8dff3eca900a/Saturation/Odd%20n%20Even%20saturation.jsfx</source>
       </version>
     </reapack>
   </category>
