@@ -1,6 +1,13 @@
-desc:Odd n Even Saturation
-version:1.3
-author:Stephen Boyes
+version: 1.3.0
+desc: Odd n Even Saturation
+author: Stephen Boyes
+about:
+  # Odd n Even saturation
+  Two stage polynomial waveshping saturation, feturing *odd and even harmonics*.
+changelog:
+  - Remove static DC from waveshaper
+  - First github version
+
 
 //Can be used to add vibe or as a maximiser
 
