@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="8a74f77487bd2072b64311a2f67551b3cfca462f">
+<index version="1" name="StevieKeys JSFX" commit="3fb28df440b191dff0c40f6ccea3c4488c29854f">
   <category name="Saturation">
     <reapack name="Odd n Even saturation.jsfx" type="effect" desc="Odd n Even Saturation">
       <metadata>
@@ -8,7 +8,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Odd n Even saturation\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Two stage polynomial waveshping saturation, feturing {\i odd and even harmonics}.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Two stage polynomial waveshping saturation, feturing {\i odd and even harmonics}. Can be used to add vibe or as a maximiser.\par}
 }
 ]]></description>
       </metadata>
