@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="01092521a55cf54b18b0c9514e8b5504673b055c">
+<index version="1" name="StevieKeys JSFX" commit="b06747e49f344feddf3e0fffbf44541abeadcf2b">
   <category name="Example">
     <reapack name="cfillion_Hello world.lua" type="script" desc="Hello world">
       <metadata>
@@ -23,8 +23,23 @@ Markdown
   </category>
   <category name="Saturation">
     <reapack name="Odd n Even saturation.jsfx" type="effect" desc="Odd n Even Saturation">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Odd n Even saturation\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Two stage polynomial waveshping saturation, feturing {\i odd and even harmonics}.\par}
+}
+]]></description>
+      </metadata>
       <version name="1.3" time="2024-01-07T23:43:24Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/cf9bfa09f532b773e8d071fdfe1b8dff3eca900a/Saturation/Odd%20n%20Even%20saturation.jsfx</source>
+      </version>
+      <version name="1.3.0" author="Stephen Boyes" time="2024-01-08T16:36:01Z">
+        <changelog><![CDATA[- Remove static DC from waveshaper
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b06747e49f344feddf3e0fffbf44541abeadcf2b/Saturation/Odd%20n%20Even%20saturation.jsfx</source>
       </version>
     </reapack>
   </category>
