@@ -33,9 +33,6 @@ Markdown
 }
 ]]></description>
       </metadata>
-      <version name="1.3" time="2024-01-07T23:43:24Z">
-        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/cf9bfa09f532b773e8d071fdfe1b8dff3eca900a/Saturation/Odd%20n%20Even%20saturation.jsfx</source>
-      </version>
       <version name="1.3.0" author="Stephen Boyes" time="2024-01-08T16:36:01Z">
         <changelog><![CDATA[- Remove static DC from waveshaper
 - First github version]]></changelog>
