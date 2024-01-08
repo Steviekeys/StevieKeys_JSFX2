@@ -1,0 +1,139 @@
+version:2.0.1
+desc:Live Limt
+author:Stephen Boyes
+about:
+  # Live Limit
+    Zero latency brickwall limiter
+changelog:
+  - Tidy code
+  - First github version
+
+
+//                                                                              
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                            
+//
+
+
+
+slider1:0.5<0,15,0.1>Boost (dB)
+slider2:-0.5<-15,0,0.1>ceiling (dB)
+
+slider4:40<1,100,0.1>Release
+
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+ext_tail_size = -1; //automatic silence detection
+rate=srate/2.2;
+invrate=1/(srate/2.2);
+
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+
+function limit2(x)
+instance (alog,peak,oldpeak,GRin)
+(
+  alog = 0.015625*rand(1);
+  GRin = max(1,abs(x) + alog);
+  peak = GRin-1;
+  oldpeak = oldpeak * Rspeed - invrate;
+  oldpeak = max(0,oldpeak);
+  peak = max(peak,oldpeak);
+  oldpeak = peak;
+  peak = 1/(peak+1);
+  peak = max(peak,0)
+);
+
+
+@slider
+
+inboost=exp(slider1/8.68588963807);   
+Gain=exp(slider2/8.68588963807);
+
+Rspeed = exp(-1/(slider4 * 0.001 * srate));
+
+
+@sample
+
+spl0=spl0*inboost;
+peak0 = limit2(spl0);
+
+
+spl1=spl1*inboost;
+peak1 = limit2(spl1);
+
+
+//stereo GR link
+Tpeak=min(peak0,peak1);
+
+//un-link a bit!
+Tpeak0=(Tpeak*2+Peak0)/3;
+Tpeak1=(Tpeak*2+peak1)/3;  
+
+
+spl0=spl0*Tpeak0;  //gain reduction
+spl1=spl1*Tpeak1;   //gain reduction
+
+
+spl0 = spl0*Gain;
+spl1 = spl1*Gain;
+
+
+Tpeak < gr_meter ? gr_meter=Tpeak : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
