@@ -1,0 +1,96 @@
+version:1.2.0
+desc:Smooth Clipper
+author: Stephen Boyes
+about:
+  # Smooth Clipper
+  Waveshaper that gets much more distorted near -1dB, but never reaches a perfectly flat top.
+  Hard clipper at the output to prevent levels over 0dB.
+  Can be used to add vibe or as a maximiser.
+changelog:
+  - Remove discontinuity
+  - First github version
+
+                                                                      
+//                                                                              
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                            
+//                                                                              
+//                                                                              
+
+
+
+
+slider1:0<0,12,0.1>Input Gain
+-slider2:0<0,1,0.02>algo a<--->b
+slider4:0<-12,1,0.1>Output Gain
+
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+
+
+@init
+ext_tail_size = -1; //automatic silence detection
+aaa = 0.02126;
+
+function smooth_clip(x)
+instance (a0,b0,c0,d0,e0,clip0)
+(
+clip0 = max(-1,min(1,x));
+a0 = sign(x)*(sign(x)*x)^(1/9);
+b0 = (9*clip0-clip0^9)*0.125;
+c0 = abs(sin(($pi*x^9)/2));
+d0 = a0*c0+b0*(1-c0);
+x >=  1 ? e0 = a0;  x <   1 ? e0 = d0;  x <  -1 ? e0 = a0;
+0.888*e0
+);
+
+/*
+function soft_clipper2(x)
+(
+limit = 1.49841305;
+x = max(-limit,min(limit,x));
+f1 = x;
+x1 = x;
+x = x1*aaa*3;  f3 = (4*x^3 - 3*x);
+x = x1*aaa*5;  f5 = (16*x^5 - 20*x^3 + 5*x);
+x = x1*aaa*7;  f7 = (64*x^7 - 112*x^5 + 56*x^3 - 7*x);
+x = x1*aaa*9;  f9 = (256*x^9 - 576*x^7 + 432*x^5 - 120*x^3 + 9*x);
+(f1 - f3 + f5 - f7 + f9)*0.224
+);
+*/
+
+@slider
+IG = 2^((slider1)/6.02);
+//a = 1-slider2;
+//b = slider2;
+OG = 2^((slider4)/6.02);
+
+
+@sample
+spl0 = spl0*IG;
+spl1 = spl1*IG;
+
+spl0 = smooth_clip(spl0);//*a + soft_clipper2(spl0)*b;
+spl1 = smooth_clip(spl1);//*a + soft_clipper2(spl1)*b;
+
+spl0 *= OG;
+spl1 *= OG;
+
+spl0 = max(-0.995,min(0.995,spl0));
+spl1 = max(-0.995,min(0.995,spl1));
