@@ -6,5 +6,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Odd n Even saturation
 * Smooth Clipper
 * Live Limit
+* Perfect Mono
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
