@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="26d40c412dbf6ff36a4af3d2af6c10cab459def2">
+<index version="1" name="StevieKeys JSFX" commit="f13cde44d1f5103569aeb2636b4def5009d276fe">
   <category name="Saturation">
     <reapack name="Odd n Even saturation.jsfx" type="effect" desc="Odd n Even Saturation">
       <metadata>
@@ -34,6 +34,23 @@
 - Add Flat Top option
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/26d40c412dbf6ff36a4af3d2af6c10cab459def2/Saturation/Odd%20saturation.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Smooth Clipper.jsfx" type="effect" desc="Smooth Clipper">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Smooth Clipper\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Waveshaper that gets much more distorted near -1dB, but never reaches a perfectly flat top. Hard clipper at the output to prevent levels over 0dB. Can be used to add vibe or as a maximiser.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.2.0" author="Stephen Boyes" time="2024-01-08T18:18:46Z">
+        <changelog><![CDATA[- Remove discontinuity
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/f13cde44d1f5103569aeb2636b4def5009d276fe/Saturation/Smooth%20Clipper.jsfx</source>
       </version>
     </reapack>
   </category>
