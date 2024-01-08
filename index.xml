@@ -80,7 +80,10 @@
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 StevieKeys JSFX\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 A collection of JSFX by StevieKeys aka Stevie Boyes\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 *Odd saturation *Odd n Even saturation *Smooth Clipper *Live Limit\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Odd saturation\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Odd n Even saturation\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Smooth Clipper\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Live Limit\sa180\par}
 }
 ]]></description>
   </metadata>
