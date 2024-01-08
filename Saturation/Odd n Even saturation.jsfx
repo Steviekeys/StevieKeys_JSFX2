@@ -4,12 +4,12 @@ author: Stephen Boyes
 about:
   # Odd n Even saturation
   Two stage polynomial waveshping saturation, feturing *odd and even harmonics*.
+  Can be used to add vibe or as a maximiser.
 changelog:
   - Remove static DC from waveshaper
   - First github version
 
 
-//Can be used to add vibe or as a maximiser
 
 
 //                                                                
