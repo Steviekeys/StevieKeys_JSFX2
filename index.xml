@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="679841867f716a2c9b62144778fa3a63802c90b2">
+<index version="1" name="StevieKeys JSFX" commit="46b345e4148ad0827b371cf6fbc3dbdceb6725ed">
   <category name="Dynamics">
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
       <metadata>
@@ -108,6 +108,22 @@
     </reapack>
   </category>
   <category name="utility">
+    <reapack name="Maximum Resolution Dither.jsfx" type="effect" desc="Maximum Resolution Dither">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Maximum Resolution Dither\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Strange noise shaped Dither. Dithers to a very high bit depth first, then reduces bit depth one bit at a time. If least significant bit is 0, truncate bit depth. If least significant bit is 1, probability of adding 1 bit onto next significant bit is 0.618 or 1 -0.618 depending on the signal polarity.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0.0" author="Stephen Boyes" time="2024-01-10T19:38:28Z">
+        <changelog><![CDATA[- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/46b345e4148ad0827b371cf6fbc3dbdceb6725ed/utility/Maximum%20Resolution%20Dither.jsfx</source>
+      </version>
+    </reapack>
     <reapack name="Perfect Mono.jsfx" type="effect" desc="Perfect Mono">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
