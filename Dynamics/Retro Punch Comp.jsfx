@@ -1,22 +1,15 @@
-version:1.0.2
+version:1.0.3
 desc:Retro Punch Comp
 about:
   # Retro Punch Comp
   Soft Knee RMS type compressor.
   Comntrols...
-  * Comp Drive:
-Input gain to drive the compressor
-  * Speed:
-Controls both attack and release speed
-  * Intensity:
-This is almost a ratio control
-with invert setting for special effect
-  * Dry/Wet:
-Mix some uncompressed signal in for parellel compression
-  * Out gain:
-Controls output level, followed by soft clipper,then out drive
-  * Out Drive:
-Extra boost after clipper, using third harmonic waveshaper
+  * Comp Drive:  Input gain to drive the compressor
+  * Speed:       Controls both attack and release speed
+  * Intensity:   This is almost a ratio control with invert setting for special effect
+  * Dry/Wet:     Mix some uncompressed signal in for parellel compression
+  * Out gain:    Controls output level, followed by soft clipper,then out drive
+  * Out Drive:   Extra boost after clipper, using third harmonic waveshaper
 changelog:
   - Rewrite about section
 
