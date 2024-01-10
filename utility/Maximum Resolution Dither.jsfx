@@ -1,0 +1,130 @@
+version:1.0.0
+desc:Maximum Resolution Dither
+author: Stephen Boyes
+about:
+  # Maximum Resolution Dither
+  Strange noise shaped Dither.
+  Dithers to a very high bit depth first, then reduces bit depth one bit at a time.
+  If least significant bit is 0, truncate bit depth.
+  If least significant bit is 1, probability of adding 1 bit onto next significant bit is 0.618 or 1 -0.618 depending on the signal polarity.
+changelog:
+  - First github version
+
+
+//  Maximum Resolution Dither
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
+
+
+
+slider1:bit_depth=16<8,24,1>Bit Depth
+slider2:0<0,1,1{Full,High}>CPU use
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+ext_nodenorm = 1;
+n = floor(rand(2^15));
+p = floor(rand(2^15));
+
+@slider
+out = bit_depth-1;
+length = 53-bit_depth-slider2*13;
+@block
+n > 2^16 ? (
+n = 0;
+);
+p > 2^16 ? (
+p = 0;
+);
+
+@sample
+noise = rand(1)-rand(1);
+
+//noise shape feedback
+spl0 += 0.97*y0;
+spl1 += 0.97*y1;
+
+
+y2 = y0;
+y3 = y1;
+  z0 = spl0;
+  z1 = spl1;
+
+spl0 *= 2^52;
+spl1 *= 2^52;
+
+slider2 == 1 ?
+(
+spl0 *= 2^-13;  spl1 *= 2^-13;
+);
+
+
+spl0 += noise;
+spl1 -= noise;
+spl0 = floor(spl0);
+spl1 = floor(spl1);
+
+
+
+loop (length,
+ spl0 & 1 ? (
+  doL = 1;
+  ):(
+  doL = 0;
+);
+ spl1 & 1 ? (
+  doR = 1;
+  ):(
+  doR = 0;
+);
+ doL ? ( 
+  n += 1;
+  a = 2+floor(n*$phi)-floor((n+1)*$phi);
+  flipL = 1-a;
+ );
+ doR ? (
+  p += 1;
+  b = 2+floor(p*$phi)-floor((p+1)*$phi);
+  flipR = 1-b;
+ );
+
+ max(0,sign(spl0)) ? (
+  spl0 += flipL;
+  ):(
+  spl0 += a;
+ );
+
+ max(0,sign(spl1)) ? (
+  spl1 += flipR;
+  ):(
+  spl1 += b;
+ );
+
+
+ spl0 *= 0.5;
+ spl1 *= 0.5;
+ spl0 = floor(spl0);
+ spl1 = floor(spl1);
+);
+
+spl0 /= 2^out;
+spl1 /= 2^out;
+
+
+  y0 = z0-spl0;
+  y1 = z1-spl1;
