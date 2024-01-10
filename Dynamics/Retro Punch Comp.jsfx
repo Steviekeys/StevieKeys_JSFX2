@@ -1,0 +1,307 @@
+version:1.0.0
+desc:Retro Punch Comp
+about:
+  # Retro Punch Comp
+  Soft Knee RMS type compressor.
+  Comntrols...
+  * Comp Drive
+  Input gain to drive the compressor
+  * Speed
+  Controls both attack and release speed
+  * Intensity
+  This is almost a ratio control
+  with invert setting for special effect
+  * Dry/Wet
+  Mix some uncompressed signal in for parellel compression
+  * Out gain
+  Controls output level, followed by soft clipper,then out drive
+  * Out Drive
+  Extra boost after clipper, using third harmonic waveshaper
+changelog:
+  - First github version
+
+// 
+//
+// svf filter code from andy simper of cytomics
+//
+//
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
+
+
+
+
+slider1:gain_db=0<-6,30,0.2>Comp Drive (dB)
+slider2:speed=5<0,10,0.2>Speed
+slider3:1<0,3,1{light,medium,limit,invert}>Intensity
+slider4:1<0,1,0.02>Dry/Wet
+slider5:out_gain_db=0<0,6,0.2>Out Gain (dB)
+slider6:Drive=0<0,1,0.02>Out Drive
+//slider7:sidechain=0<0,1,1{Internal,External}>Sidechain
+
+
+in_pin:left input
+in_pin:right input
+//in_pin:left sc
+//in_pin:right sc
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+out_last_gain=10^(out_gain_db/20);
+nlevel =(1/48000)*srate*0.00012;
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+function gain_2_db(gain)
+(
+log10(gain)*20
+);
+
+function dB_2_gain(dB)
+(
+10^(dB/20)
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_highshelf(v0,bellgain_dB,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a,a1,a2,a3,g,k,m0,m1,m2)
+(
+ a = 10^(bellgain_dB/40);
+ g = tan($pi*cutoff/srate)*sqrt(a);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = a*a;
+ m1 = k*(1-a)*a;
+ m2 = (1-a*a);
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function soft_clip(x)
+(
+  x = x*1.587;
+  x >= 2 ? x = 2;
+  x <= -2 ? x = -2;
+  x > 1 ?
+  (
+    f1 = 1 + (x-1)^3;  y = (x/f1^(1/3));
+  );
+  x <= 1 ? y = x;
+  x < -1 ?
+  (
+    f2 = 1+(-x-1)^3;  y = (x/f2^(1/3));
+  );
+  y = y*(1/1.587);
+  y
+);
+
+
+
+@slider
+next_gain=10^(gain_db/20);
+out_next_gain=10^(out_gain_db/20);
+spd = speed*1.2;
+sc_on = sidechain;
+
+slider3 > 2.5 ? 
+(
+  ratio_b = 1.018;
+):(
+  ratio_b = 1.0;
+  slider3 < 1.5 ? ratio_b = 0.96;
+  slider3 < 1.0 ? ratio_b = 0.9;
+);
+wet = slider4;
+dry = 1-wet;
+ratio_c = (1/3)*(-3*ratio_b^2+3);
+ratio_d = (ratio_b^3)*(2/3);
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+out_d_gain = (out_next_gain - out_last_gain)/samplesblock;
+
+
+
+@sample
+drift = rand(1)*nlevel;
+spl0 *= last_gain;
+spl1 *= last_gain;
+
+inlevel = max(abs(spl0),abs(spl1));  //GR meter
+
+dry0 = spl0;
+dry1 = spl1;
+
+spl0 = in0.svf_highshelf(spl0,4,1200,0.3);  //sidechain filter
+spl1 = in1.svf_highshelf(spl1,4,1200,0.3);
+spl0 = (spl0-spl0^2)*0.5*0.00002 + spl0*0.99998;
+spl1 = (spl1-spl1^2)*0.5*0.00002 + spl1*0.99998;
+
+
+  spl0 <= -ratio_b ? 
+  (
+    knee0 = ratio_c*spl0 - ratio_d;
+  ):(
+    ratio_b <= spl0 ? 
+    (
+      knee0 = ratio_c*spl0 + ratio_d;
+    ):(
+      knee0 = (3*spl0 - spl0^3)/3;
+    );
+  );
+  spl1 <= -ratio_b ? 
+  (
+    knee1 = ratio_c*spl1 - ratio_d;
+  ):(
+    ratio_b <= spl1 ? 
+    (
+      knee1 = ratio_c*spl1 + ratio_d;
+    ):(
+      knee1 = (3*spl1 - spl1^3)/3;
+    );
+  );
+  overdB_left = gain_2_dB((spl0/knee0)+drift);
+  overdB_righ = gain_2_db((spl1/knee1)+drift);
+
+
+/*
+tog += 1;
+tog < 0.2*srate ? overdB_left = overdB_righ = -1;
+tog > 0.2*srate ? overdB_left = overdB_righ = -28;
+tog > 0.25*srate ? tog = 0;
+*/
+
+
+overdB_aleft = aleft.svf_highshelf(overdB_left,-28,20+spd,0.5); //attack
+overdB_rleft = left.svf_lowp(overdB_left,5+spd,0.5);  //release
+overdB_r2left = left2.svf_lowp(overdB_left,0.8+spd,0.2);  //release2
+
+overdB_arigh = arigh.svf_highshelf(overdB_righ,-28,20+spd,0.5); //attack
+overdB_rrigh = righ.svf_lowp(overdB_righ,5+spd,0.5);  //release
+overdB_r2righ = righ2.svf_lowp(overdB_righ,0.8+spd,0.2);  //release2
+
+over_gain_aleft = dB_2_gain(overdB_aleft);
+over_gain_rleft = dB_2_gain(overdB_rleft);
+over_gain_r2left = dB_2_gain(overdB_r2left);
+att_l = 0.6;  rel_l = 0.32;  rel2_l = 0.08;
+over_gain_left  = att_l*over_gain_aleft + rel_l*over_gain_rleft + over_gain_r2left*rel2_l;
+
+over_gain_arigh = dB_2_gain(overdB_arigh);
+over_gain_rrigh = dB_2_gain(overdB_rrigh);
+over_gain_r2righ = dB_2_gain(overdB_r2righ);
+att_r = 0.6;  rel_r = 0.32;  rel2_r = 0.08;
+over_gain_righ  = att_r*over_gain_arigh + rel_r*over_gain_rrigh + over_gain_r2righ*rel2_r;
+
+spl0 = out0.svf_highshelf(spl0,-4,1200,0.3);  //sidechain filter
+spl1 = out1.svf_highshelf(spl1,-4,1200,0.3);
+
+spl0 = spl0/over_gain_left;
+spl1 = spl1/over_gain_righ;
+
+spl0 = wet*spl0 + dry*dry0;
+spl1 = wet*spl1 + dry*dry1;
+
+outlevel = max(abs(spl0*1.002),abs(spl1*1.002));
+realGR = max(0.1,outlevel/inlevel);
+realGR < gr_meter ? gr_meter = realGR : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+spl0 /= last_gain;
+spl1 /= last_gain;
+
+spl0 *= out_last_gain;
+spl1 *= out_last_gain;
+last_gain += d_gain;
+out_last_gain += out_d_gain;
+
+
+
+spl0 = soft_clip(spl0)*0.999;
+spl1 = soft_clip(spl1)*0.999;
+
+spl0 = (1-drive)*spl0 + drive*((3*spl0-spl0^3)*0.5);
+spl1 = (1-drive)*spl1 + drive*((3*spl1-spl1^3)*0.5);
+spl2 = spl3 = 0;
+
+
+
+/*
+spl0 = over_gain_left;
+spl1 = over_gain_righ;
+*/
+
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
