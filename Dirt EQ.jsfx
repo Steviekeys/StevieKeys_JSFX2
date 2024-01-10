@@ -1,0 +1,259 @@
+version:1.0.0
+desc:Dirt EQ
+about:
+  # Dirt EQ
+  Is it a EQ?  Is it distortion? NO! It's Dirt EQ!
+  To use as EQ keep drive controls near or left of center.
+  more EQ = more harmonics.
+  To use as distortion, boost drive gain + IC1 + IC2 drive, try the filters first.
+
+  SVF filter code from Andy Simper of cytomics
+changelog:
+  - First github version
+
+
+
+
+//
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
+
+
+
+
+
+slider1:lowpass_freq=24000<4000,24000,100>Lowpass  freq
+slider2:lowpass_q=0.9<0.1,1.7,0.02>Lowpass   Q  
+
+slider4:band1_gain=0<-12,12,0.2>HIGH gain
+slider5:band1_freq=10000<4000,16000,100>HIGH freq
+
+slider9:band2_gain=0<-15,15,0.2>High MID gain
+slider10:band2_freq=3000<500,5500,20>High MID freq
+slider11:band2_q=0.5<0.5,3.0,0.1>High MID Q
+
+slider13:band3_gain=0<-15,15,0.2>Low MID gain
+slider14:band3_freq=500<100,900,10>Low MID freq
+slider15:band3_q=0.5<0.5,3.0,0.1>Low MID Q
+
+slider17:band4_gain=0<-12,12,0.2>LOW gain
+slider18:band4_freq=80<10,150,2>LOW freq
+
+slider21:highpass_freq=5<5,175,1>Highpass  freq
+slider22:highpass_q=0.9<0.1,1.7,0.02>Highpass   Q  
+
+slider24:ic1_drive=1<0.25,4.0,0.05:log!>IC1 drive
+slider25:ic2_drive=1<0.25,4.0,0.05:log!>IC2 drive
+
+
+slider29:drive_db=0<-30,30,1>drive gain (dB)
+slider30:gain_db=0<-10,10,0.2>out gain (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+last_drive=10^(drive_db/20);
+hp = $pi*0.5;
+
+
+function svf_bell(v0,bellgain_dB,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ a = 10^(bellgain_dB/40);
+ g = tan($pi*cutoff/srate);
+ k = 1/(Q*a);
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = k*(a*a-1);
+ m2 = 0;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ //Hard
+ ic1eq *= ic1_drive;
+ ic1eq > hp ? ic1eq = hp;
+ ic1eq < -hp ? ic1eq = -hp;
+ //Soft
+ ic1eq = sin(ic1eq);
+ ic1eq /= ic1_drive;
+
+ ic2eq = 2*v2-ic2eq;
+ //Hard
+ ic2eq *= ic2_drive*0.41;
+ ic2eq > hp ? ic2eq = hp;
+ ic2eq < -hp ? ic2eq = -hp;
+ //Soft
+ ic2eq = sin(ic2eq);
+ ic2eq /= ic2_drive*0.41;
+
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_bell_os(v0,bellgain_dB,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+loop(2,
+ a = 10^(bellgain_dB/40);
+ g = tan(0.5*$pi*cutoff/srate);
+ k = 1/(Q*a);
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = k*(a*a-1);
+ m2 = 0;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ //Hard
+ ic1eq *= ic1_drive;
+ ic1eq > hp ? ic1eq = hp;
+ ic1eq < -hp ? ic1eq = -hp;
+ //Soft
+ ic1eq = sin(ic1eq);
+ ic1eq /= ic1_drive;
+
+ ic2eq = 2*v2-ic2eq;
+ //Hard
+ ic2eq *= ic2_drive*0.41;
+ ic2eq > hp ? ic2eq = hp;
+ ic2eq < -hp ? ic2eq = -hp;
+ //Soft
+ ic2eq = sin(ic2eq);
+ ic2eq /= ic2_drive*0.41;
+);
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_lowp_os(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+loop(2,
+ g = tan(0.5*$pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ //Hard
+ ic1eq *= ic1_drive;
+ ic1eq > hp ? ic1eq = hp;
+ ic1eq < -hp ? ic1eq = -hp;
+ //Soft
+ ic1eq = sin(ic1eq);
+ ic1eq /= ic1_drive;
+
+ ic2eq = 2*v2-ic2eq;
+ //Hard
+ ic2eq *= ic2_drive*0.41;
+ ic2eq > hp ? ic2eq = hp;
+ ic2eq < -hp ? ic2eq = -hp;
+ //Soft
+ ic2eq = sin(ic2eq);
+ ic2eq /= ic2_drive*0.41;
+);
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_highp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ 
+ //Hard
+ ic2eq *= ic2_drive;
+ ic2eq > hp ? ic2eq = hp;
+ ic2eq < -hp ? ic2eq = -hp;
+ //Soft
+ ic2eq = sin(ic2eq);
+ ic2eq /= ic2_drive;
+ 
+
+ m0*v0+m1*v1+m2*v2
+);
+
+@slider
+next_gain = 10^(gain_db/20);
+next_drive = 10^(drive_db/20);
+
+knee_ic1_a = knee_ic1*2+3;
+knee_ic2_a = knee_ic2*2+3;
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_drive = (next_drive - last_drive)/samplesblock;
+
+
+
+@sample
+spl0 *= last_drive;
+spl1 *= last_drive;
+
+spl0 = L1LP.svf_lowp_os(spl0,lowpass_freq,lowpass_q);
+spl1 = R1LP.svf_lowp_os(spl1,lowpass_freq,lowpass_q);
+
+spl0 = L1.svf_bell(spl0,band1_gain,band1_freq,0.2);
+spl1 = R1.svf_bell(spl1,band1_gain,band1_freq,0.2);
+spl0 = L2.svf_bell(spl0,band2_gain,band2_freq,band2_q);
+spl1 = R2.svf_bell(spl1,band2_gain,band2_freq,band2_q);
+spl0 = L3.svf_bell(spl0,band3_gain,band3_freq,band3_q);
+spl1 = R3.svf_bell(spl1,band3_gain,band3_freq,band3_q);
+spl0 = L4.svf_bell(spl0,band4_gain,band4_freq,0.3);
+spl1 = R4.svf_bell(spl1,band4_gain,band4_freq,0.3);
+
+spl0 = spl0 + 0.015625*spl0^2;
+spl1 = spl1 - 0.015625*spl1^2;
+
+spl0 = L1HP.svf_highp(spl0,highpass_freq,highpass_q);
+spl1 = R1HP.svf_highp(spl1,highpass_freq,highpass_q);
+
+
+spl0 /= last_drive;
+spl1 /= last_drive;
+last_drive += d_drive;
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+
