@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="b5b257e933c2da6793a76050b81cf9bd7be5c236">
+<index version="1" name="StevieKeys JSFX" commit="1fb24a847dd701cef227252c85a7830d0613d942">
   <category name="Dynamics">
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
       <metadata>
@@ -26,12 +26,7 @@
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro Punch Comp\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 Soft Knee RMS type compressor. Comntrols...\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Comp Drive: Input gain to drive the compressor\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Speed: Controls both attack and release speed\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Intensity: This is almost a ratio control with invert setting for special effect\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dry/Wet: Mix some uncompressed signal in for parellel compression\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Out gain: Controls output level, followed by soft clipper,then out drive\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Out Drive: Extra boost after clipper, using third harmonic waveshaper\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Comp Drive:\sa180\par}
 }
 ]]></description>
       </metadata>
@@ -42,6 +37,10 @@
       <version name="1.0.1" time="2024-01-10T18:06:23Z">
         <changelog><![CDATA[- Rewrite about section]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b5b257e933c2da6793a76050b81cf9bd7be5c236/Dynamics/Retro%20Punch%20Comp.jsfx</source>
+      </version>
+      <version name="1.0.2" time="2024-01-10T18:19:20Z">
+        <changelog><![CDATA[- Rewrite about section]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1fb24a847dd701cef227252c85a7830d0613d942/Dynamics/Retro%20Punch%20Comp.jsfx</source>
       </version>
     </reapack>
   </category>
