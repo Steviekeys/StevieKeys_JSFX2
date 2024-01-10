@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="3af0d529ad5d7e89820bed152afc6d04fef44fa0">
+<index version="1" name="StevieKeys JSFX" commit="97d4f24f648972a3af38d108f5bc4550756439b1">
   <category name="Dynamics">
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
       <metadata>
@@ -69,6 +69,23 @@
       <version name="1.0.0" time="2024-01-10T19:54:12Z">
         <changelog><![CDATA[- First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3af0d529ad5d7e89820bed152afc6d04fef44fa0/EQ/Dirt%20EQ.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Retro-Q V3.jsfx" type="effect" desc="Retro-Q V3">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro-Q\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Fixed frequency parellel EQ with vibe. Tip, try boosting or cutting all bands the same amount first! more EQ = more harmonics.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 SVF filter code from Andy Simper of cytomics\par}
+}
+]]></description>
+      </metadata>
+      <version name="3.0.0" time="2024-01-10T22:00:17Z">
+        <changelog><![CDATA[- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/97d4f24f648972a3af38d108f5bc4550756439b1/EQ/Retro-Q%20V3.jsfx</source>
       </version>
     </reapack>
   </category>
@@ -175,7 +192,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Perfect Mono\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Punch Comp\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Maximum Resolution Dither\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dirt EQ\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dirt EQ\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V3\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
