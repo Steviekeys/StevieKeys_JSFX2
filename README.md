@@ -9,5 +9,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Perfect Mono
 * Retro Punch Comp
 * Maximum Resolution Dither
+* Dirt EQ
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
