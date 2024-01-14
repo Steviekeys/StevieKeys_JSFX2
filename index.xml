@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="97d4f24f648972a3af38d108f5bc4550756439b1">
+<index version="1" name="StevieKeys JSFX" commit="28d77b6de98dc8fe437ffbaf75ca9d4cb173106e">
+  <category name="Distortion">
+    <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro Fuzz\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 High gain distortion. easy to use.\par}
+}
+]]></description>
+      </metadata>
+      <version name="2.0.0pre1" author="Stephen Boyes" time="2024-01-14T18:13:57Z">
+        <changelog><![CDATA[- Total rewrite of all code for version 2
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/28d77b6de98dc8fe437ffbaf75ca9d4cb173106e/Distortion/Retro%20Fuzz.jsfx</source>
+      </version>
+    </reapack>
+  </category>
   <category name="Dynamics">
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
       <metadata>
