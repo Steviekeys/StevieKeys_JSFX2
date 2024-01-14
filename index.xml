@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="28d77b6de98dc8fe437ffbaf75ca9d4cb173106e">
+<index version="1" name="StevieKeys JSFX" commit="9ad1483f866d8c651ecfe060bc1def5cd56fe76d">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -16,6 +16,10 @@
         <changelog><![CDATA[- Total rewrite of all code for version 2
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/28d77b6de98dc8fe437ffbaf75ca9d4cb173106e/Distortion/Retro%20Fuzz.jsfx</source>
+      </version>
+      <version name="2.0.0pre2" author="Stephen Boyes" time="2024-01-14T22:40:35Z">
+        <changelog><![CDATA[- New diode clip improves CPU and reduces second derivitive discontinuity]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9ad1483f866d8c651ecfe060bc1def5cd56fe76d/Distortion/Retro%20Fuzz.jsfx</source>
       </version>
     </reapack>
   </category>
@@ -212,7 +216,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Punch Comp\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Maximum Resolution Dither\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dirt EQ\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V3\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V3\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Fuzz\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
