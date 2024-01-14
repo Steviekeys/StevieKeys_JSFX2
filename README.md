@@ -11,5 +11,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Maximum Resolution Dither
 * Dirt EQ
 * Retro-Q V3
+* Retro Fuzz
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
