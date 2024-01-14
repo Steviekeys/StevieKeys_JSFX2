@@ -1,4 +1,4 @@
-version:2.0.0pre1
+version:2.0.0pre2
 desc:Retro Fuzz [V2]
 author: Stephen Boyes
 about:
@@ -6,8 +6,8 @@ about:
   High gain distortion.
   easy to use.
 changelog:
-  - Total rewrite of all code for version 2
-  - First github version
+  - New diode clip improves CPU and reduces second derivitive discontinuity
+
 
 slider1:ingain_db=0<0,15,1>input gain
 slider7:outgain_db=0<-18,6,0.2>output gain
@@ -72,7 +72,7 @@ function diode_clipper(x)
 local(f)
 (
 f = min(1,max(-1,x));
-x*((10/9)*f - (1/9)*f^9)^6;
+x*sin(($pi/2)*f)^12
 );
 
 @slider
