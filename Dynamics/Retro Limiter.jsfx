@@ -1,0 +1,196 @@
+version:1.2.2
+desc:Retro Limiter
+Author:Stephen Boyes
+description:
+  # Retro Limiter
+  RMS feedback compressor followed by smooth clip and limiter
+  Then output feeds the compressor detector!
+  controls...
+  RMS Threshold (dB) :
+  Release (ms)       :
+  Input gain (dB)    :
+  Mode (norm,atten)  :
+changelog:
+  - Make final limit soft knee
+  - Github Release
+
+
+*  This program is free software.                          *
+*  c 2023                                                  *
+*                                                          *
+
+
+slider1:-6<-12,-3,0.1>RMS Threshold (dB)
+
+slider4:100<40,400,0.1>Release (ms)
+slider5:gain_db=0<0,12,0.1>Inpt gain (dB)
+slider6:1<0,1,1{Normal,Attenuate}>Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+Tgain = 1;
+smoothFreq = 2;
+smoothFc = smoothFreq/srate;
+slew = 1-exp(-2*$pi*smoothFc);
+
+Rspeed = exp(-1/(80 * 0.001 * srate));
+longa_time = 20;
+
+function RMS_compressor(input,ratio,threshold,Release,Average_time)
+instance (Rspeed,Fc,b,GRop,LastGR,rms)
+(
+Rspeed = exp(-1/(Release * 0.001 * srate));
+RMS_aver_frq = 1/(Average_time*0.001);
+Fc = RMS_aver_frq/srate;
+b = exp(-2*$pi*Fc);
+a = 1-b;
+
+
+//RMS aprox calculation//
+square = 0.0006+input^2;
+mean += a*(square-mean);
+rms = sqrt(mean)-0.0006;
+
+//convert to dB to calculate ratio//
+GRin = 20*log10(rms);
+ratio = (ratio+1)/ratio;
+GRin = ratio*(max(GRin,threshold)-threshold);
+GRop = 10^(GRin*0.05);  //convert back to gain
+
+lastGR = LastGR*Rspeed;
+GRop = max(GRop,LastGR);
+LastGR = GRop; //store last value
+GRop = 1/(GRop);   //gain needed to compress the signal
+
+GRop
+);
+
+
+function smooth_clip(x)
+instance (a0,b0,c0,d0,e0,clip0)
+(
+clip0 = max(-1,min(1,x));
+a0 = sign(x)*(sign(x)*x)^(1/9);
+b0 = (9*clip0-clip0^9)*0.125;
+c0 = abs(sin(($pi*x^9)/2));
+d0 = a0*c0+b0*(1-c0);
+x >=  1 ? e0 = a0;  x <   1 ? e0 = d0;  x <  -1 ? e0 = a0;
+0.888*e0
+);
+
+Function limiter (input,Rspeed)
+instance (peak0,oldpeak0,input,lim)
+(
+input = input*1.05;
+k = 12; //controls the knee
+peak0 = (log(exp(k-k*input)+1)/k) -1;
+peak0+= (log(exp(k+k*input)+1)/k) -1;
+oldpeak0 = oldpeak0*Rspeed; // release
+peak0 = max(peak0,oldpeak0); // limit
+oldpeak0=peak0; //store last value for release
+
+lim = 1/(peak0+1);  //(invert) gain needed to limit the signal to 1
+output = input*lim;
+output*0.9523809524
+);
+
+function lowpass(in,slew)
+instance (in,slew,y)
+(
+y += slew*(in-y);
+y
+);
+
+@slider
+next_gain=10^(gain_db/20);
+threshold = slider1;
+ratio = 2.25; //negative ratio
+release = slider4;
+
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+
+@sample
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+inlevel = max(abs(spl0),abs(spl1));
+
+// aply feedback gain
+spl0 = spl0*Tgain;  spl1 = spl1*Tgain;
+
+
+// smooth clip
+spl0 = left.smooth_clip(spl0);  spl1 = right.smooth_clip(spl1);
+max_peaks = max(abs(spl0),abs(spl1));
+
+// final limiter
+spl0 = le.limiter(spl0,Rspeed);  spl1 = re.limiter(spl1,Rspeed);
+
+// gain detector
+Lgain = L.RMS_compressor(spl0,ratio,threshold,release,average_time);
+Rgain = R.RMS_compressor(spl1,ratio,threshold,release,average_time);
+Tgain = min(Lgain,Rgain);
+
+// program dependance
+max_peaks > 0.88 ? averaging_time = 0.1*longa_time : averaging_time = longa_time;
+average_time = ave.lowpass(averaging_time,slew);
+
+outlevel = max(abs(spl0),abs(spl1));
+realGR = max(0.1,outlevel/inlevel);
+realGR < gr_meter ? gr_meter = realGR : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+slider6 ?
+(
+spl0 /= last_gain;
+spl1 /= last_gain;
+);
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
