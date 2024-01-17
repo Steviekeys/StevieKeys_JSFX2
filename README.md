@@ -12,5 +12,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Dirt EQ
 * Retro-Q V3
 * Retro Fuzz
+* Retro Limiter
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
