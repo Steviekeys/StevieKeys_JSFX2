@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="9ad1483f866d8c651ecfe060bc1def5cd56fe76d">
+<index version="1" name="StevieKeys JSFX" commit="dd57ec9d139ce81d702301fc25738b91308fb7e7">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -20,6 +20,10 @@
       <version name="2.0.0pre2" author="Stephen Boyes" time="2024-01-14T22:40:35Z">
         <changelog><![CDATA[- New diode clip improves CPU and reduces second derivitive discontinuity]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9ad1483f866d8c651ecfe060bc1def5cd56fe76d/Distortion/Retro%20Fuzz.jsfx</source>
+      </version>
+      <version name="2.0.0" author="Stephen Boyes" time="2024-01-17T10:49:41Z">
+        <changelog><![CDATA[- Use exp() instead of $e^]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/dd57ec9d139ce81d702301fc25738b91308fb7e7/Distortion/Retro%20Fuzz.jsfx</source>
       </version>
     </reapack>
   </category>
