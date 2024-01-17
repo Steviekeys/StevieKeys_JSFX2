@@ -221,7 +221,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Maximum Resolution Dither\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dirt EQ\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V3\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Fuzz\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Fuzz\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Limiter\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
