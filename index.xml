@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="a2b79f72d1ee55ef490b8f29fac910ea9233561a">
+<index version="1" name="StevieKeys JSFX" commit="9607780d21f8cd6a68c4efa9031714a8762e80f9">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -28,6 +28,23 @@
     </reapack>
   </category>
   <category name="Dynamics">
+    <reapack name="Limit Smash.jsfx" type="effect" desc="Limit smash [v3]">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Limit Smash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Anolouge style limiter with feedforward and feedback detectors\par}
+}
+]]></description>
+      </metadata>
+      <version name="3.1.1" author="Stephen Boyes" time="2024-01-18T11:40:28Z">
+        <changelog><![CDATA[- Fix coeficient calculations
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9607780d21f8cd6a68c4efa9031714a8762e80f9/Dynamics/Limit%20Smash.jsfx</source>
+      </version>
+    </reapack>
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
