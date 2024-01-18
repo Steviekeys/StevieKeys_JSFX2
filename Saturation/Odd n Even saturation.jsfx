@@ -1,4 +1,4 @@
-version: 1.3.0
+version: 1.4.0
 desc: Odd n Even Saturation
 author: Stephen Boyes
 about:
@@ -6,10 +6,7 @@ about:
   Two stage polynomial waveshping saturation, feturing *odd and even harmonics*.
   Can be used to add vibe or as a maximiser.
 changelog:
-  - Remove static DC from waveshaper
-  - First github version
-
-
+  - New optional DC filter (signals over 0dB may occur)
 
 
 //                                                                
@@ -31,11 +28,10 @@ changelog:
 
 
 
-
 slider1:0<-6,6,0.1>Input
 slider2:0.9<0,1,0.01>Amount
 slider3:0<-6,6,0.1>Output
-
+slider4:0<0,1,1{Off,On}>DC blocker
 
 
 in_pin:left input
@@ -46,23 +42,16 @@ out_pin:right output
 @init
 ext_tail_size = -1; //automatic silence detection
 
-cutoff = 0.2;
-//coeff = exp(-2*$pi*cutoff/srate);
+Fc = 1/srate;
+a = exp(-2*$pi*Fc);
+b = 1-a;
 
-
-/*
-function smooth_clip2(x)
-instance (a0,b0,c0,d0,e0,clip0)
+function DCblocker(in,b)
+instance(y)
 (
-clip0 = max(-1,min(1,x));
-a0 = sign(x)*(sign(x)*x)^(1/3);
-b0 = (3*clip0-clip0^3)*0.5;
-c0 = abs(sin(($pi*x^3)/2));
-d0 = a0*c0+b0*(1-c0);
-x >=  1 ? e0 = a0;  x <   1 ? e0 = d0;  x <  -1 ? e0 = a0;
-0.8*e0
+y += b*(in-y);
+in-y
 );
-*/
 
 
 @slider
@@ -80,7 +69,6 @@ OG = 2^(slider3/6);
 spl0 = spl0*IG*IG2;
 spl1 = spl1*IG*IG2;
 
-
 //sat1 gain//
 X0 = (-spl0+1)*0.382683;
 X1 = (-spl1+1)*0.382683;
@@ -89,9 +77,9 @@ X1 = (-spl1+1)*0.382683;
 wet0 = 8*(X0^4)-8*(X0^2)+1-0.00000187195422;
 wet1 = 8*(X1^4)-8*(X1^2)+1-0.00000187195422;
 
+//dry wet mix
 spl0 = spl0*D1+wet0*S1;
 spl1 = spl1*D1+wet1*S1;
-
 
 //sat2 gain//
 X0 = (-spl0-1)*0.258818;
@@ -101,20 +89,18 @@ X1 = (-spl1-1)*0.258818;
 wet0 = 32*(X0^6)-48*(X0^4)+18*(X0^2)-0.999993508182465;
 wet1 = 32*(X1^6)-48*(X1^4)+18*(X1^2)-0.999993508182465;
 
-
+//dry wet mix
 spl0 = spl0*D2+wet0*S2;
 spl1 = spl1*D2+wet1*S2;
 
-
+//output gain
 spl0 = spl0*OG;
 spl1 = spl1*OG;
 
-//otm1 = coeff*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
-//otm2 = coeff*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
+spl0 = max(-1,min(1,spl0))*0.996;
+spl1 = max(-1,min(1,spl1))*0.996;
 
-
-//spl0 = le.smooth_clip2(spl0);
-//spl1 = ri.smooth_clip2(spl1);
-
-spl0 = max(-1,min(1,spl0));
-spl1 = max(-1,min(1,spl1));
+slider4 == 1 ? (
+spl0 = le.DCblocker(spl0,b);
+spl1 = ri.DCblocker(spl1,b);
+);
