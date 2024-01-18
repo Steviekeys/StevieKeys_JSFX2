@@ -1,9 +1,14 @@
-version:3.1.1
+version:3.1.2
 desc:Limit smash [v3]
 author:Stephen Boyes
 about:
   # Limit Smash
-    Anolouge style limiter with feedforward and feedback detectors
+    Analogue style limiter with feedforward and feedback detectors
+    Controls...
+    Drive Amount        : Increases compression
+    Output Gain         : Control the overall level
+    Analogue - Digital  : Analogue=feedback  Digital=feddforward
+    Release Time        : Time for gain reduction to return to 0dB after level drops
 changelog:
   - Fix coeficient calculations
   - First github version
@@ -27,7 +32,7 @@ slider2:0<-8,8,0.1>Output Gain (dB)
 slider3:0.5<0,1,0.01>Analogue - Digital
 
 
-slider8:=400<50,1000,0.1:log!=400>release time (ms)
+slider8:=400<50,1000,0.1:log!=400>Release Time (ms)
 -slider10:0<0,5000>actual release constant
 
 in_pin:left input
@@ -60,8 +65,8 @@ gr_meter_decay = exp(1/(1*srate));
 function RMS(in,c)
 instance (in,c,y)
   (
-  in = 0.0000006+in^2;  y += c*(in-y);
-  sqrt(y)-sqrt(0.0000006)
+  in = 0.00005+in^2;  y += c*(in-y);
+  sqrt(y)-(0.00005)
   );
 
 function sta_var_LPfilter(in,f,q)  // fc = 90;  q = 1/0.62;  f = 2*sin($pi*fc/(srate));
@@ -108,7 +113,7 @@ spl0 = spl0*inboost;
 
 FF0 = sqrt(FFleft.sta_var_LPfilter(spl0^2,f2,2.618)); //FF atack
 
-rect0 = abs((FB0*Feedback)+(FF0*Feedforward)+alog);   //rectify side chain
+rect0 = abs(FB0*Feedback + FF0*Feedforward + alog);   //rectify side chain
 GRin0 = max(1,rect0);  //prevent signal falling below one
 peak0 = GRin0-1;  //how far over 1 is the signal
 
@@ -127,7 +132,7 @@ spl1 = spl1*inboost;
 
 FF1 = sqrt(FFright.sta_var_LPfilter(spl1^2,f2,2.618)); //FF atack
 
-rect1 = abs((FB1*Feedback)+(FF1*Feedforward)+alog);
+rect1 = abs( FB1*Feedback + FF1*Feedforward + alog);
 GRin1 = max(1,rect1);
 peak1 = GRin1-1;   //how far over 1 is the signal
 
@@ -147,11 +152,11 @@ Tpeak1 = (Tpeak+peak1)/2;
 
 
 spl0 = spl0*Tpeak0;  //gain reduction
-FB0 = (left.RMS(spl0^2,c)); //feedback for comp
+FB0 = left.RMS(spl0^2,c); //feedback for comp
 
 
 spl1 = spl1*Tpeak1;   //gain reduction
-FB1 = (right.RMS(spl1^2,c)); //feedback for comp
+FB1 = right.RMS(spl1^2,c); //feedback for comp
 
 
 
