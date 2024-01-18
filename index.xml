@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="122087701e46dfe97815dabb2bcba32c9afd4026">
+<index version="1" name="StevieKeys JSFX" commit="a2b79f72d1ee55ef490b8f29fac910ea9233561a">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -139,6 +139,10 @@
         <changelog><![CDATA[- Remove static DC from waveshaper
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b06747e49f344feddf3e0fffbf44541abeadcf2b/Saturation/Odd%20n%20Even%20saturation.jsfx</source>
+      </version>
+      <version name="1.4.0" author="Stephen Boyes" time="2024-01-18T11:11:45Z">
+        <changelog><![CDATA[- New optional DC filter (signals over 0dB may occur)]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a2b79f72d1ee55ef490b8f29fac910ea9233561a/Saturation/Odd%20n%20Even%20saturation.jsfx</source>
       </version>
     </reapack>
     <reapack name="Odd saturation.jsfx" type="effect" desc="Odd Saturation">
