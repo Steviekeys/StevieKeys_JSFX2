@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="c2f9d6b8538c303ad0156b27d0db9ed81f00e94c">
+<index version="1" name="StevieKeys JSFX" commit="6d72ea483b95b7ba37afe146997f28ed76824278">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -76,6 +76,11 @@
         <changelog><![CDATA[- Make final limit soft knee
 - Github Release]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/122087701e46dfe97815dabb2bcba32c9afd4026/Dynamics/Retro%20Limiter.jsfx</source>
+      </version>
+      <version name="1.2.3" author="Stephen Boyes" time="2024-01-18T14:45:22Z">
+        <changelog><![CDATA[- Make final limit soft knee
+- Github Release]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6d72ea483b95b7ba37afe146997f28ed76824278/Dynamics/Retro%20Limiter.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Punch Comp.jsfx" type="effect" desc="Retro Punch Comp">
