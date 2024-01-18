@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="024480dd5718223239bc649802b2020ee8389fe7">
+<index version="1" name="StevieKeys JSFX" commit="c2f9d6b8538c303ad0156b27d0db9ed81f00e94c">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -48,6 +48,10 @@
         <changelog><![CDATA[- Fix coeficient calculations
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/024480dd5718223239bc649802b2020ee8389fe7/Dynamics/Limit%20Smash.jsfx</source>
+      </version>
+      <version name="3.2.0" author="Stephen Boyes" time="2024-01-18T13:24:06Z">
+        <changelog><![CDATA[- Slight soft knee]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c2f9d6b8538c303ad0156b27d0db9ed81f00e94c/Dynamics/Limit%20Smash.jsfx</source>
       </version>
     </reapack>
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
