@@ -13,5 +13,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro-Q V3
 * Retro Fuzz
 * Retro Limiter
+* Limit Smash
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
