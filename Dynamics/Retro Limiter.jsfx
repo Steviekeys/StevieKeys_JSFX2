@@ -1,4 +1,4 @@
-version:1.2.2
+version:1.2.3
 desc:Retro Limiter
 Author:Stephen Boyes
 description:
@@ -6,10 +6,10 @@ description:
   RMS feedback compressor followed by smooth clip and limiter
   Then output feeds the compressor detector!
   controls...
-  RMS Threshold (dB) :
-  Release (ms)       :
-  Input gain (dB)    :
-  Mode (norm,atten)  :
+  RMS Threshold (dB) :  Signals staying over the threshold get squished, higher threshold alows more distortion from the following clipper
+  Release (ms)       :  Compression release time
+  Input gain (dB)    :  Boost the input
+  Mode (norm,atten)  :  Gain compensation OFF/ON
 changelog:
   - Make final limit soft knee
   - Github Release
