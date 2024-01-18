@@ -1,4 +1,4 @@
-version:3.1.2
+version:3.2.0
 desc:Limit smash [v3]
 author:Stephen Boyes
 about:
@@ -10,8 +10,8 @@ about:
     Analogue - Digital  : Analogue=feedback  Digital=feddforward
     Release Time        : Time for gain reduction to return to 0dB after level drops
 changelog:
-  - Fix coeficient calculations
-  - First github version
+  - Slight soft knee
+
 
 
 /*******************************************************************************
@@ -47,7 +47,7 @@ Fc1 = 90;
 f1 = 2*sin($pi*fc1/(srate));
 Fc2 = 25;
 f2 = 2*sin($pi*fc2/(srate));
-Fc3 = 10.159/srate;
+Fc3 = 10.15/srate;
 c = 1-exp(-2*$pi*Fc3);
 Fc4 = 1489.93/srate;
 f4 = 1-exp(-2*$pi*Fc4);
@@ -101,7 +101,7 @@ slider10 = Rspeed;
 
 
 @sample
-alog = 0.001*rand(1); // noise
+alog = 0.001*(0.5-rand(1)); // noise
 alog = noise.sta_var_LPfilter(alog,f1,1);
 
 tpeak < 0.55 ? Rspeed = Rspeedin^5 : Rspeed = Rspeedin;
@@ -112,16 +112,19 @@ Rspeed = PD.RMS(Rspeed,c);
 spl0 = spl0*inboost;
 
 FF0 = sqrt(FFleft.sta_var_LPfilter(spl0^2,f2,2.618)); //FF atack
-
+/*
 rect0 = abs(FB0*Feedback + FF0*Feedforward + alog);   //rectify side chain
 GRin0 = max(1,rect0);  //prevent signal falling below one
 peak0 = GRin0-1;  //how far over 1 is the signal
+*/
+input0 = (FB0*Feedback + FF0*Feedforward + alog);
+//k = 8; //controls the knee
+peak0  = (log((exp(8-8*input0)+1)*(exp(8+8*input0)+1))/8)-2;
 
 oldpeak0 = oldpeak0*Rspeed; // release
 oldpeak0 = max(0,oldpeak0);
 peak0 = max(peak0,oldpeak0);
 oldpeak0 = peak0; //store last value
-
 peak0 = 1/(peak0+1);  //(invert) gain needed to limit the signal to 1
 
 
@@ -131,16 +134,21 @@ peak0 = 1/(peak0+1);  //(invert) gain needed to limit the signal to 1
 spl1 = spl1*inboost;
 
 FF1 = sqrt(FFright.sta_var_LPfilter(spl1^2,f2,2.618)); //FF atack
-
+/*
 rect1 = abs( FB1*Feedback + FF1*Feedforward + alog);
 GRin1 = max(1,rect1);
 peak1 = GRin1-1;   //how far over 1 is the signal
+*/
+input1 = (FB1*Feedback + FF1*Feedforward + alog);
+//k = 8; //controls the knee
+peak1  = (log((exp(8-8*input1)+1)*(exp(8+8*input1)+1))/8)-2;
+
+
 
 oldpeak1 = oldpeak1*Rspeed;
 oldpeak1 = max(0,oldpeak1);
 peak1 = max(peak1,oldpeak1);
 oldpeak1 = peak1; //store last value
-
 peak1 = 1/(peak1+1);   //gain needed to limit the signal to 1 (invert)
 
 
