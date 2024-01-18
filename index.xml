@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="9607780d21f8cd6a68c4efa9031714a8762e80f9">
+<index version="1" name="StevieKeys JSFX" commit="024480dd5718223239bc649802b2020ee8389fe7">
   <category name="Distortion">
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
@@ -35,7 +35,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Limit Smash\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Anolouge style limiter with feedforward and feedback detectors\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Analogue style limiter with feedforward and feedback detectors Controls... Drive Amount : Increases compression Output Gain : Control the overall level Analogue - Digital : Analogue=feedback Digital=feddforward Release Time : Time for gain reduction to return to 0dB after level drops\par}
 }
 ]]></description>
       </metadata>
@@ -43,6 +43,11 @@
         <changelog><![CDATA[- Fix coeficient calculations
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9607780d21f8cd6a68c4efa9031714a8762e80f9/Dynamics/Limit%20Smash.jsfx</source>
+      </version>
+      <version name="3.1.2" author="Stephen Boyes" time="2024-01-18T12:16:33Z">
+        <changelog><![CDATA[- Fix coeficient calculations
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/024480dd5718223239bc649802b2020ee8389fe7/Dynamics/Limit%20Smash.jsfx</source>
       </version>
     </reapack>
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
