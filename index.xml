@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="6d72ea483b95b7ba37afe146997f28ed76824278">
+<index version="1" name="StevieKeys JSFX" commit="8dba2e418041f9f69d2b734d3708d9331adaf2d0">
   <category name="Distortion">
+    <reapack name="Retro Distortion.jsfx" type="effect" desc="Retro Distortion">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro Distortion\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Distortion. easy to use. Distortion.\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.2.1" author="Stephen Boyes" time="2024-01-19T11:56:01Z">
+        <changelog><![CDATA[- first github release]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/8dba2e418041f9f69d2b734d3708d9331adaf2d0/Distortion/Retro%20Distortion.jsfx</source>
+      </version>
+    </reapack>
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
