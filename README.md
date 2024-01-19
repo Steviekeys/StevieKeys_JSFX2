@@ -14,5 +14,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro Fuzz
 * Retro Limiter
 * Limit Smash
+* Retro Distortion
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
