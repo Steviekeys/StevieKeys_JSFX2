@@ -7,7 +7,7 @@ about:
     Controls...
     Drive Amount        : Increases compression
     Output Gain         : Control the overall level
-    Analogue - Digital  : Analogue=feedback  Digital=feddforward
+    Analogue - Digital  : Analogue=feedback  Digital=feedforward
     Release Time        : Time for gain reduction to return to 0dB after level drops
 changelog:
   - Slight soft knee
