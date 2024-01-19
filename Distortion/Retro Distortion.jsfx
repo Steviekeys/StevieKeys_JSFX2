@@ -1,0 +1,177 @@
+version:1.2.1
+desc:Retro Distortion
+author: Stephen Boyes
+about:
+  # Retro Distortion
+  Distortion.
+  easy to use.
+  Distortion.
+changelog:
+  - first github release
+
+////////////////////
+/  S.Boyes 2023
+/
+/////////////
+/ Aditional code by...
+/ SVF filter code by Andy Simper (Cytomic)
+/
+/
+/
+//////////////////////////////////////////////////////////////////////
+/ DC blocker from Cockoos JSFX
+/////////////////////////////////////
+
+
+
+
+slider1:gain_db=0<-24,12,1>Headroom
+slider2:0.5<0,1,0.01>Distortion
+slider3:0.5<0,1,0.01>Dynamic Mix
+slider4:out_gain_db=<-24,12,1>out gain (dB)
+slider5:0<0,1,1{Distort,Saturate}>Mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(-gain_db/20);
+last_gain_out=10^(out_gain_db/20);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+
+function dyn_sat (in,z)
+instance(in,y,buff0,buff1,count,y,z,pos,pos1,RMS_Y,buffy,RMS_Z,buffz,compressor)
+(
+z = this.svf_lowp(z,4800,0.3);
+y = 0.0001+z^2;
+
+RMS_Y = this.y.svf_lowp(y,550,0.41);
+RMS_z = this.z.svf_lowp(z,550,0.41);
+
+compressor = 0.15+(RMS_Z/RMS_Y)*0.85;
+compressor = max(0.02,compressor);
+compressor = min(50,compressor);
+y = y*compressor;
+out = (in*1.618-y*slider2)*0.618
+);
+
+function dyn_sat_subtle (in,z)
+instance(in,y,buff0,buff1,count,y,z,pos,pos1,RMS_Y,buffy,RMS_Z,buffz,compressor)
+(
+z = this.svf_lowp(z,1150,0.2)*0.96 + z*0.04;
+y = 0.0001+z^2;
+
+RMS_Y = this.y.svf_lowp(y,50,0.5);
+RMS_z = this.z.svf_lowp(z,50,0.5);
+
+compressor = 0.1+(RMS_Z/RMS_Y)*0.9;
+compressor = min(1*10^11,compressor);
+compressor = max(1,compressor);
+compressor = sqrt(compressor);
+compressor = compressor*0.5+0.5;
+compressor = min(1100,compressor);
+y = y*compressor;
+out = (in*2-y*slider2)*0.5
+);
+
+function sat (input)
+instance (input)
+(
+y = input^2;
+(input-y*slider2)
+);
+
+
+function soft_clip(x)
+(
+   2/(1+exp(-2*x))-1;
+);
+
+
+@slider
+next_gain=10^(-gain_db/20);
+next_gain_out=10^(out_gain_db/20);
+dyngain = slider3;
+satgain = 1-slider3;
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_gain_out = (next_gain_out - last_gain_out)/samplesblock;
+
+@sample
+spl0 *= last_gain;
+spl1 *= last_gain;
+
+slider5 == 1 ?
+(
+spl0 *= 0.5;  spl1 *= 0.5;
+);
+
+
+
+spl0 = inr.soft_clip(spl0*0.8)*1.25;
+spl1 = inl.soft_clip(spl1*0.8)*1.25;
+
+
+//rectify
+REC0 = sqrt(0.0001+spl0^2);
+REC1 = sqrt(0.0001+spl1^2);
+
+//saturation
+slider5 == 0 ?
+(
+DYN0 = lef.dyn_sat(spl0,REC0);
+DYN1 = rig.dyn_sat(spl1,REC1);
+SAT0 = left.sat(spl0);
+SAT1 = righ.sat(spl1);
+):(
+DYN0 = lef.dyn_sat_subtle(spl0,REC0);
+DYN1 = rig.dyn_sat_subtle(spl1,REC1);
+SAT0 = left.sat(spl0*0.5)*1.4+spl0*0.3;
+SAT1 = righ.sat(spl1*0.5)*1.4+spl1*0.3;
+);
+
+spl0 = DYN0*dyngain + SAT0*satgain;
+spl1 = DYN1*dyngain + SAT1*satgain;
+
+//DC blocker
+otm1=0.9996*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
+otm2=0.9996*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
+
+slider5 == 1 ?
+(
+spl0 *= 2;  spl1 *= 2;
+);
+
+
+//output level
+spl0 /= last_gain;
+spl1 /= last_gain;
+spl0 *= last_gain_out;
+spl1 *= last_gain_out;
+last_gain += d_gain;
+last_gain_out += d_gain_out;
+
+spl0 = outl.soft_clip(spl0);
+spl1 = outr.soft_clip(spl1);
