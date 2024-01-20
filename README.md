@@ -15,5 +15,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro Limiter
 * Limit Smash
 * Retro Distortion
+* Transient Softener
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
