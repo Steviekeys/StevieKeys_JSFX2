@@ -1,26 +1,36 @@
-version:1.2.1
+version:1.2.2
 desc:Retro Distortion
 author: Stephen Boyes
 about:
   # Retro Distortion
-  Distortion.
-  easy to use.
-  Distortion.
+  Versatile saturation/distortion effect.
+  Three stages of non-linear distortion
+  
+  one: tanh soft clipper
+  two: a blend of 2nd harmonic and a distortion that works at all signal levels!
+  three: tanh soft clipper
+  
+  Controls:
+  . Headroom
+  Less headroom = more distortion from clippers and optional 2nd harmonic.
+  . Distortion
+  More 2nd harmonic and/or dynamic variable distortion.
+  . Dynamic Mix
+  Blends in the dynamic variable distortion.
+  . out gain
+  Output level
 changelog:
   - first github release
+  - add about info
 
-////////////////////
-/  S.Boyes 2023
-/
-/////////////
+///////////////////////////////////////////////
+/         S.Boyes 2023
+///////////////////////////////////////////////
 / Aditional code by...
-/ SVF filter code by Andy Simper (Cytomic)
-/
-/
-/
-//////////////////////////////////////////////////////////////////////
+/ SVF filter code by Andy Simper (Cytomic) 
+///////////////////////////////////////////////
 / DC blocker from Cockoos JSFX
-/////////////////////////////////////
+///////////////////////////////////////////////
 
 
 
