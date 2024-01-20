@@ -1,5 +1,20 @@
-version:1.6.1
+version:1.6.2
 desc:Transient Softener
+about:
+  # distorts bright spikey transients making a softer sound.
+  use reapers delta mode to hear what parts of the sound are being shaved off.
+  
+  modes...
+  .Classic
+  tanh slew soft clipper, same as v1
+  .Smooth-Clip
+  sharper slew clipper, just rounding peaks
+  .Invisible
+  more warmth/dullness with less audible distortion
+  
+  Range
+  .Original
+  .Wide (slew clipper operates inside a compander)
 changlog:
   - Reduce CPU use
   - Github release
