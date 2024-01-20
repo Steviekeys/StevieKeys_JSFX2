@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="af4d769d8d7c8e33d9fa1f95dda19c8c36fb2e91">
+<index version="1" name="StevieKeys JSFX" commit="2a4d4fa7508e8e1f6bcba753ec08369d01fc18e5">
   <category name="Distortion">
     <reapack name="Retro Distortion.jsfx" type="effect" desc="Retro Distortion">
       <metadata>
@@ -179,8 +179,23 @@
   </category>
   <category name="Other">
     <reapack name="Transient Softener.jsfx" type="effect" desc="Transient Softener">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 distorts bright spikey transients making a softer sound.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 use reapers delta mode to hear what parts of the sound are being shaved off.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 modes... .Classic tanh slew soft clipper, same as v1 .Smooth-Clip sharper slew clipper, just rounding peaks .Invisible more warmth/dullness with less audible distortion\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Range .Original .Wide (slew clipper operates inside a compander)\par}
+}
+]]></description>
+      </metadata>
       <version name="1.6.1" time="2024-01-20T22:15:24Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/e65249027afe5be386b49379b7a4cd13a277e0fe/Other/Transient%20Softener.jsfx</source>
+      </version>
+      <version name="1.6.2" time="2024-01-20T22:50:37Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2a4d4fa7508e8e1f6bcba753ec08369d01fc18e5/Other/Transient%20Softener.jsfx</source>
       </version>
     </reapack>
   </category>
