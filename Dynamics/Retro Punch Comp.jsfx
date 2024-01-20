@@ -1,5 +1,6 @@
 version:1.0.3
 desc:Retro Punch Comp
+Author:Stephen Boyes
 about:
   # Retro Punch Comp
   Soft Knee RMS type compressor.
@@ -13,7 +14,6 @@ about:
 changelog:
   - Rewrite about section
 
-// 
 //
 // svf filter code from andy simper of cytomics
 //
