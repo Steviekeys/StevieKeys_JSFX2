@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="151ee2e63c1b02eed9f8f5adeee6dca79ec2c99e">
+<index version="1" name="StevieKeys JSFX" commit="e65249027afe5be386b49379b7a4cd13a277e0fe">
   <category name="Distortion">
     <reapack name="Retro Distortion.jsfx" type="effect" desc="Retro Distortion">
       <metadata>
@@ -170,6 +170,13 @@
       </version>
     </reapack>
   </category>
+  <category name="Other">
+    <reapack name="Transient Softener.jsfx" type="effect" desc="Transient Softener">
+      <version name="1.6.1" time="2024-01-20T22:15:24Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/e65249027afe5be386b49379b7a4cd13a277e0fe/Other/Transient%20Softener.jsfx</source>
+      </version>
+    </reapack>
+  </category>
   <category name="Saturation">
     <reapack name="Odd n Even saturation.jsfx" type="effect" desc="Odd n Even Saturation">
       <metadata>
@@ -282,7 +289,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Fuzz\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Limiter\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Limit Smash\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Distortion\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Distortion\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
