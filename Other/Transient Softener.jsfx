@@ -1,0 +1,158 @@
+version:1.6.1
+desc:Transient Softener
+changlog:
+  - Reduce CPU use
+  - Github release
+
+
+
+
+//                                                                
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                            
+//                                                                              
+// 
+
+
+
+
+slider1:gain_db=0<-150,12,1>gain (dB)
+slider2:amount=0<0,30,0.1>drive
+slider3:0<0,2,1{Original,Smooth-Clip,Invisible}>Style
+slider4:0<0,1,1{Original,Wide}>Range
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+ext_nodenorm = 1;
+ext_tail_size = -2; 
+last_gain=10^(gain_db/20);
+last_drive = 10^(amount/20);
+last_drive *= srate/48000;
+
+function slew(in,drive)
+instance(lastsamout,diff,out)
+(
+x = drive*in-lastsamout;  //difference from last sample
+diff = (exp(x)-exp(-x))/(exp(x)+exp(-x));
+out = lastsamout+diff;
+lastsamout = out;
+out = out*(1/drive);
+out
+);
+
+function slew2(in,drive)
+instance(lastsamout,diff,out,a0,b0,c0,d0,e0,clip0)
+(
+// difference from last sample
+x = drive*in-lastsamout;
+// distort slew rate
+clip0 = max(-1,min(1,x));
+a0 = sign(x)*(sign(x)*x)^(1/9);
+b0 = (9*clip0-clip0^9)*0.125;
+c0 = abs(sin(($pi*x^9)/2));
+d0 = a0*c0+b0*(1-c0);
+x >=  1 ? e0 = a0;  x <   1 ? e0 = d0;  x <  -1 ? e0 = a0;
+diff = 0.888*e0;
+// calculate output
+out = lastsamout+diff;
+lastsamout = out;
+out = out*(1/drive);
+out
+);
+
+function slew3(in,drive)
+instance(lastsamout,diff,out)
+(
+x = drive*in-lastsamout;  //difference from last sample
+diff = sign(x)*(sign(x)*x)^(11/13); //distort slew rate
+out = lastsamout+diff;
+lastsamout = out;
+out = out*(1/drive);
+out
+);
+
+cFc = 30/srate; cy = 1-cos(2*$pi*cFc); time_coef = -cy+sqrt(cy^2+2*cy);
+
+function compressor(inout,threshold,time_coef)
+instance (comp_gain,rec,thresh,inout)
+(
+thresh = 2^(threshold/6);
+inout = inout*(1-comp_gain);
+rec = 1.414*abs(inout);
+rec = max(thresh,rec)-thresh;
+comp_gain += time_coef*(rec^2-comp_gain);
+inout
+);
+
+
+@slider
+next_gain=10^(gain_db/20);
+next_drive = 10^(amount/20);
+next_drive *= srate/48000;
+
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_drive = (next_drive - last_drive)/samplesblock;
+
+@sample
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+slider4 == 1 ?
+(
+// compander in
+dry0 = spl0;
+dry1 = spl1;
+spl0 = lef.compressor(spl0,-90,time_coef);
+spl1 = rig.compressor(spl1,-90,time_coef);
+GE0 = dry0/spl0;
+GE1 = dry1/spl1;
+spl0 *= 1.25;
+spl1 *= 1.25;
+);
+
+slider3 == 0 ?
+(
+spl0 = l.slew(spl0,last_drive);
+spl1 = r.slew(spl1,last_drive);
+);
+
+slider3 == 1 ?
+(
+spl0 = le.slew2(spl0,last_drive);
+spl1 = ri.slew2(spl1,last_drive);
+);
+
+slider3 == 2 ?
+(
+spl0 = left.slew3(spl0,last_drive*96)*0.88+spl0*0.12;
+spl1 = righ.slew3(spl1,last_drive*96)*0.88+spl1*0.12;
+);
+
+slider4 == 1 ?
+(
+// compander out
+spl0 *= 0.8;
+spl1 *= 0.8;
+spl0 = spl0*GE0;
+spl1 = spl1*GE1;
+);
+
+last_drive += d_drive;
