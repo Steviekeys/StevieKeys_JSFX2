@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="e65249027afe5be386b49379b7a4cd13a277e0fe">
+<index version="1" name="StevieKeys JSFX" commit="af4d769d8d7c8e33d9fa1f95dda19c8c36fb2e91">
   <category name="Distortion">
     <reapack name="Retro Distortion.jsfx" type="effect" desc="Retro Distortion">
       <metadata>
@@ -8,13 +8,20 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro Distortion\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Distortion. easy to use. Distortion.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Versatile saturation/distortion effect. Three stages of non-linear distortion\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 one: tanh soft clipper two: a blend of 2nd harmonic and a distortion that works at all signal levels! three: tanh soft clipper\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Controls: . Headroom Less headroom = more distortion from clippers and optional 2nd harmonic. . Distortion More 2nd harmonic and/or dynamic variable distortion. . Dynamic Mix Blends in the dynamic variable distortion. . out gain Output level\par}
 }
 ]]></description>
       </metadata>
       <version name="1.2.1" author="Stephen Boyes" time="2024-01-19T11:56:01Z">
         <changelog><![CDATA[- first github release]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/8dba2e418041f9f69d2b734d3708d9331adaf2d0/Distortion/Retro%20Distortion.jsfx</source>
+      </version>
+      <version name="1.2.2" author="Stephen Boyes" time="2024-01-20T22:40:37Z">
+        <changelog><![CDATA[- first github release
+- add about info]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/af4d769d8d7c8e33d9fa1f95dda19c8c36fb2e91/Distortion/Retro%20Distortion.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
