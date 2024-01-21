@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2a4d4fa7508e8e1f6bcba753ec08369d01fc18e5">
+<index version="1" name="StevieKeys JSFX" commit="19935263c68f0ff7742dd591c6c91c1c659b0637">
   <category name="Distortion">
     <reapack name="Retro Distortion.jsfx" type="effect" desc="Retro Distortion">
       <metadata>
@@ -58,7 +58,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Limit Smash\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Analogue style limiter with feedforward and feedback detectors Controls... Drive Amount : Increases compression Output Gain : Control the overall level Analogue - Digital : Analogue=feedback Digital=feedforward Release Time : Time for gain reduction to return to 0dB after level drops\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Analogue style limiter with feedforward and feedback detectors Controls... Drive Amount : Increases compression Output Gain : Control the overall level Analogue - Digital : Analogue=feedback Digital=feddforward Release Time : Time for gain reduction to return to 0dB after level drops\par}
 }
 ]]></description>
       </metadata>
@@ -75,6 +75,11 @@
       <version name="3.2.0" author="Stephen Boyes" time="2024-01-18T13:24:06Z">
         <changelog><![CDATA[- Slight soft knee]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c2f9d6b8538c303ad0156b27d0db9ed81f00e94c/Dynamics/Limit%20Smash.jsfx</source>
+      </version>
+      <version name="3.3.0" author="Stephen Boyes" time="2024-01-21T21:45:10Z">
+        <changelog><![CDATA[- Adjust RMS for feedback
+- Clean redundant code]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/19935263c68f0ff7742dd591c6c91c1c659b0637/Dynamics/Limit%20Smash.jsfx</source>
       </version>
     </reapack>
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
