@@ -1,4 +1,4 @@
-version:3.2.0
+version:3.3.0
 desc:Limit smash [v3]
 author:Stephen Boyes
 about:
@@ -7,10 +7,11 @@ about:
     Controls...
     Drive Amount        : Increases compression
     Output Gain         : Control the overall level
-    Analogue - Digital  : Analogue=feedback  Digital=feedforward
+    Analogue - Digital  : Analogue=feedback  Digital=feddforward
     Release Time        : Time for gain reduction to return to 0dB after level drops
 changelog:
-  - Slight soft knee
+  - Adjust RMS for feedback
+  - Clean redundant code
 
 
 
@@ -51,13 +52,10 @@ Fc3 = 10.15/srate;
 c = 1-exp(-2*$pi*Fc3);
 Fc4 = 1489.93/srate;
 f4 = 1-exp(-2*$pi*Fc4);
+Fc5 = 10.00/srate;
+fbRMS = 1-exp(-2*$pi*Fc5);
 
-/*
-Fc3_old = 150/srate;
-c_old = 2.718^-2*$pi*Fc3_old;
-Fc4_old = 20000/srate;
-f4_old = 2.718^-2*$pi*Fc4_old;
-*/
+
 
 gr_meter=1;
 gr_meter_decay = exp(1/(1*srate));
@@ -112,11 +110,6 @@ Rspeed = PD.RMS(Rspeed,c);
 spl0 = spl0*inboost;
 
 FF0 = sqrt(FFleft.sta_var_LPfilter(spl0^2,f2,2.618)); //FF atack
-/*
-rect0 = abs(FB0*Feedback + FF0*Feedforward + alog);   //rectify side chain
-GRin0 = max(1,rect0);  //prevent signal falling below one
-peak0 = GRin0-1;  //how far over 1 is the signal
-*/
 input0 = (FB0*Feedback + FF0*Feedforward + alog);
 //k = 8; //controls the knee
 peak0  = (log((exp(8-8*input0)+1)*(exp(8+8*input0)+1))/8)-2;
@@ -134,11 +127,6 @@ peak0 = 1/(peak0+1);  //(invert) gain needed to limit the signal to 1
 spl1 = spl1*inboost;
 
 FF1 = sqrt(FFright.sta_var_LPfilter(spl1^2,f2,2.618)); //FF atack
-/*
-rect1 = abs( FB1*Feedback + FF1*Feedforward + alog);
-GRin1 = max(1,rect1);
-peak1 = GRin1-1;   //how far over 1 is the signal
-*/
 input1 = (FB1*Feedback + FF1*Feedforward + alog);
 //k = 8; //controls the knee
 peak1  = (log((exp(8-8*input1)+1)*(exp(8+8*input1)+1))/8)-2;
@@ -160,11 +148,11 @@ Tpeak1 = (Tpeak+peak1)/2;
 
 
 spl0 = spl0*Tpeak0;  //gain reduction
-FB0 = left.RMS(spl0^2,c); //feedback for comp
+FB0 = left.RMS(spl0^2,fbRMS); //feedback for comp
 
 
 spl1 = spl1*Tpeak1;   //gain reduction
-FB1 = right.RMS(spl1^2,c); //feedback for comp
+FB1 = right.RMS(spl1^2,fbRMS); //feedback for comp
 
 
 
