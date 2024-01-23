@@ -1,0 +1,139 @@
+version:1.0.2pre
+desc:Bass X
+changlog:
+  - use EXP function for better CPU use
+  - change gain ranges
+  - github release
+
+//  Bass X 
+//                                                                
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                            
+//                                                                              
+// 
+
+
+
+slider1:gain_db=0<-48,12,0.1>gain in (dB)
+slider2:dry_out=0<-96,12,0.1>dry (dB)
+slider3:wet_out=0<-96,12,0.1>wet (dB)
+slider4:gain_out=0<-48,12,0.1>gain out (dB)
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+last_dry=10^(dry_out/20);
+last_wet=10^(wet_out/20);
+h = 16;
+
+
+fc = 90;  q = 1/0.62;  f = 2*sin($pi*fc/(srate));
+
+function sta_var_LPfilter(in,f,q)
+instance (hp,in,lp,dly1,dly2)
+(
+hp = in-lp-dly1*q;
+lp = (hp*f)+dly1;
+dly1 = lp;
+lp = lp*f+dly2;
+dly2 = lp;
+lp;  //final output low pass
+);
+
+
+fc = 180;  q = 1/0.62;  f = 2*sin($pi*fc/(srate));
+
+function sta_var_HPfilter(in,f,q)
+instance (hp,in,lp,dly1,dly2)
+(
+hp = in-lp-dly1*q;
+lp = (hp*f)+dly1;
+dly1 = lp;
+out = hp;  //final output high pass
+lp = lp*f+dly2;
+dly2 = lp;
+out;
+);
+
+
+function soft_clip(x)
+(
+(exp(x)-exp(-x))/(exp(x)+exp(-x))
+);
+
+
+
+@slider
+last_gain=10^(gain_db/20);
+last_dry=10^(dry_out/20);
+last_wet=10^(wet_out/20);
+last_out=10^(gain_out/20);
+@block
+
+
+
+
+@sample
+
+spl0 *= last_gain;
+spl1 *= last_gain;
+
+
+dry0 = spl0; dry1 = spl1;
+
+fc = 120;  q = 1/0.7071;  f = 2*sin($pi*fc/(srate));
+spl0 = LP0.sta_var_LPfilter(spl0,f,q);
+spl1 = LP1.sta_var_LPfilter(spl1,f,q);
+
+
+fc = 60;  q = 1/0.7071;  f = 2*sin($pi*fc/(srate));
+ina = spl0*x0;  spl0 = LP2.sta_var_LPfilter(ina,f,q);  x0 = (1/h)*soft_clip(h*spl0)+1;  x0 *= 0.75;
+inb = spl1*x1;  spl1 = LP3.sta_var_LPfilter(inb,f,q);  x1 = (1/h)*soft_clip(h*spl1)+1;  x1 *= 0.75;
+
+
+fc = 120;  q = 1/0.7071;  f = 2*sin($pi*fc/(srate));
+inc = spl0*y0;  spl0 = HP0.sta_var_HPfilter(spl0*y0,f,q);  y0 = (1/h)*soft_clip(h*spl0)+1;  y0 *= 0.25;
+ind = spl1*y1;  spl1 = HP1.sta_var_HPfilter(spl1*y1,f,q);  y1 = (1/h)*soft_clip(h*spl1)+1;  y1 *= 0.25;
+
+
+fc = 120;  q = 1/0.7071;  f = 2*sin($pi*fc/(srate));
+spl0 = HP2.sta_var_HPfilter(inc,f,q);
+spl1 = HP3.sta_var_HPfilter(ind,f,q);
+
+
+spl0 = spl0*24;  spl0 = (1/h)*soft_clip(h*spl0)+spl0*0.1;  spl0 = spl0*0.8;
+spl1 = spl1*24;  spl1 = (1/h)*soft_clip(h*spl1)+spl1*0.1;  spl1 = spl1*0.8;
+
+
+fc = 240;  q = 1/0.8;  f = 2*sin($pi*fc/(srate));
+spl0 = LP4.sta_var_LPfilter(spl0,f,q);
+spl1 = LP5.sta_var_LPfilter(spl1,f,q);
+
+
+dry0 *= last_dry;
+dry1 *= last_dry;
+
+spl0 *= last_wet;
+spl1 *= last_wet;
+
+spl0 = dry0+spl0;
+spl1 = dry1+spl1;
+
+spl0 *= last_out;
+spl1 *= last_out;
