@@ -15,7 +15,7 @@ about:
   Range
   .Original
   .Wide (slew clipper operates inside a compander)
-changlog:
+changelog:
   - Reduce CPU use
   - Github release
 
