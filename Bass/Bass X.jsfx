@@ -1,5 +1,6 @@
 version:1.0.2pre
 desc:Bass X
+author:Stephen Boyes
 changlog:
   - use EXP function for better CPU use
   - change gain ranges
