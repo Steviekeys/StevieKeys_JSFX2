@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="301dcdf9036a5435d78cc30c58ffbe744c57fbf4">
+<index version="1" name="StevieKeys JSFX" commit="35559fd83aa50b4aef09e89bddbe6adf7f959351">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Bass enhancer\par}
+}
+]]></description>
+      </metadata>
       <version name="1.0.2pre" time="2024-01-23T18:11:44Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/301dcdf9036a5435d78cc30c58ffbe744c57fbf4/Bass/Bass%20X.jsfx</source>
+      </version>
+      <version name="1.1.0" author="Stephen Boyes" time="2024-01-24T22:39:56Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/35559fd83aa50b4aef09e89bddbe6adf7f959351/Bass/Bass%20X.jsfx</source>
       </version>
     </reapack>
   </category>
