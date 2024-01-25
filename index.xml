@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2587a697ecdb10af774ab6661ed57effb4b2498c">
+<index version="1" name="StevieKeys JSFX" commit="5bc7c416bafc39dc61e110ece2f8672668b74252">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -31,6 +31,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Echo Live Vocal In Stereo (ELVIS)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Easy to use slapback delay\par}
 }
 ]]></description>
       </metadata>
