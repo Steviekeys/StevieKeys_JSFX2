@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="35559fd83aa50b4aef09e89bddbe6adf7f959351">
+<index version="1" name="StevieKeys JSFX" commit="a12941c8027d72d394c3afb361e6ef76062ed9e6">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -8,6 +8,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Bass enhancer\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Add harmonics to low frequency sounds to improve percieved bass even on small speakers. Frequencies bellow the Freq slider setting are processed and are then filtered to the harmonic bandwidth amount.\par}
 }
 ]]></description>
       </metadata>
@@ -16,6 +17,9 @@
       </version>
       <version name="1.1.0" author="Stephen Boyes" time="2024-01-24T22:39:56Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/35559fd83aa50b4aef09e89bddbe6adf7f959351/Bass/Bass%20X.jsfx</source>
+      </version>
+      <version name="1.1.1" author="Stephen Boyes" time="2024-01-25T17:42:39Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a12941c8027d72d394c3afb361e6ef76062ed9e6/Bass/Bass%20X.jsfx</source>
       </version>
     </reapack>
   </category>
