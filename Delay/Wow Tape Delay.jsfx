@@ -1,0 +1,188 @@
+version:1.0.1
+desc:Wow Tape Delay
+povides:wowtapedelay/cookdsp.jsfx-inc
+about:
+  # Wow Tape Delay
+  
+changelog:
+  - scale DC filter
+  - 
+  
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.   
+
+
+slider1:500<2,1000>Delay Time (ms)
+slider2:0.5<0,1>Feedback
+
+slider4:0.5<0,1>head2 amount
+slider5:1.5<1.02,1.98>head2 time ratio
+
+slider7:0<-1,1>input panner
+slider8:5<1,10>wow
+
+slider12:0.4<0,1>mix
+
+
+import cookdsp.jsfx-inc
+
+@init
+Function limiter (input)
+instance (peak,oldpeak,input)
+(
+Rspeed = exp(-1/(30 * 0.001 * srate));
+rect = abs(input);   //rectify side chain
+GRin = max(1,rect);  //prevent signal falling below one
+peak = GRin-1;  //how far over 1 is the signal
+oldpeak = oldpeak*Rspeed; // release
+peak = max(peak,oldpeak); // limit
+oldpeak=peak; //store last value for release
+input/(peak+1)  //(invert) gain needed to limit the signal to 1
+);
+
+function svf_gen(v0)
+instance (ic1eq,ic2eq,v1,v2,v3,a1,a2,a3,m0,m1,m2)
+(
+v3 = v0-ic2eq;
+v1 = a1*ic1eq+a2*v3;
+v2 = ic2eq+a2*ic1eq+a3*v3;
+ic1eq = 2*v1-ic1eq;
+ic2eq = 2*v2-ic2eq;
+m0*v0+m1*v1+m2*v2
+);
+
+//lowpass coef
+function svf_low_set(cutoff,q)
+instance (a1,a2,a3,m0,m1,m2)
+(
+g = tan($pi*cutoff/srate);
+k = 1/q;
+a1 = 1/(1+g*(g+k));
+a2 = g*a1;
+a3 = g*a2;
+m0 = 0;
+m1 = 0;
+m2 = 1;
+);
+
+// set filters
+tol1 = rand(3);  tol2 = rand(3);  tol3 = rand(5);  tol4 = rand(5);
+sam.svf_low_set(2.1,0.12);
+lef.svf_low_set(14200+tol1,0.3502);
+rig.svf_low_set(14200+tol2,0.3516);
+lhe.svf_low_set(14000+tol3,0.3537);
+rhe.svf_low_set(14000+tol4,0.3504);
+wow.svf_low_set(12,1.5);
+dri.svf_low_set(0.1,7);
+flu.svf_low_set(105,7);
+
+    last_samps = slider1 * 0.001 * srate;
+    last_feedb = -slider2*1.4*(1-slider4*0.3);
+    last_head2 = slider5*1.012;
+    
+    // two second stereo delay line
+    d0.delay(2*srate);
+    d1.delay(2*srate);
+    d2.delay(3*srate);
+    d3.delay(3*srate);
+
+azim = srate/46000;  azim2 = azim*0.618;
+dcc = exp(-2*$pi*(7/srate));
+
+@slider
+    // delay time in samples
+    next_samps = slider1 * 0.001 * srate;
+    next_feedb = -slider2*1.4*(1-slider4*0.3);
+    
+    h2amount = slider4;
+    next_head2 = slider5*1.012;
+    
+    dmono = slider5;
+    pingpong = slider6;
+    
+    wet = slider12;  wet = wet^(1/4);
+    dry = 1-wet;    dry = dry^(1/4);
+@block
+d_samps = (next_samps - last_samps)/samplesblock;
+d_feedb = (next_feedb - last_feedb)/samplesblock;
+d_head2 = (next_head2 - last_head2)/samplesblock;
+
+@sample
+samps = last_samps;
+head2 = last_head2;
+wow = (rand(32)-rand(32))*slider8;  wow = wow.svf_gen(wow);
+dri = rand(70)-rand(70);  dri = dri.svf_gen(dri);
+wow_flut_drift = flu.svf_gen(wow+dri);
+last_samps += d_samps;
+last_head2 += d_head2;
+samps = sam.svf_gen(samps);
+samps = max(10,samps);
+  
+
+// read with cubic interpolation
+val0 = d0.delay_read3(samps+wow_flut_drift+wow-azim);  
+val1 = d1.delay_read3(samps+wow_flut_drift-wow+azim);  
+val2 = d2.delay_read3(samps*head2+dri+wow_flut_drift-azim2);  
+val3 = d3.delay_read3(samps*head2+dri+wow_flut_drift+azim2);  
+
+// noise?
+val0 += 0.000002*rand(1);  val1 += 0.000001*rand(1);
+val2 += 0.000002*rand(1);  val3 += 0.000001*rand(1);
+
+// filter
+val0 = lef.svf_gen(val0*dist0);  dist0 = 1 + 0.01*val0;
+val1 = rig.svf_gen(val1*dist1);  dist1 = 1 + 0.01*val1;
+val2 = lhe.svf_gen(val2*dist2);  dist2 = 1 - 0.01*val2;
+val3 = rhe.svf_gen(val3*dist3);  dist3 = 1 - 0.01*val3;
+
+// saturate delay
+val0 = one.limiter(3*val0);  val0 = (3*val0 - val0^3)*0.1; 
+val1 = two.limiter(3*val1);  val1 = (3*val1 - val1^3)*0.1;
+val2 = three.limiter(2.5*val2);  val2 = (3*val2 - val2^3)*0.1*h2amount; 
+val3 = four.limiter(2.5*val3);  val3 = (3*val3 - val3^3)*0.1*h2amount;
+
+// remove DC
+otm1 = dcc*otm1 + val0 - itm1; itm1=val0; val0=otm1;
+otm2 = dcc*otm2 + val1 - itm2; itm2=val1; val1=otm2;
+otm3 = dcc*otm3 + val2 - itm3; itm3=val2; val2=otm3;
+otm4 = dcc*otm4 + val3 - itm4; itm4=val3; val3=otm4;
+
+// input pan settings
+Slider7 ? (
+  Slider7 > 0 ? (
+  inp0 = spl0*(1-Slider7);
+  inp1 = spl1*(1-Slider7*0.5) + spl0*Slider7*0.5;
+    ):(
+    inp0 = spl0*(1+Slider7*0.5) - spl1*Slider7*0.5;
+    inp1 = spl1*(1+Slider7);
+    );
+  ):(
+  // Dual mono
+  inp0 = Spl0;
+  inp1 = Spl1;
+ );
+sm = 0.8; // self modulate
+xm = 0.01; //cross modulate
+
+
+// write values in delay lines
+d0.delay_write(inp0 + (val0*sm + val1*xm + val2*sm + val3*xm)*last_feedb);
+d1.delay_write(inp1 + (val0*xm + val1*sm + val2*xm + val3*sm)*last_feedb);
+d2.delay_write(inp1 + (val0*sm + val1*xm + val2*sm + val3*xm)*last_feedb);
+d3.delay_write(inp0 + (val0*xm + val1*sm + val2*xm + val3*sm)*last_feedb);
+  last_feedb += d_feedb;   
+    
+    // sum and output
+   spl0 = (dry*spl0 + wet*val0 + wet*val2);
+   spl1 = (dry*spl1 + wet*val1 + wet*val3);
