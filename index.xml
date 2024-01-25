@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="a12941c8027d72d394c3afb361e6ef76062ed9e6">
+<index version="1" name="StevieKeys JSFX" commit="2587a697ecdb10af774ab6661ed57effb4b2498c">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -20,6 +20,22 @@
       </version>
       <version name="1.1.1" author="Stephen Boyes" time="2024-01-25T17:42:39Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a12941c8027d72d394c3afb361e6ef76062ed9e6/Bass/Bass%20X.jsfx</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Delay">
+    <reapack name="Echo Live Vocal In Stereo.jsfx" type="effect" desc="Echo Live Vocal In Stereo">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Echo Live Vocal In Stereo (ELVIS)\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.1.0" time="2024-01-25T21:17:46Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2587a697ecdb10af774ab6661ed57effb4b2498c/Delay/Echo%20Live%20Vocal%20In%20Stereo.jsfx</source>
       </version>
     </reapack>
   </category>
