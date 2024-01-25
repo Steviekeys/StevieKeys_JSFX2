@@ -1,11 +1,13 @@
-version:1.1.0
+version:1.1.1
 desc:Bass X
 author:Stephen Boyes
 about:
   # Bass enhancer
+  Add harmonics to low frequency sounds to improve percieved bass even on small speakers.
+  Frequencies bellow the Freq slider setting are processed and are then filtered to the harmonic bandwidth amount.
 changlog:
-  - add frequency controls
-  - change gain ranges
+  - add (Hz) to Freq slider
+  - more, about info added
 
 //  Bass X 
 //                                                                
@@ -26,12 +28,11 @@ changlog:
 // 
 
 
-
 slider1:gain_db=0<-24,12,0.1>gain in (dB)
 slider2:dry_out=0<-96,12,0.1>dry (dB)
 slider3:wet_out=0<-96,12,0.1>Harmonics
 slider4:gain_out=0<-24,12,0.1>gain out (dB)
-slider5:frequency=120<60,180,2>Freq
+slider5:frequency=120<60,180,2>Freq (Hz)
 slider6:harmband=1<1,2,0.05>harmonics bandwidth (octave)
 
 
