@@ -2,7 +2,7 @@ version:1.1.0
 desc:Echo Live Vocal In Stereo
 about:
   # Echo Live Vocal In Stereo (ELVIS)
-  
+  Easy to use slapback delay
 changelog:
   - DC blocker
   - reduce CPU
