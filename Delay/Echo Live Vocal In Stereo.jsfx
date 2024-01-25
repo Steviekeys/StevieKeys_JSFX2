@@ -1,0 +1,211 @@
+version:1.1.0
+desc:Echo Live Vocal In Stereo
+about:
+  # Echo Live Vocal In Stereo (ELVIS)
+  
+changelog:
+  - DC blocker
+  - reduce CPU
+  - fix coeficient calculation
+  - github release
+  
+/*******************************************************************************
+*  2023    Stephen Boyes                                                       *
+*  This program is free software.                                              *
+*                                                                              *
+*                                                                              * 
+*                                                                              *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
+*                                                                              *
+*******************************************************************************/
+
+
+
+slider3:0.3<0,1,0.01>Amount
+slider4:1<0,1.5,0.01>Width
+slider5:1<0,1,1{off,on}>Dry Mix
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+
+@init
+ext_tail_size = -1;
+
+
+
+buf0 = 100000;
+buf1 = 200000;
+
+function db2ratio(db) ( 10^(db * 0.05); );
+
+function delay_set(buffer,ms)
+ instance(buf,size,frac,pos)
+(
+  buf = buffer;
+  size = srate * ms * 0.001;
+  frac = size - floor(size);
+  size = floor(size);
+);
+
+function delay(in)
+ instance(pos,buf,old,out,size,frac)
+(
+  out = buf[pos];
+  out = out*(1-frac) + old*frac;
+  old = buf[pos];
+  buf[pos] = in;
+  pos += 1;
+  pos >= size ? pos -= size;
+  out;
+);
+
+
+Ldelaytime = 80;
+Rdelaytime = 110;
+
+
+delay0.delay_set(buf0,Ldelaytime);
+delay1.delay_set(buf1,Rdelaytime);
+
+que = 0.5;
+cut1 = 11000;
+cut1L = cut1+rand(50);
+cut1R = cut1+rand(50);
+TolerL = rand(16);
+TolerR = rand(16);
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+
+function svf_all(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -2*k;
+ m2 = -0;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function slew(in,drive)
+instance(lastsamout,diff,out)
+(
+x = drive*in-lastsamout;  //difference from last sample
+diff = (exp(x)-exp(-x))/(exp(x)+exp(-x));  //distort slew rate
+out = lastsamout+diff;
+lastsamout = out;
+out = out*(1/drive);
+out
+);
+
+function RMS_compressor(input,ratio,threshold,Release,Averaging_time)
+instance (GRop,LastGR,rms,b,square,GRin)
+(
+Rspeed = exp(-1/(Release * 0.001 * srate));
+RMS_aver = 1/(Averaging_time*0.001);
+Fc = RMS_aver/srate;
+b = 1 - exp(-2*$pi*Fc);
+
+square = input^2;
+mean += b*(square-mean);
+rms = sqrt(mean);
+
+GRin = 20*log10(rms);
+ratio = (ratio-1)/ratio;
+GRin = ratio*(max(GRin,threshold)-threshold);
+GRop = 10^(GRin*0.05);
+
+lastGR = LastGR*Rspeed;
+GRop = max(GRop,LastGR);
+LastGR = GRop;
+GRop = 1/(GRop);
+
+input*GRop
+);
+
+function DCfilter(in)
+instance(in,y,Fc,b)
+(
+Fc = 20/srate;
+b = 1 - exp(-2*$pi*Fc);
+y += b*(in-y);
+in-y
+);
+
+@slider
+
+c = slider3;
+wide = (0.5*slider4)+0.5;
+d = slider5;
+
+@block
+
+@sample
+ noise1 = rand(1)-0.5;
+ noise2 = rand(1)-0.5;
+ noise3 = rand(1)-0.5;
+ noise4 = rand(1)-0.5;
+
+slap0 = delay0.delay(spl0);   slap1 = delay1.delay(spl1); // delay
+
+wow = 0.0011*flut.svf_lowp(noise1,36,1.4);
+wow += 0.0006*wow1.svf_lowp(noise2,0.618,2.2);
+wow += 0.0008*wow2.svf_lowp(noise3,2.618,2.7);
+wow = 1+(3*scrape.svf_lowp(wow,639,12));
+cut1L = max(20,min(20000,cut1L*wow));
+cut1R = max(20,min(20000,cut1R*wow));
+wow2 = 2*wow3.svf_lowp(noise4,30,0.7071);
+wow2 = 1+0.001*wow4.svf_lowp(wow2,125,7);
+que = que*wow2;
+
+slap0 = slap0-0.0002*(tubeL.svf_lowp(slap0,3500+tolerL,1)^2); slap1 = slap1-0.0002*(tubeR.svf_lowp(slap1,3500+tolerR,1)^2);
+slap0 += 0.00000001*noise2; slap1 += 0.00000001*noise3;
+slap0 = slap0-0.32*threeL; slap1 = slap1-0.32*threeR;
+slap0 = L.svf_all(slap0,cut1L,que);
+slap1 = R.svf_all(slap1,cut1R,que);
+threeL = bumpL.svf_lowp(0.64*slap0,500,0.4041)^3; threeR = bumpR.svf_lowp(0.64*slap1,500,0.4041)^3;  // low frequency harmonics
+TgainL = 8*threeL;  TgainR = 8*threeR;
+threeL = LH.RMS_compressor(12*threeL,1.2,-78,56,44);  threeR = RH.RMS_compressor(12*threeR,1.2,-78,56,44);
+
+slap0 = Left.slew(slap0,1.75);  slap1 = Right.slew(slap1,1.75);
+
+slap0 = slap0*wide+slap1*(1-wide);  slap1 = slap1*wide+slap0*(1-wide);
+
+//DC fliter
+slap0 = outleft.DCfilter(slap0);  slap1 = outright.DCfilter(slap1);
+
+spl0= slap0*c+spl0*d;   spl1= slap1*c+spl1*d; //amount
