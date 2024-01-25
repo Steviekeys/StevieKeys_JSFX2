@@ -17,5 +17,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro Distortion
 * Transient Softener
 * Bass X
+* Echo Live In Stereo
+* Wow Tape Delay
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
