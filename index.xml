@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="0800a6097e7685d46d293a071d6b5c8c9b78f2e7">
+<index version="1" name="StevieKeys JSFX" commit="e8a1f5286e7f7ca874e6d4ec3da070b66a76ec1e">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -37,6 +37,20 @@
       </metadata>
       <version name="1.1.0" time="2024-01-25T21:17:46Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2587a697ecdb10af774ab6661ed57effb4b2498c/Delay/Echo%20Live%20Vocal%20In%20Stereo.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Wow Tape Delay.jsfx" type="effect" desc="Wow Tape Delay">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Wow Tape Delay\par}
+}
+]]></description>
+      </metadata>
+      <version name="1.0.1" time="2024-01-25T22:23:17Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/e8a1f5286e7f7ca874e6d4ec3da070b66a76ec1e/Delay/Wow%20Tape%20Delay.jsfx</source>
       </version>
     </reapack>
   </category>
@@ -358,7 +372,9 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Limit Smash\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Distortion\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Bass X\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Bass X\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Echo Live In Stereo\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wow Tape Delay\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
