@@ -1,0 +1,332 @@
+version:2.0.1
+desc:Big Bad Delay
+provides:bigbaddelay/*
+about:
+  # Big Bad Delay
+  LO-FI sampling analogue delay (bucket brigade)
+cangelog:
+  - github release
+
+//  The MIT License (MIT)
+//Copyright © 2023 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+
+
+import cookdsp.jsfx-inc
+//import StevieKeys_JSFX2/Delays/cookdsp.jsfx-inc
+
+
+slider1:200<20,600>Delay Time (mS)
+slider2:1<0,2,1{512,1024,2048}>BBD size
+
+slider5:0<0,1,0.01>feedback
+
+slider7:0<0,10,0.1>Depth
+slider8:5<2,8,0.1>Rate
+
+slider10:0.5<0,1,0.01>wet
+slider11:1<0,1,0.01>dry
+
+
+@init
+last_samps = slider1 * 0.001 * srate;
+last_delaytime = slider1 * 0.001;
+last_feedb = slider5*1.25;
+last_wet = slider10;
+last_dry = slider11;
+DCcoef = exp(-2*$pi*(7/srate));
+
+// oversample
+// Copyright (C) 2015-2020 Theo Niessink <theo@taletn.com>
+// This work is free. You can redistribute it and/or modify it under the
+// terms of the Do What The Fuck You Want To Public License, Version 2,
+// as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+
+function os_os2()
+  instance(y6, y5, y4, y3, y2, y1, y0)
+(
+  y6 = y4; y5 = y3; y4 = y2; y3 = y1; y2 = y0;
+);
+
+function os_up2(sample)
+  instance(x3, x2, x1, x0, y1, y0)
+(
+  x3 = x2; x2 = x1; x1 = x0;
+  x0 = sample;
+
+  this.os_os2();
+
+  y1 = (x0 + x3) * -0.045400238948626045 + (x1 + x2) * 0.54759060135404221;
+  y0 = x1 * 0.99561927518916766;
+);
+
+function os_down2()
+  instance(y6, y4, y3, y2, y0)
+(
+  (y0 + y6) * -0.022700119474313023 + (y2 + y4) * 0.27379530067702111 + y3 * 0.49780963759458383;
+);
+
+function os_reset2()
+  instance(x2, x1, x0, y4, y3, y2, y1, y0)
+(
+  x2 = x1 = x0 =
+  y4 = y3 = y2 = y1 = y0 = 0;
+);
+
+
+// Initializes the Hilbert transform
+zero.hil.hilbert();
+one.hil.hilbert();
+
+// one second stereo delay line
+  d0.delay(1*srate);
+  d1.delay(1*srate);
+
+function svf_gen(v0)
+instance (ic1eq,ic2eq,v1,v2,v3,a1,a2,a3,m0,m1,m2)
+(
+v3 = v0-ic2eq;
+v1 = a1*ic1eq+a2*v3;
+v2 = ic2eq+a2*ic1eq+a3*v3;
+ic1eq = 2*v1-ic1eq;
+ic2eq = 2*v2-ic2eq;
+m0*v0+m1*v1+m2*v2
+);
+
+//lowpass coef
+function svf_low_set(cutoff,q)
+instance (a1,a2,a3,m0,m1,m2)
+(
+g = tan($pi*cutoff/srate);
+k = 1/q;
+a1 = 1/(1+g*(g+k));
+a2 = g*a1;
+a3 = g*a2;
+m0 = 0;
+m1 = 0;
+m2 = 1;
+);
+
+//Bell coef
+function svf_bell_set(cutoff,q,bellgain_dB)
+instance (a,a1,a2,a3,m0,m1,m2)
+(
+a = 10^(bellgain_dB/40);
+g = tan($pi*cutoff/srate);
+k = 1/(q*a);
+a1 = 1/(1+g*(g+k));
+a2 = g*a1;
+a3 = g*a2;
+m0 = 1;
+m1 = k*(a*a-1);
+m2 = 0;
+);
+
+// lowpass
+function lowpass(in,aLP)
+instance(aLP,y)
+(
+y += aLP*(in-y);
+y
+);
+
+cFc = 35/srate; cy = 1-cos(2*$pi*cFc); time_coef = -cy+sqrt(cy^2+2*cy);
+
+function compressor(inout,threshold,time_coef)
+instance (comp_gain,rec,thresh,inout)
+(
+thresh = 2^(threshold/6);
+inout = inout*(1-comp_gain);
+rec = 1.414*abs(inout);
+rec = max(thresh,rec)-thresh;
+comp_gain += time_coef*(rec-comp_gain);
+inout
+);
+
+function expander(inout,threshold,time_coef)
+instance (exp_gain,exp_rec,thresh,inout)
+(
+thresh = 2^(threshold/6);
+exp_rec = 1.414*abs(inout);
+exp_rec = (max(thresh,exp_rec)-thresh)*0.5;
+exp_gain += time_coef*(exp_rec-exp_gain);
+inout = inout*(1+exp_gain);
+inout
+);
+
+
+@slider
+next_samps = slider1 * 0.001 * srate;
+next_delaytime = slider1 * 0.001;
+
+slider2 == 0 ? (
+BBDsize = 512;
+);
+slider2 == 1 ? (
+BBDsize = 1024;
+);
+slider2 == 2 ? (
+BBDsize = 2048;
+);
+
+next_feedb = slider5*1.25;
+Depth = slider7*3;
+Rate = slider8;
+next_wet = slider10;
+next_dry = slider11;
+
+@block
+d_samps = (next_samps - last_samps)/samplesblock;
+d_delaytime = (next_delaytime - last_delaytime)/samplesblock;
+d_feedb = (next_feedb - last_feedb)/samplesblock;
+d_wet = (next_wet - last_wet)/samplesblock;
+d_dry = (next_dry - last_dry)/samplesblock;
+
+@sample
+samps = last_samps;
+fake_samplerate = (2*BBDsize)/last_delaytime;  fake_samplerate = min(fake_samplerate,srate-900);
+niquest_frequency = fake_samplerate/2;
+third_samplerate_filters = fake_samplerate/3;
+adj = 2*$pi*niquest_frequency/srate;
+adj2 = 2*$pi*Rate/srate;
+Fc = (fake_samplerate)/srate; y = 1-cos(2*$pi*Fc); aLP = -y+sqrt(y^2+2*y);  aLP = 1-aLP;
+last_samps += d_samps;
+last_delaytime += d_delaytime;
+
+// tone gen for fake aliases/images
+rtone = sin(pos);
+itone = cos(pos);
+pos=pos+adj;
+(pos >= 2.0*$pi) ? pos -= 2.0*$pi;
+
+// LFO hello
+LFO = sin(pos2);
+pos2=pos2+adj2;
+(pos2 >= 2.0*$pi) ? pos2 -= 2.0*$pi;
+
+// set filter coefs
+in0.svf_low_set(third_samplerate_filters*1.1,1.22);
+in1.svf_low_set(third_samplerate_filters*1.1,1.22);
+out0.svf_low_set(third_samplerate_filters*0.84,1.2);
+out1.svf_low_set(third_samplerate_filters*0.84,1.2);
+cutr0.svf_bell_set(niquest_frequency,1.5,-70);
+cutr1.svf_bell_set(niquest_frequency,1.5,-70);
+cuti0.svf_bell_set(niquest_frequency,1.5,-70);
+cuti1.svf_bell_set(niquest_frequency,1.5,-70);
+
+// read with cubic interpolation
+dla0 = d0.delay_read3(samps+LFO*Depth);
+dla1 = d1.delay_read3(samps+LFO*Depth);  
+
+// compressor
+dla0 = left.compressor(dla0,-60,time_coef)*2;
+dla1 = righ.compressor(dla1,-60,time_coef)*2;
+
+// lowpass 1/3 samplerate input filter
+dla0 = in0.svf_gen(dla0);  dla0 = spin0.lowpass(dla0,aLP);
+dla1 = in1.svf_gen(dla1);  dla1 = spin1.lowpass(dla1,aLP);
+
+// add BBD noise
+noise = (rand(1)-rand(1))*(srate/48000)*(2^-14);
+dla0 += noise;
+dla1 += noise;
+
+// oversample
+osL.os_up2(dla0);
+osR.os_up2(dla1);
+
+// distortion
+osL.y1 = osL.y1+0.06*osL.y1^2;
+osL.y0 = osL.y0+0.06*osL.y0^2;
+osR.y1 = osR.y1+0.06*osR.y1^2;
+osR.y0 = osR.y0+0.06*osR.y0^2;
+
+// downsample
+dla0 = osL.os_down2();
+dla1 = osR.os_down2();
+
+// Hilbert transform
+zero.hil.hilbert_do(dla0);
+one.hil.hilbert_do(dla1);
+
+// Outputs
+r0 = zero.hil.real;
+i0 = zero.hil.imag;
+r1 = one.hil.real;
+i1 = one.hil.imag;
+
+// negitive frequency shift, flip low spectrum
+//real
+rdla0 = r0*rtone+i0*itone;
+rdla1 = r1*rtone+i1*itone;
+rdla0 = cutr0.svf_gen(rdla0);
+rdla1 = cutr1.svf_gen(rdla1);
+//imaginary
+idla0 = i0*rtone-r0*itone;
+idla1 = i1*rtone-r1*itone;
+idla0 = cuti0.svf_gen(idla0);
+idla1 = cuti1.svf_gen(idla1);
+
+
+// positive frequency shift
+// real? a*c-b*d
+lowres0 = rdla0*itone-idla0*rtone;
+lowres1 = rdla1*itone-idla1*rtone;
+
+// lowpass reconstrution filter
+lowres0 = out0.svf_gen(lowres0+dla0);  lowres0 = spout0.lowpass(lowres0,aLP);
+lowres1 = out1.svf_gen(lowres1+dla1);  lowres1 = spout1.lowpass(lowres1,aLP);
+
+// expander
+lowres0 = BBD0.expander(lowres0,-52,time_coef);
+lowres1 = BBD1.expander(lowres1,-52,time_coef);
+
+// DC blocker
+otm1 = DCcoef*otm1 + lowres0 - itm1; itm1=lowres0; lowres0=otm1;
+otm2 = DCcoef*otm2 + lowres1 - itm2; itm2=lowres1; lowres1=otm2;
+
+// oversample
+osLL.os_up2(lowres0);  osLLL.os_up2(lowres0);
+osRR.os_up2(lowres1);  osRRR.os_up2(lowres1);
+
+// feedbackdistortion
+osLL.y1 = max(-1,min(1,osLL.y1))*last_feedb;  osLL.y1 = (3*osLL.y1-osLL.y1^3)*0.1;
+osLL.y0 = max(-1,min(1,osLL.y0))*last_feedb;  osLL.y0 = (3*osLL.y0-osLL.y0^3)*0.1;
+osRR.y1 = max(-1,min(1,osRR.y1))*last_feedb;  osRR.y1 = (3*osRR.y1-osRR.y1^3)*0.1;
+osRR.y0 = max(-1,min(1,osRR.y0))*last_feedb;  osRR.y0 = (3*osRR.y0-osRR.y0^3)*0.1;
+
+// downsample
+feedb0 = osLL.os_down2();
+feedb1 = osRR.os_down2();
+
+// write values in delay lines
+d0.delay_write(spl0 - feedb0);
+d1.delay_write(spl1 - feedb1);
+
+// dry output
+spl0 = spl0*last_dry;
+spl1 = spl1*last_dry;
+
+// clip output
+osLLL.y1 = max(-0.6,min(0.6,osLLL.y1*last_wet));
+osLLL.y0 = max(-0.6,min(0.6,osLLL.y0*last_wet));
+osRRR.y1 = max(-0.6,min(0.6,osRRR.y1*last_wet));
+osRRR.y0 = max(-0.6,min(0.6,osRRR.y0*last_wet));
+
+// plus wet output
+spl0 += osLLL.os_down2();
+spl1 += osRRR.os_down2();
+
+last_feedb += d_feedb;
+last_wet += d_wet;
+last_dry += d_dry;
