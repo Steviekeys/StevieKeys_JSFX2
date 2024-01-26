@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="e8a1f5286e7f7ca874e6d4ec3da070b66a76ec1e">
+<index version="1" name="StevieKeys JSFX" commit="ba976fe170d8aa18a8ea5f4417e1ff7c387b0c11">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -51,6 +51,9 @@
       </metadata>
       <version name="1.0.1" time="2024-01-25T22:23:17Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/e8a1f5286e7f7ca874e6d4ec3da070b66a76ec1e/Delay/Wow%20Tape%20Delay.jsfx</source>
+      </version>
+      <version name="1.1.0" time="2024-01-26T16:42:51Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/ba976fe170d8aa18a8ea5f4417e1ff7c387b0c11/Delay/Wow%20Tape%20Delay.jsfx</source>
       </version>
     </reapack>
   </category>
