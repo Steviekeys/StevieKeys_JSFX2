@@ -1,12 +1,12 @@
-version:1.0.1
+version:1.1.0
 desc:Wow Tape Delay
-povides:wowtapedelay/cookdsp.jsfx-inc
+povides:wowtapedelay/*
 about:
   # Wow Tape Delay
   
 changelog:
-  - scale DC filter
-  - 
+  - fix download
+
   
 //  The MIT License (MIT)
 //Copyright © 2023 Stephen Boyes
