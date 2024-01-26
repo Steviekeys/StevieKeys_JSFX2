@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="ba976fe170d8aa18a8ea5f4417e1ff7c387b0c11">
+<index version="1" name="StevieKeys JSFX" commit="0f01d45d0676fa50193c83178d804c5bbf4a6f28">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -24,6 +24,22 @@
     </reapack>
   </category>
   <category name="Delay">
+    <reapack name="Big Bad Delay.jsfx" type="effect" desc="Big Bad Delay">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Big Bad Delay\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 LO-FI sampling analogue delay (bucket brigade)\par}
+}
+]]></description>
+      </metadata>
+      <version name="2.0.1" time="2024-01-26T16:53:27Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0f01d45d0676fa50193c83178d804c5bbf4a6f28/Delay/Big%20Bad%20Delay.jsfx</source>
+        <source file="bigbaddelay/cookdsp.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0f01d45d0676fa50193c83178d804c5bbf4a6f28/Delay/bigbaddelay/cookdsp.jsfx-inc</source>
+      </version>
+    </reapack>
     <reapack name="Echo Live Vocal In Stereo.jsfx" type="effect" desc="Echo Live Vocal In Stereo">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
