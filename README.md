@@ -19,5 +19,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Bass X
 * Echo Live In Stereo
 * Wow Tape Delay
+* Big Bad Delay
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
