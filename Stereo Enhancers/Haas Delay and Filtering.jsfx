@@ -1,0 +1,152 @@
+version:3.0.0pre
+desc:haas delay with filter
+author:Stephen Boyes
+
+// 2022 Stephen Boyes
+//
+// This program is free software.                                              
+//
+//  v 1.1  Change delay range and
+//  step size
+//  v 1.2  Change LP filter for 2x
+//  samplerate. Added new 4x rate
+//  LP filter
+//  v 1.3  bugfix for zero delay time
+// bug.
+//
+//  v 2.0  New delay fine control.
+//  v 3.0.0  new filter code
+//  This program is distributed in the
+//  hope that it will be useful,
+//  but WITHOUT ANY WARRANTY;
+//  without even the implied
+//  warranty of
+//  MERCHANTABILITY or FITNESS
+//  FOR A PARTICULAR PURPOSE.
+
+
+
+slider1:15<0,30,1>Delay (mS)
+slider2:0<-1,1,0.05>Delay fine (mS)
+slider3:-10<-28,-2,0.2>Amount (dB)
+slider4:200<50,800,2>HP Adjust
+slider5:8000<4000,16000,10>LP Adjust
+slider6:0<0,2,1{Off,Delay Left,Delay Right}>Effect Mode
+slider7:0<0,1,1{Normal,Invert}>Haas Polarity
+slider8:1<0,1,1{Off,On}>High/Low Pass
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+
+@init
+ext_tail_size = -1; //automatic silence detection
+
+SD1=1000/srate; // delay time of 1 sample for bugfix;
+
+buf0 = 100000;
+buf1 = 200000;
+
+function db2ratio(db) ( 10^(db * 0.05); );
+
+function delay_set(buffer,ms)
+ instance(buf,size,frac,pos)
+(
+  buf = buffer;
+  size = srate * ms * 0.001;
+  frac = size - floor(size);
+  size = floor(size);
+);
+
+function delay(in)
+ instance(pos,buf,old,out,size,frac)
+(
+  out = buf[pos];
+  out = out*(1-frac) + old*frac;
+  old = buf[pos];
+  buf[pos] = in;
+  pos += 1;
+  pos >= size ? pos -= size;
+  out;
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_highp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+@slider
+delaytime=slider1+slider2;
+
+delay0.delay_set(buf0,max(delaytime,SD1));
+delay1.delay_set(buf1,max(delaytime,SD1));
+
+wetGain  =2 ^ (slider3/6);
+
+FXonL = slider6 & 1 ? 1 : 0;
+FXonR = slider6 & 2 ? 1 : 0;
+//outputs value 1 for the channel that wants to be effected
+
+InvPol = slider7 & 1 ? -1 : 1;
+//select invert code
+
+HPLPswitch=slider8;
+
+
+@sample
+
+FXonL ? (
+  spl0 = delay0.delay(spl0) * wetGain * InvPol;   // delay, polarity inversion and gain (left)
+
+  HPLPswitch ? (
+    spl0=lefthi.svf_highp(spl0,slider4,0.57735);
+    spl0=leftlo.svf_lowp(spl0,slider5,0.57735);
+  ) ;
+) ;
+
+
+FXonR ? (
+  spl1 = delay1.delay(spl1) * wetGain * InvPol; // delay, polarity inversion and gain (right)
+
+  HPLPswitch ? (
+    spl1=righhi.svf_highp(spl1,slider4,0.57735);
+    spl1=righlo.svf_lowp(spl1,slider5,0.57735);
+  ) ;
+) ;
+
+
