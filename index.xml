@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="88b88309cb73634102ba59bfee992bdffc007df2">
+<index version="1" name="StevieKeys JSFX" commit="c074a1a2bffc40a953131b9626494bce952e5306">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -120,6 +120,11 @@
       <version name="2.0.0" author="Stephen Boyes" time="2024-01-17T10:49:41Z">
         <changelog><![CDATA[- Use exp() instead of $e^]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/dd57ec9d139ce81d702301fc25738b91308fb7e7/Distortion/Retro%20Fuzz.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Retro Overdrive.jsfx" type="effect">
+      <version name="1.2.0pre" time="2024-01-29T21:43:34Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c074a1a2bffc40a953131b9626494bce952e5306/Distortion/Retro%20Overdrive.jsfx</source>
       </version>
     </reapack>
   </category>
@@ -402,7 +407,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Echo Live In Stereo\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wow Tape Delay\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Big Bad Delay\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Haas Delay and Filtering (v3pre)\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Haas Delay and Filtering (v3pre)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Overdrive (v1.2.0pre)\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
