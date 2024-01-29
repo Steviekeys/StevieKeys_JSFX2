@@ -21,6 +21,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Wow Tape Delay
 * Big Bad Delay
 * Haas Delay and Filtering (v3pre)
-* Retro Overdrive (v1.2.0pre)
+* Retro Overdrive
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
