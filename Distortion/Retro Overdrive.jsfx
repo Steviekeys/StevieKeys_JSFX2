@@ -1,0 +1,145 @@
+version:1.2.0pre
+// v1.1 fix click from dc offset
+// v1.2 fix dc offset not always starting
+// DC filter from JSFX DC filter
+// SVF filter from Andy Simper of Cytomics
+
+
+desc:Retro Overdrive
+
+slider1:in_gain_db=0<-15,15,0.1>Input (dB)
+slider2:OD_gain_db=0<0,20,0.1>Overdrive
+slider3:gain_db=0<-15,15,0.1>Amp Gain (dB)
+slider4:out_gain_db=0<-20,20,0.1>Output (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_in_gain=10^(in_gain_db/20);
+last_OD_gain=10^(OD_gain_db/20);
+last_gain=10^(gain_db/20);
+last_out_gain=10^(out_gain_db/20);
+DCx = 0.32;  DCy = 0.1;  DCz = 0.387;
+startup = 2^-100;
+
+function tube_clip(x)
+instance (f,f1,f2,f3,f4)
+(
+x = x*0.8;
+f = max(-1,min(1,x));
+f1 = sign(x)*abs(x)^(2/3);
+f2 = (3*f - f^3)*0.5;
+f3 = abs(sin(($pi/2)*f))^(3/2);
+f4 = f1*f3 + f2*(1-f3);
+f4 * 0.9
+);
+
+
+function diode(x) instance(out,lastx,diodex,f1)
+(
+diodex *= 0.34;
+loop(6,
+diodex *= rand(2)*0.000004+0.999996;
+out = 1*x - diodex*0.618;
+lastx = out;
+f1 = max(-1,min(1,lastx))*($pi/2);
+diodex = lastx*0.7071 - sin(f1);
+out
+);
+out
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+@slider
+next_in_gain=10^(in_gain_db/20);
+next_OD_gain=10^(OD_gain_db/20);
+next_gain=10^(gain_db/20);
+next_out_gain=10^(out_gain_db/20);
+
+
+@block
+d_in_gain = (next_in_gain - last_in_gain)/samplesblock;
+d_OD_gain = (next_OD_gain - last_OD_gain)/samplesblock;
+d_gain = (next_gain - last_gain)/samplesblock;
+d_out_gain = (next_out_gain - last_out_gain)/samplesblock;
+
+
+@sample
+rando = rand(1)*0.0015;
+
+//Tube warmup!
+startup < 1 ? (
+DCx *= startup;  DCy *= startup;  DCz *= startup;  startup *= 2;
+):(
+DCx = 0.32;  DCy = 0.1;  DCz = 0.387;
+);
+
+
+//input
+spl0 *= last_in_gain;  spl1 *= last_in_gain;
+
+
+//diode soft clip
+spl0 *= last_OD_gain;
+spl1 *= last_OD_gain;
+spl0 *= 0.5;
+spl1 *= 0.5;
+spl0 = le.diode(spl0);
+spl1 = ri.diode(spl1);
+spl0 /= sqrt(last_OD_gain);
+spl1 /= sqrt(last_OD_gain);
+
+
+//amp gain
+spl0 *= last_gain;  spl1 *= last_gain;
+
+
+//tube amp
+spl0 = t0.tube_clip(spl0-DCx-bias0*0.42);  spl0 = min(1.5-rando,spl0);
+spl1 = t1.tube_clip(spl1-DCx-bias1*0.42);  spl1 = min(1.5-rando,spl1);
+spl0 += DCy;
+spl1 += DCy;
+fb0 = abs(spl0+rando);  bias0 = left.svf_lowp(fb0,11,0.45);
+fb1 = abs(spl1+rando);  bias1 = right.svf_lowp(fb1,11,0.45);
+spl0 += DCz;
+spl1 += DCz;
+
+
+//dc filter and tube clip
+spl0 = min(1.7-rando*0.03,spl0);
+spl1 = min(1.7-rando*0.03,spl1);
+otm1=0.999*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
+otm2=0.999*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
+
+//output
+spl0 *= last_out_gain;  spl1 *= last_out_gain;
+spl0 = min(0.98-rando*0.02,max(-0.98+rando*0.02,spl0));
+spl1 = min(0.98-rando*0.02,max(-0.98+rando*0.02,spl1));
+
+
+
+last_in_gain += d_in_gain;
+last_OD_gain += d_OD_gain;
+last_gain += d_gain;
+last_out_gain += d_out_gain;
