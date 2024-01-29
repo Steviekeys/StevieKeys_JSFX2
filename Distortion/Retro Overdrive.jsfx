@@ -1,11 +1,15 @@
-version:1.2.0pre
-// v1.1 fix click from dc offset
-// v1.2 fix dc offset not always starting
+version:1.3.0
+desc:Retro Overdrive
+author:Stephen Boyes
+changelog:
+  - v1.1 fix click from dc offset
+  - v1.2 fix dc offset not always starting
+  - v1.3.0 DC filter at 10Hz for all sample rates 
 // DC filter from JSFX DC filter
 // SVF filter from Andy Simper of Cytomics
 
 
-desc:Retro Overdrive
+
 
 slider1:in_gain_db=0<-15,15,0.1>Input (dB)
 slider2:OD_gain_db=0<0,20,0.1>Overdrive
@@ -24,6 +28,9 @@ last_gain=10^(gain_db/20);
 last_out_gain=10^(out_gain_db/20);
 DCx = 0.32;  DCy = 0.1;  DCz = 0.387;
 startup = 2^-100;
+Fc = 10/srate;
+a = exp(-2*$pi*Fc);
+b = 1-a;
 
 function tube_clip(x)
 instance (f,f1,f2,f3,f4)
@@ -129,8 +136,8 @@ spl1 += DCz;
 //dc filter and tube clip
 spl0 = min(1.7-rando*0.03,spl0);
 spl1 = min(1.7-rando*0.03,spl1);
-otm1=0.999*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
-otm2=0.999*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
+otm1 = a*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
+otm2 = a*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
 
 //output
 spl0 *= last_out_gain;  spl1 *= last_out_gain;
