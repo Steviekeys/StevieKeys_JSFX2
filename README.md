@@ -20,5 +20,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Echo Live In Stereo
 * Wow Tape Delay
 * Big Bad Delay
+* Haas Delay and Filtering (v3pre)
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
