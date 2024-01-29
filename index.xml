@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="c074a1a2bffc40a953131b9626494bce952e5306">
+<index version="1" name="StevieKeys JSFX" commit="97bd899e8d7c114149d038e7b9b719b5e5d33a3d">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -122,9 +122,15 @@
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/dd57ec9d139ce81d702301fc25738b91308fb7e7/Distortion/Retro%20Fuzz.jsfx</source>
       </version>
     </reapack>
-    <reapack name="Retro Overdrive.jsfx" type="effect">
+    <reapack name="Retro Overdrive.jsfx" type="effect" desc="Retro Overdrive">
       <version name="1.2.0pre" time="2024-01-29T21:43:34Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c074a1a2bffc40a953131b9626494bce952e5306/Distortion/Retro%20Overdrive.jsfx</source>
+      </version>
+      <version name="1.3.0" author="Stephen Boyes" time="2024-01-29T21:58:12Z">
+        <changelog><![CDATA[- v1.1 fix click from dc offset
+- v1.2 fix dc offset not always starting
+- v1.3.0 DC filter at 10Hz for all sample rates ]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/97bd899e8d7c114149d038e7b9b719b5e5d33a3d/Distortion/Retro%20Overdrive.jsfx</source>
       </version>
     </reapack>
   </category>
