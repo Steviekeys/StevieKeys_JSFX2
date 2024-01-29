@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="0f01d45d0676fa50193c83178d804c5bbf4a6f28">
+<index version="1" name="StevieKeys JSFX" commit="88b88309cb73634102ba59bfee992bdffc007df2">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -332,6 +332,13 @@
         <changelog><![CDATA[- Remove discontinuity
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/f13cde44d1f5103569aeb2636b4def5009d276fe/Saturation/Smooth%20Clipper.jsfx</source>
+      </version>
+    </reapack>
+  </category>
+  <category name="Stereo Enhancers">
+    <reapack name="Haas Delay and Filtering.jsfx" type="effect" desc="haas delay with filter">
+      <version name="3.0.0pre" author="Stephen Boyes" time="2024-01-29T19:52:08Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/88b88309cb73634102ba59bfee992bdffc007df2/Stereo%20Enhancers/Haas%20Delay%20and%20Filtering.jsfx</source>
       </version>
     </reapack>
   </category>
