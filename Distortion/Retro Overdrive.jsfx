@@ -1,10 +1,14 @@
-version:1.3.0
+version:1.3.1
 desc:Retro Overdrive
 author:Stephen Boyes
+about:
+  # my attempt at making a overdrive peddle driving a tube amp.
+  Add a speaker emulation for guitar tones or apply it to other sounds in your mix.
 changelog:
   - v1.1 fix click from dc offset
   - v1.2 fix dc offset not always starting
-  - v1.3.0 DC filter at 10Hz for all sample rates 
+  - v1.3.0 DC filter at 10Hz for all sample rates
+  - v1.3.1 Add about header
 // DC filter from JSFX DC filter
 // SVF filter from Andy Simper of Cytomics
 
