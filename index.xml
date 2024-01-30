@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="bcc9dcea8d6d87ef2732029b86af440a1b54be94">
+<index version="1" name="StevieKeys JSFX" commit="ce685c9e4b948ead2da4034f37d6c624c695ef41">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -245,6 +245,10 @@
         <changelog><![CDATA[- Rewrite about section]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/679841867f716a2c9b62144778fa3a63802c90b2/Dynamics/Retro%20Punch%20Comp.jsfx</source>
       </version>
+      <version name="1.0.4" author="Stephen Boyes" time="2024-01-30T10:56:48Z">
+        <changelog><![CDATA[- Rewrite about section]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0972dc7b466f2baf74b490ddb1a40820410091bd/Dynamics/Retro%20Punch%20Comp.jsfx</source>
+      </version>
     </reapack>
   </category>
   <category name="EQ">
@@ -264,6 +268,10 @@
         <changelog><![CDATA[- First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3af0d529ad5d7e89820bed152afc6d04fef44fa0/EQ/Dirt%20EQ.jsfx</source>
       </version>
+      <version name="1.0.1" author="Stephen Boyes" time="2024-01-30T10:57:19Z">
+        <changelog><![CDATA[- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3e6724b4504eec741d2d7bf5388015279dcc2698/EQ/Dirt%20EQ.jsfx</source>
+      </version>
     </reapack>
     <reapack name="Retro-Q V3.jsfx" type="effect" desc="Retro-Q V3">
       <metadata>
@@ -280,6 +288,10 @@
       <version name="3.0.0" time="2024-01-10T22:00:17Z">
         <changelog><![CDATA[- First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/97d4f24f648972a3af38d108f5bc4550756439b1/EQ/Retro-Q%20V3.jsfx</source>
+      </version>
+      <version name="3.0.1" author="Stephen Boyes" time="2024-01-30T10:57:34Z">
+        <changelog><![CDATA[- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/fac6669c7a6aa717318e002c3e051540f85cb049/EQ/Retro-Q%20V3.jsfx</source>
       </version>
     </reapack>
   </category>
@@ -302,6 +314,11 @@
       </version>
       <version name="1.6.2" time="2024-01-20T22:50:37Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2a4d4fa7508e8e1f6bcba753ec08369d01fc18e5/Other/Transient%20Softener.jsfx</source>
+      </version>
+      <version name="1.6.3" author="Stephen Boyes" time="2024-01-30T10:58:22Z">
+        <changelog><![CDATA[- Reduce CPU use
+- Github release]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/ce685c9e4b948ead2da4034f37d6c624c695ef41/Other/Transient%20Softener.jsfx</source>
       </version>
     </reapack>
   </category>
@@ -402,6 +419,11 @@
         <changelog><![CDATA[- version 1
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/8a37641ed9bb68dc2303875bc789086104d7c50f/utility/Perfect%20Mono.jsfx</source>
+      </version>
+      <version name="1.0.1" author="Stephen Boyes" time="2024-01-30T10:56:09Z">
+        <changelog><![CDATA[- version 1
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0ed85dee5fafa8884a1e7ac621945c05921cfb1d/utility/Perfect%20Mono.jsfx</source>
       </version>
     </reapack>
   </category>
