@@ -1,5 +1,6 @@
-version:1.6.2
+version:1.6.3
 desc:Transient Softener
+author:Stephen Boyes
 about:
   # distorts bright spikey transients making a softer sound.
   use reapers delta mode to hear what parts of the sound are being shaved off.
