@@ -1,0 +1,155 @@
+version:0.2.0beta
+desc:Auto DeEsser (beta)
+author:Stephen Boyes
+about:
+  # Auto DeEsser
+changelog:
+  - beta v0.2.0
+
+slider1:gain_db=0<-20,2,0.2>vowel gain (dB)
+slider2:con_gain_db=0<-20,2,0.2>consonant gain (dB)
+slider3:con_chan=0<0,1,1{one and two,three and four}>consonant output channel
+
+slider9:freq=5000<2000,10000>Detector Freq
+slider10:mon_detector=0<0,1,1{Off,On}>Monitor Detector
+
+slider20:que=5.0<1,8,0.1>Q
+//slider4:SThresh=0<-6,6,0.1>Auto Threshold Fine
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+out_pin:left ess
+out_pin:right ess
+
+@init
+last_gain=10^(gain_db/20);
+last_con_gain=10^(con_gain_db/20);
+
+function svf_highp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+rel_ms = 75;
+rel = -1/(srate*0.001*rel_ms);
+att_ms = 0.75;
+att = 1/(srate*0.001*att_ms);
+
+function slew_release(in0)
+instance(in0,x,diff,out,out1)
+(
+x = in0-out1;  //difference from last sample
+diff = min(max(x,rel),att);
+out = max(min(out1+diff,1),0);
+out1 = out;
+out
+);
+
+function FIR(x,cx0,cx1,cx2,cx3,cx4)
+instance(x0,x1,x2,x3,x4)
+(
+x4 = x3;
+x3 = x2;
+x2 = x1;
+x1 = x0;
+x0 = x;
+cx0*x0 + cx1*x1 + cx2*x2 + cx3*x3 +cx4*x4
+);
+
+Fc = 24/srate;
+a = exp(-2*$pi*Fc);
+b = 1-a;
+
+function lowpass(in,b)
+instance(in,b,y)
+(
+y += b*(in-y);
+y
+);
+
+@slider
+next_gain = 10^(gain_db/20);
+next_con_gain = 10^(con_gain_db/20);
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_con_gain = (next_con_gain - last_con_gain)/samplesblock;
+
+@sample
+
+
+side_chain = 0.5*(spl0+spl1);
+ESchain = sss.svf_highp(side_chain,freq,que);  //isolate ess and tee
+ESlevel = sqrt(ess.svf_lowp(0.000000001+ESchain^2,520,0.5));
+
+DThresh = (0.00001+side_chain^2);  //min threshold -50dB
+DThresh = t.svf_lowp(DThresh,510,0.5);  //dynamic threshold
+DThresh = sqrt(DThresh);
+
+
+
+consonant = 1/(1 + exp(-12*((ESlevel/DThresh)-1)));
+cx0=0.5;  cx1=0.8663;  cx2=1;  cx3=0.8663;  cx4=0.5;
+cxcx = cx0+cx1+cx2+cx3+cx4;
+cx0 /= cxcx;  cx1 /= cxcx;  cx2 /= cxcx;  cx3 /= cxcx; cx4 /= cxcx;
+consonant = fir.FIR(consonant,cx0,cx1,cx2,cx3,cx4);
+consonant = con.lowpass(consonant,b);
+consonant = slew.slew_release(consonant);
+vowel = 1-consonant;
+
+cx0=cx1=cx2=cx3=cx4=0;  cx4=1;
+spl0 = le.FIR(spl0,cx0,cx1,cx2,cx3,cx4);
+spl1 = ri.FIR(spl1,cx0,cx1,cx2,cx3,cx4);
+spl2 = consonant*spl0;
+spl3 = consonant*spl1;
+spl0 *= vowel;
+spl1 *= vowel;
+
+// gain
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+spl2 *= last_con_gain;
+spl3 *= last_con_gain;
+last_con_gain += d_con_gain;
+
+
+con_chan == 0 ? (
+  spl0 = spl0+spl2;  spl1 = spl1+spl3;  spl2 = 0;  spl3 = 0;
+);
+mon_detector == 1 ? spl0 = spl1 = ESchain;  //monitor side chain
