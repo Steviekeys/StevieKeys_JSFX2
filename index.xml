@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="c3915bfbe185057b2f8f3331dc07e46ff61790b8">
+<index version="1" name="StevieKeys JSFX" commit="5f7f8b51246f88d201e2316c5bf2d45d4266429c">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -381,13 +381,13 @@
     </reapack>
   </category>
   <category name="Stereo Enhancers">
-    <reapack name="Haas Delay and Filtering.jsfx" type="effect" desc="Haas Delay with Filter">
+    <reapack name="Haas Delay and Filtering.jsfx" type="effect" desc="Haas Delay and filtering">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Hass Delay with Filter\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Hass Delay and Flitering\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 Delay and high/low pass filters on one channel Be sure to check the result in mono ;-)\par}
 }
 ]]></description>
@@ -397,6 +397,13 @@
       </version>
       <version name="3.0.0" author="Stephen Boyes" time="2024-01-30T12:22:44Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c3915bfbe185057b2f8f3331dc07e46ff61790b8/Stereo%20Enhancers/Haas%20Delay%20and%20Filtering.jsfx</source>
+      </version>
+      <version name="3.0.1" author="Stephen Boyes" time="2024-01-30T12:43:53Z">
+        <changelog><![CDATA[- v3.0.0pre changes to filter code and sliders since v2
+- v3.0.0   change defualt values
+- v3.0.1   change desc tag
+- v3.0.1   add changelog to reapack header]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/5f7f8b51246f88d201e2316c5bf2d45d4266429c/Stereo%20Enhancers/Haas%20Delay%20and%20Filtering.jsfx</source>
       </version>
     </reapack>
   </category>
