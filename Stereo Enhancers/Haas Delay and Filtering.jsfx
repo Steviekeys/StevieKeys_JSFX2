@@ -1,6 +1,10 @@
-version:3.0.0pre
-desc:haas delay with filter
+version:3.0.0
+desc:Haas Delay with Filter
 author:Stephen Boyes
+about:
+  # Hass Delay with Filter
+  Delay and high/low pass filters on one channel
+  Be sure to check the result in mono ;-)
 
 // 2022 Stephen Boyes
 //
@@ -16,6 +20,7 @@ author:Stephen Boyes
 //
 //  v 2.0  New delay fine control.
 //  v 3.0.0  new filter code
+//  v 3.0.0  change defualt values
 //  This program is distributed in the
 //  hope that it will be useful,
 //  but WITHOUT ANY WARRANTY;
@@ -29,7 +34,7 @@ author:Stephen Boyes
 slider1:15<0,30,1>Delay (mS)
 slider2:0<-1,1,0.05>Delay fine (mS)
 slider3:-10<-28,-2,0.2>Amount (dB)
-slider4:200<50,800,2>HP Adjust
+slider4:300<50,800,2>HP Adjust
 slider5:8000<4000,16000,10>LP Adjust
 slider6:0<0,2,1{Off,Delay Left,Delay Right}>Effect Mode
 slider7:0<0,1,1{Normal,Invert}>Haas Polarity
