@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="6bd6185338920c37fd88df1d0d0ee1b834f2b500">
+<index version="1" name="StevieKeys JSFX" commit="305947d2d19417ccd2f8546b82f42584a63d2dcc">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -421,6 +421,21 @@
       <version name="0.2.0beta" author="Stephen Boyes" time="2024-01-30T14:48:39Z">
         <changelog><![CDATA[- beta v0.2.0]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6bd6185338920c37fd88df1d0d0ee1b834f2b500/utility/Auto%20DeEsser.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Dual 360 Pan.jsfx" type="effect" desc="Dual 360 Pan">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 pan sounds beyond the speakers!\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 +-90 is hard left or right. Warning! Sounds panned to +-180 will dissapear in mono!\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.8.0" author="Stephen Boyes" time="2024-02-01T14:44:52Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/305947d2d19417ccd2f8546b82f42584a63d2dcc/utility/Dual%20360%20Pan.jsfx</source>
       </version>
     </reapack>
     <reapack name="Maximum Resolution Dither.jsfx" type="effect" desc="Maximum Resolution Dither">
