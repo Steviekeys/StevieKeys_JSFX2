@@ -1,0 +1,79 @@
+version:0.8.0
+desc:Highpass Lowpass 12dB
+author:Stephen Boyes
+about:
+  # Highpass Lowpass 12dB
+
+slider1:highp=2<2,500,2>Highpass (Hz)
+slider2:highselect=2<0,3,1{Off,Q=0.5  (Smooth Step Response),Bessel  (Smooth Phase Response),Butterworth (smooth freq response)}>Select Highpass
+
+slider4:lowp=22<2,22,0.2>Lowpass (KHz)
+slider5:lowselect=0<0,3,1{Off,Q=0.5  (Smooth Step Response),Bessel  (Smooth Phase Response),Butterworth (smooth freq response)}>Select Lowpass
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+function svf_highp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+@slider
+freq1 = highp;
+highselect == 1 ? HQ = 0.5;
+highselect == 2 ? HQ = 0.57735026919; 
+highselect == 3 ? HQ = 0.70710678119;
+freq2 = lowp*1000;
+lowselect == 1 ? LQ = 0.5;
+lowselect == 2 ? LQ = 0.57735026919; 
+lowselect == 3 ? LQ = 0.70710678119;
+
+@block
+
+
+@sample
+highselect != 0 ? (
+spl0 = LH.svf_highp(spl0,freq1,HQ);
+spl1 = RH.svf_highp(spl1,freq1,HQ);
+);
+
+lowselect != 0 ? (
+spl0 = LL.svf_lowp(spl0,freq2,LQ);
+spl1 = RL.svf_lowp(spl1,freq2,LQ);
+);
