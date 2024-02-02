@@ -1,5 +1,6 @@
-version:2.0.1
+version:2.0.2
 desc:Big Bad Delay
+author:Stephen Boyes
 provides:bigbaddelay/*
 about:
   # Big Bad Delay
