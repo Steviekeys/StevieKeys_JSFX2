@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2b1d89e387a46cc405108b05cc71ffd712eb5f76">
+<index version="1" name="StevieKeys JSFX" commit="c4aab274440f5ab979a83d80f546b95ce8109ef7">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -39,6 +39,10 @@
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0f01d45d0676fa50193c83178d804c5bbf4a6f28/Delay/Big%20Bad%20Delay.jsfx</source>
         <source file="bigbaddelay/cookdsp.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0f01d45d0676fa50193c83178d804c5bbf4a6f28/Delay/bigbaddelay/cookdsp.jsfx-inc</source>
       </version>
+      <version name="2.0.2" author="Stephen Boyes" time="2024-02-02T19:05:15Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1a4134ff1710c18fd741ca73e07bc0c85e1e3544/Delay/Big%20Bad%20Delay.jsfx</source>
+        <source file="bigbaddelay/cookdsp.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1a4134ff1710c18fd741ca73e07bc0c85e1e3544/Delay/bigbaddelay/cookdsp.jsfx-inc</source>
+      </version>
     </reapack>
     <reapack name="Echo Live Vocal In Stereo.jsfx" type="effect" desc="Echo Live Vocal In Stereo">
       <metadata>
@@ -53,6 +57,13 @@
       </metadata>
       <version name="1.1.0" time="2024-01-25T21:17:46Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2587a697ecdb10af774ab6661ed57effb4b2498c/Delay/Echo%20Live%20Vocal%20In%20Stereo.jsfx</source>
+      </version>
+      <version name="1.1.1" author="Stephen Boyes" time="2024-02-02T19:05:53Z">
+        <changelog><![CDATA[- DC blocker
+- reduce CPU
+- fix coeficient calculation
+- github release]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a18a60544260305517d49ca383fc787e6c449d0e/Delay/Echo%20Live%20Vocal%20In%20Stereo.jsfx</source>
       </version>
     </reapack>
     <reapack name="Wow Tape Delay.jsfx" type="effect" desc="Wow Tape Delay">
@@ -70,6 +81,9 @@
       </version>
       <version name="1.1.0" time="2024-01-26T16:42:51Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/ba976fe170d8aa18a8ea5f4417e1ff7c387b0c11/Delay/Wow%20Tape%20Delay.jsfx</source>
+      </version>
+      <version name="1.1.1" author="Stephen Boyes" time="2024-02-02T19:06:32Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c4aab274440f5ab979a83d80f546b95ce8109ef7/Delay/Wow%20Tape%20Delay.jsfx</source>
       </version>
     </reapack>
   </category>
