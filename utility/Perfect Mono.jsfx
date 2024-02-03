@@ -1,9 +1,9 @@
-version:1.0.1
+version:1.0.2
 desc:Perfect Mono
 Author:Stephen Boyes
 about:
   # Perfect Mono
-  Mono output, without loss of level of hard panned sounds.
+  Will mono the output, without loss of level of hard panned sounds.
   See, Dan Worrel, the problem with LCR mixing, YouTube video.
 changelog:
   - version 1
@@ -157,3 +157,12 @@ delay1.delay_set(buf3,4096);
   spl1=mid+side;
 
   pos += 2;
+  
+@gfx 560 280
+gfx_set(0.7,0.75,0.9);
+gfx_rect(0,0,560,280);
+gfx_x=20;  gfx_y=15;
+gfx_set(0,0,0);
+gfx_drawstr("Will mono the output,");
+gfx_x=20;  gfx_y=30;
+gfx_drawstr("without loss of level of hard panned sounds.");
