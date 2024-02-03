@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="c4aab274440f5ab979a83d80f546b95ce8109ef7">
+<index version="1" name="StevieKeys JSFX" commit="b8e125fc8c2a81f9a5298cc5d5655e677a89a9f1">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -489,7 +489,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Perfect Mono\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Mono output, without loss of level of hard panned sounds. See, Dan Worrel, the problem with LCR mixing, YouTube video.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Will mono the output, without loss of level of hard panned sounds. See, Dan Worrel, the problem with LCR mixing, YouTube video.\par}
 }
 ]]></description>
       </metadata>
@@ -502,6 +502,11 @@
         <changelog><![CDATA[- version 1
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0ed85dee5fafa8884a1e7ac621945c05921cfb1d/utility/Perfect%20Mono.jsfx</source>
+      </version>
+      <version name="1.0.2" author="Stephen Boyes" time="2024-02-03T21:00:48Z">
+        <changelog><![CDATA[- version 1
+- First github version]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b8e125fc8c2a81f9a5298cc5d5655e677a89a9f1/utility/Perfect%20Mono.jsfx</source>
       </version>
     </reapack>
   </category>
