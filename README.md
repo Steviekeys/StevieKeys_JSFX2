@@ -22,5 +22,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Big Bad Delay
 * Haas Delay and Filtering (v3pre)
 * Retro Overdrive
+* Dual 360 Pan
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
