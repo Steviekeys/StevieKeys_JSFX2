@@ -1,4 +1,4 @@
-version:1.2.3
+version:1.2.4
 desc:Retro Limiter
 Author:Stephen Boyes
 description:
@@ -11,8 +11,8 @@ description:
   Input gain (dB)    :  Boost the input
   Mode (norm,atten)  :  Gain compensation OFF/ON
 changelog:
-  - Make final limit soft knee
-  - Github Release
+  - GR meter update
+
 
 
 *  This program is free software.                          *
@@ -157,7 +157,7 @@ spl1 /= last_gain;
 );
 
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
-
+  gr_meter < 0.001 ? gr_meter = 0.001; // max GR so if the audio processing stops it doesnt "stick"
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
   
