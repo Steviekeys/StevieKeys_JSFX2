@@ -1,4 +1,4 @@
-version:3.3.0
+version:3.3.1
 desc:Limit smash [v3]
 author:Stephen Boyes
 about:
@@ -7,11 +7,11 @@ about:
     Controls...
     Drive Amount        : Increases compression
     Output Gain         : Control the overall level
-    Analogue - Digital  : Analogue=feedback  Digital=feddforward
+    Analogue - Digital  : Analogue=feedback  Digital=feedforward
     Release Time        : Time for gain reduction to return to 0dB after level drops
 changelog:
-  - Adjust RMS for feedback
-  - Clean redundant code
+  - GR meter adjust
+  
 
 
 
@@ -163,7 +163,7 @@ Tpeak = max(0.02,Tpeak);
 Tpeak < gr_meter ? gr_meter=Tpeak : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
 
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
-
+  gr_meter < 0.001 ? gr_meter = 0.001; // max GR so if the audio processing stops it doesnt "stick"
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
   
