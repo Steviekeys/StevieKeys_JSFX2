@@ -1,20 +1,22 @@
-version:0.2.0beta
+version:0.3.0beta
 desc:Auto DeEsser (beta)
 author:Stephen Boyes
 about:
   # Auto DeEsser
 changelog:
-  - beta v0.2.0
+  - beta v0.3.0
 
 slider1:gain_db=0<-20,2,0.2>vowel gain (dB)
-slider2:con_gain_db=0<-20,2,0.2>consonant gain (dB)
-slider3:con_chan=0<0,1,1{one and two,three and four}>consonant output channel
+slider2:=thresh<-20,0,0.2>consonant limit threshold (dB)
+slider3:con_gain_db=0<-20,2,0.2>consonant gain (dB)
+slider4:con_chan=0<0,1,1{one and two,three and four}>consonant output channel
 
 slider9:freq=5000<2000,10000>Detector Freq
 slider10:mon_detector=0<0,1,1{Off,On}>Monitor Detector
 
 slider20:que=5.0<1,8,0.1>Q
 //slider4:SThresh=0<-6,6,0.1>Auto Threshold Fine
+
 
 in_pin:left input
 in_pin:right input
@@ -26,6 +28,29 @@ out_pin:right ess
 @init
 last_gain=10^(gain_db/20);
 last_con_gain=10^(con_gain_db/20);
+ext_tail_size = -1;
+gr_meter=1;
+gr_meter_decay = exp(1/(1*srate));
+
+rms_sec = 0.5 * 0.001;
+rms_Freq = 1/(2*$pi*rms_sec);
+rms_coef = (rms_Freq/srate)/(1+(rms_Freq/srate));
+rms_coef = 1-rms_coef;
+
+a_time = 5;
+att_sec = a_time * 0.001;
+att_Freq = 1/(2*$pi*att_sec);
+att_coef = (att_Freq/srate)/(1+(att_Freq/srate));
+att_coef = 1-att_coef;
+
+r_time = 100;
+rel_sec = rel_time * 0.001;
+rel_Freq = 1/(2*$pi*rel_sec);
+rel_coef = (rel_Freq/srate)/(1+(rel_Freq/srate));
+rel_coef = 1-rel_coef;
+
+smooth = 2^-20;
+expand = 1;
 
 function svf_highp(v0,cutoff,Q)
 instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
@@ -102,27 +127,36 @@ y += b*(in-y);
 y
 );
 
+
+ratio = 10;
+slope = (1/ratio);
+corner = 0.9 + 3*slope;
+
 @slider
 next_gain = 10^(gain_db/20);
 next_con_gain = 10^(con_gain_db/20);
+
+thresh_in = 1 / 10^(thresh/20);
+thresh_out = 10^(thresh/20);
 
 @block
 d_gain = (next_gain - last_gain)/samplesblock;
 d_con_gain = (next_con_gain - last_con_gain)/samplesblock;
 
+pdc_delay=2;  pdc_bot_ch=0;  pdc_top_ch=4;
+
 @sample
-
-
+////////detect HF level////////
 side_chain = 0.5*(spl0+spl1);
-ESchain = sss.svf_highp(side_chain,freq,que);  //isolate ess and tee
+ESchain = sss.svf_highp(side_chain,freq,que);
 ESlevel = sqrt(ess.svf_lowp(0.000000001+ESchain^2,520,0.5));
 
+////////detect average level////////
 DThresh = (0.00001+side_chain^2);  //min threshold -50dB
 DThresh = t.svf_lowp(DThresh,510,0.5);  //dynamic threshold
 DThresh = sqrt(DThresh);
 
-
-
+////////calculate is sound consonant or vowel////////
 consonant = 1/(1 + exp(-12*((ESlevel/DThresh)-1)));
 cx0=0.5;  cx1=0.8663;  cx2=1;  cx3=0.8663;  cx4=0.5;
 cxcx = cx0+cx1+cx2+cx3+cx4;
@@ -132,6 +166,7 @@ consonant = con.lowpass(consonant,b);
 consonant = slew.slew_release(consonant);
 vowel = 1-consonant;
 
+////////split signal////////
 cx0=cx1=cx2=cx3=cx4=0;  cx4=1;
 spl0 = le.FIR(spl0,cx0,cx1,cx2,cx3,cx4);
 spl1 = ri.FIR(spl1,cx0,cx1,cx2,cx3,cx4);
@@ -140,7 +175,40 @@ spl3 = consonant*spl1;
 spl0 *= vowel;
 spl1 *= vowel;
 
-// gain
+
+////////limiter////////
+//threshold
+spl2 *= thresh_in;
+spl3 *= thresh_in;
+
+//RMS
+square = (smooth+spl2^2+spl3^2)*0.5;
+out = square + rms_coef*(out - square);
+rms_out = SQRT(out);
+
+//calculate envelope
+env = rms_out + env_coef*(env - rms_out);
+env_dB = 20*log10(env);
+fuz = 1/(1+exp(-8*((last_env_dB/env_dB)-1)));
+env_coef = fuz*att_coef + (1-fuz)*rel_coef;
+last_env_dB = env_dB;
+
+//calculate ratio and threshold
+knee = 1 + 10^( ((expand-slope)/corner) * env_dB);
+knee = expand * env_dB - corner*log10(knee);
+gain_red_db = knee - env_dB;
+gr = 10^(gain_red_db/20);
+//gain reduction
+spl2 *= gr;
+spl3 *= gr;
+spl2 *= thresh_out;
+spl3 *= thresh_out;
+
+
+
+
+
+////////output gain////////
 spl0 *= last_gain;
 spl1 *= last_gain;
 last_gain += d_gain;
