@@ -1,13 +1,13 @@
-version:0.3.0beta
+version:0.4.0beta
 desc:Auto DeEsser (beta)
 author:Stephen Boyes
 about:
   # Auto DeEsser
 changelog:
-  - beta v0.3.0
+  - beta v0.4.0
 
 slider1:gain_db=0<-20,2,0.2>vowel gain (dB)
-slider2:=thresh<-20,0,0.2>consonant limit threshold (dB)
+slider2:thresh=<-40,0,0.2>consonant limit threshold (dB)
 slider3:con_gain_db=0<-20,2,0.2>consonant gain (dB)
 slider4:con_chan=0<0,1,1{one and two,three and four}>consonant output channel
 
@@ -15,7 +15,7 @@ slider9:freq=5000<2000,10000>Detector Freq
 slider10:mon_detector=0<0,1,1{Off,On}>Monitor Detector
 
 slider20:que=5.0<1,8,0.1>Q
-//slider4:SThresh=0<-6,6,0.1>Auto Threshold Fine
+
 
 
 in_pin:left input
@@ -29,27 +29,30 @@ out_pin:right ess
 last_gain=10^(gain_db/20);
 last_con_gain=10^(con_gain_db/20);
 ext_tail_size = -1;
+pdc_bot_ch=0;
+pdc_top_ch=4;
+pdc_delay=2;  
 gr_meter=1;
 gr_meter_decay = exp(1/(1*srate));
 
-rms_sec = 0.5 * 0.001;
+rms_sec = 1.2 * 0.001;
 rms_Freq = 1/(2*$pi*rms_sec);
 rms_coef = (rms_Freq/srate)/(1+(rms_Freq/srate));
 rms_coef = 1-rms_coef;
 
-a_time = 5;
+a_time = 0.4;
 att_sec = a_time * 0.001;
 att_Freq = 1/(2*$pi*att_sec);
 att_coef = (att_Freq/srate)/(1+(att_Freq/srate));
 att_coef = 1-att_coef;
 
-r_time = 100;
-rel_sec = rel_time * 0.001;
+r_time = 4;
+rel_sec = r_time * 0.001;
 rel_Freq = 1/(2*$pi*rel_sec);
 rel_coef = (rel_Freq/srate)/(1+(rel_Freq/srate));
 rel_coef = 1-rel_coef;
 
-smooth = 2^-20;
+smooth = 2^-18;
 expand = 1;
 
 function svf_highp(v0,cutoff,Q)
@@ -128,9 +131,9 @@ y
 );
 
 
-ratio = 10;
+ratio = 8;
 slope = (1/ratio);
-corner = 0.9 + 3*slope;
+corner = 4;
 
 @slider
 next_gain = 10^(gain_db/20);
@@ -143,7 +146,6 @@ thresh_out = 10^(thresh/20);
 d_gain = (next_gain - last_gain)/samplesblock;
 d_con_gain = (next_con_gain - last_con_gain)/samplesblock;
 
-pdc_delay=2;  pdc_bot_ch=0;  pdc_top_ch=4;
 
 @sample
 ////////detect HF level////////
@@ -167,7 +169,7 @@ consonant = slew.slew_release(consonant);
 vowel = 1-consonant;
 
 ////////split signal////////
-cx0=cx1=cx2=cx3=cx4=0;  cx4=1;
+cx0=cx1=cx2=cx3=cx4=0;  cx2=1;
 spl0 = le.FIR(spl0,cx0,cx1,cx2,cx3,cx4);
 spl1 = ri.FIR(spl1,cx0,cx1,cx2,cx3,cx4);
 spl2 = consonant*spl0;
@@ -221,3 +223,49 @@ con_chan == 0 ? (
   spl0 = spl0+spl2;  spl1 = spl1+spl3;  spl2 = 0;  spl3 = 0;
 );
 mon_detector == 1 ? spl0 = spl1 = ESchain;  //monitor side chain
+
+
+
+
+
+gr = max(0.02,gr);
+gr < gr_meter ? gr_meter=gr : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+  gr_meter < 0.001 ? gr_meter = 0.001; // max GR so if the audio processing stops it doesnt "stick"
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=0.62; gfx_g=0.98; gfx_b=0.62; gfx_a=0.75;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
