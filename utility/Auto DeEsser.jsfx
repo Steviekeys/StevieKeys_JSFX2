@@ -1,20 +1,21 @@
-version:0.4.0beta
+version:0.4.5beta
 desc:Auto DeEsser (beta)
 author:Stephen Boyes
 about:
-  # Auto DeEsser
+  # Auto DeEsser (beta)
+  Split the vocal signal into vowels and consonants
 changelog:
-  - beta v0.4.0
+  - beta v0.4.5
 
-slider1:gain_db=0<-20,2,0.2>vowel gain (dB)
-slider2:thresh=<-40,0,0.2>consonant limit threshold (dB)
-slider3:con_gain_db=0<-20,2,0.2>consonant gain (dB)
+slider1:gain_db=0<-40,2,0.2>vowel gain (dB)
+slider2:thresh=<-50,0,0.2>consonant limit threshold (dB)
+slider3:con_gain_db=0<-40,2,0.2>consonant gain (dB)
 slider4:con_chan=0<0,1,1{one and two,three and four}>consonant output channel
 
-slider9:freq=5000<2000,10000>Detector Freq
+slider9:freq=6000<2000,10000>Detector Freq
 slider10:mon_detector=0<0,1,1{Off,On}>Monitor Detector
 
-slider20:que=5.0<1,8,0.1>Q
+slider20:que=3.0<1,5,0.1>Q
 
 
 
@@ -35,18 +36,18 @@ pdc_delay=2;
 gr_meter=1;
 gr_meter_decay = exp(1/(1*srate));
 
-rms_sec = 1.2 * 0.001;
+rms_sec = 0.3 * 0.001;
 rms_Freq = 1/(2*$pi*rms_sec);
 rms_coef = (rms_Freq/srate)/(1+(rms_Freq/srate));
 rms_coef = 1-rms_coef;
 
-a_time = 0.4;
+a_time = 0.3;
 att_sec = a_time * 0.001;
 att_Freq = 1/(2*$pi*att_sec);
 att_coef = (att_Freq/srate)/(1+(att_Freq/srate));
 att_coef = 1-att_coef;
 
-r_time = 4;
+r_time = 3;
 rel_sec = r_time * 0.001;
 rel_Freq = 1/(2*$pi*rel_sec);
 rel_coef = (rel_Freq/srate)/(1+(rel_Freq/srate));
@@ -119,7 +120,7 @@ x0 = x;
 cx0*x0 + cx1*x1 + cx2*x2 + cx3*x3 +cx4*x4
 );
 
-Fc = 24/srate;
+Fc = 900/srate;
 a = exp(-2*$pi*Fc);
 b = 1-a;
 
@@ -131,9 +132,9 @@ y
 );
 
 
-ratio = 8;
+ratio = 10;
 slope = (1/ratio);
-corner = 4;
+corner = 5;
 
 @slider
 next_gain = 10^(gain_db/20);
@@ -176,6 +177,14 @@ spl2 = consonant*spl0;
 spl3 = consonant*spl1;
 spl0 *= vowel;
 spl1 *= vowel;
+
+////////shift some low into vowel////////
+low0 = c0.lowpass(spl2,b);
+low1 = c1.lowpass(spl3,b);
+spl0 += low0;
+spl1 += low1;
+spl2 -= low0;
+spl3 -= low1;
 
 
 ////////limiter////////
@@ -236,7 +245,7 @@ gr < gr_meter ? gr_meter=gr : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1;
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=0.62; gfx_g=0.98; gfx_b=0.62; gfx_a=0.75;
   
-  meter_bot=20;
+  meter_bot=19;
   meter_h=min(gfx_h,32);
   xscale=gfx_w*20/meter_bot;
 
