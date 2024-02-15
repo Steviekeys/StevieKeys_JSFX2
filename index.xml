@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2dd0e91f739485b6396f60de3f3f22a217508b0f">
+<index version="1" name="StevieKeys JSFX" commit="a60d79fea4cd5fbc11b39f67a6d9e30ed8796d4d">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -458,7 +458,8 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Auto DeEsser\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Auto DeEsser (beta)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Split the vocal signal into vowels and consonants\par}
 }
 ]]></description>
       </metadata>
@@ -473,6 +474,10 @@
       <version name="0.4.0beta" author="Stephen Boyes" time="2024-02-14T14:11:37Z">
         <changelog><![CDATA[- beta v0.4.0]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2dd0e91f739485b6396f60de3f3f22a217508b0f/utility/Auto%20DeEsser.jsfx</source>
+      </version>
+      <version name="0.4.5beta" author="Stephen Boyes" time="2024-02-15T12:32:13Z">
+        <changelog><![CDATA[- beta v0.4.5]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a60d79fea4cd5fbc11b39f67a6d9e30ed8796d4d/utility/Auto%20DeEsser.jsfx</source>
       </version>
     </reapack>
     <reapack name="Dual 360 Pan.jsfx" type="effect" desc="Dual 360 Pan">
