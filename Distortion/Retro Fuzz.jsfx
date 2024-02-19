@@ -1,4 +1,4 @@
-version:2.0.0
+version:2.1.0
 desc:Retro Fuzz [V2]
 author: Stephen Boyes
 about:
@@ -6,8 +6,13 @@ about:
   High gain distortion.
   easy to use.
 changelog:
-  - Use exp() instead of $e^
+  - GUI!!!
 
+options:gfx_hz=60
+provides:retro fuzz/*
+filename:0,retro fuzz/fuzz.png
+filename:1,retro fuzz/guitar_strat_fuzz.png
+filename:2,retro fuzz/guitar_strat_volume.png
 
 slider1:ingain_db=0<0,15,1>input gain
 slider7:outgain_db=0<-18,6,0.2>output gain
@@ -74,6 +79,54 @@ local(f)
 f = min(1,max(-1,x));
 x*sin(($pi/2)*f)^12
 );
+
+
+
+   /******************************* GUI Function ***********************************/
+
+  function xy(x y)
+             ( gfx_x = x; gfx_y = y; );
+   
+  function rgb(r g b)
+              ( gfx_r = r; gfx_g = g; gfx_b = b; );
+   
+  function button_rect(x,y,w,h)
+  (
+    mouse_x >= x && mouse_x <= x+w && mouse_y >= y && mouse_y <= y+h ? (
+    this.button = 1111;
+    ):(
+    this.button = 0;
+    );
+  );
+
+  function mouse_on()//instance(count)
+  (
+  1 && mouse_cap ? count += 1 : count = 0;
+  count > 0 && count < 2 ? m_on =1 : m_on = 0;
+  m_on
+  );
+  
+  function mouse_off()
+  (
+  1 && mouse_cap ? m_off = 0 : m_off = 1;
+  m_off
+  );
+  
+  function y_drag(area,cap,m_on,m_off)local(area,cap)instance(up,down,storeY,area,click,cap)
+  (
+  area && m_on ? area = 1 : area = 0;
+  area && mouse_cap && cap ? click = 1;
+  m_off == 1 ? click = 0;
+  click ? (
+    mouse_y < storeY ? (up = 1; down = 0;);
+    mouse_y > storeY ? (up = 0; down = 1;);
+  );
+  mouse_cap != cap ? click = 0;
+  storeY == mouse_y ? up=down=0;
+  storeY = mouse_y;
+  );
+  
+
 
 @slider
 next_ingain=10^(ingain_db/20);
@@ -163,3 +216,52 @@ spl1 *=0.25;
 spl0 *= last_outgain;
 spl1 *= last_outgain;
 last_outgain += d_outgain;
+
+
+@gfx 480 384
+gfx_blit(0,1,0);
+
+  /******************************* GUI Control ***********************************/
+  
+  //load state change
+  //gfx_getchar();
+  mouse_on() = m_on;
+  mouse_off() = m_off;
+  aaaa = mouse_cap;
+  
+  //define the button
+  fuzz.button_rect(96,96,96,96);
+ 
+  //setup the drag
+  fuzz.y_drag(fuzz.button,1,m_on,m_off);//left click drag
+  //slow_fuzz.y_drag(slow_fuzz.button,1001,m_on,m_off);
+
+  //define what happens
+  1 && mouse_cap ? ( 
+  fuzz.down ? ingain_db=max(ingain_db-=0.2,0);
+  fuzz.up ? ingain_db=min(ingain_db+=0.2,15);
+  );
+  1111 && mouse_cap ? (
+  fuzz.down ? ingain_db=max(ingain_db-=0.2,0);
+  fuzz.up ? ingain_db=min(ingain_db+=0.2,15);
+  );
+   
+   
+  //define the button
+  Out_gain.button_rect(288,96,96,96);
+  
+  //setup the drag
+  Out_gain.y_drag(Out_gain.button,1,m_on,m_off);//left click drag
+  
+  //define what happens
+  Out_gain.down ? outgain_db=max(outgain_db-=0.5,-18);
+  Out_gain.up ? outgain_db=min(outgain_db+=0.5,6);
+  
+
+ 
+  
+
+ xy(96,96);   knob1 = 96*ceil(ingain_db*2);       gfx_blit(1,1,0,0,knob1,96,96); //fuzz
+ xy(288,96);  knob2 = 96*ceil((18+outgain_db)*1.25);   gfx_blit(2,1,0,0,knob2,96,96); //vol
+ 
+ xy(0,0);
