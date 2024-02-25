@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="a05b97f9169326465b7f48c85ef3e6bf5c1f5af5">
+<index version="1" name="StevieKeys JSFX" commit="087779ac86c3c93a24d5ad21139fdd92daf9c8a0">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -138,6 +138,10 @@
       <version name="2.1.0" author="Stephen Boyes" time="2024-02-19T22:25:04Z">
         <changelog><![CDATA[- GUI!!!]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a05b97f9169326465b7f48c85ef3e6bf5c1f5af5/Distortion/Retro%20Fuzz.jsfx</source>
+      </version>
+      <version name="2.1.1" author="Stephen Boyes" time="2024-02-25T19:43:04Z">
+        <changelog><![CDATA[- fix GUI]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/087779ac86c3c93a24d5ad21139fdd92daf9c8a0/Distortion/Retro%20Fuzz.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Overdrive.jsfx" type="effect" desc="Retro Overdrive">
