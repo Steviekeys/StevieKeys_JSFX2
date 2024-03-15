@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="087779ac86c3c93a24d5ad21139fdd92daf9c8a0">
+<index version="1" name="StevieKeys JSFX" commit="c9490227dbd24f50db8d0cb0d2de63705b8e5517">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -43,6 +43,10 @@
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1a4134ff1710c18fd741ca73e07bc0c85e1e3544/Delay/Big%20Bad%20Delay.jsfx</source>
         <source file="bigbaddelay/cookdsp.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1a4134ff1710c18fd741ca73e07bc0c85e1e3544/Delay/bigbaddelay/cookdsp.jsfx-inc</source>
       </version>
+      <version name="2.0.3" author="Stephen Boyes" time="2024-03-15T23:07:42Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a2a47801f10c76e5c471686f9848d66795a6775a/Delay/Big%20Bad%20Delay.jsfx</source>
+        <source file="bigbaddelay/cookdsp.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a2a47801f10c76e5c471686f9848d66795a6775a/Delay/bigbaddelay/cookdsp.jsfx-inc</source>
+      </version>
     </reapack>
     <reapack name="Echo Live Vocal In Stereo.jsfx" type="effect" desc="Echo Live Vocal In Stereo">
       <metadata>
@@ -84,6 +88,9 @@
       </version>
       <version name="1.1.1" author="Stephen Boyes" time="2024-02-02T19:06:32Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c4aab274440f5ab979a83d80f546b95ce8109ef7/Delay/Wow%20Tape%20Delay.jsfx</source>
+      </version>
+      <version name="1.1.2" author="Stephen Boyes" time="2024-03-15T23:08:11Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c9490227dbd24f50db8d0cb0d2de63705b8e5517/Delay/Wow%20Tape%20Delay.jsfx</source>
       </version>
     </reapack>
   </category>
