@@ -1,7 +1,7 @@
-version:2.0.3
+version:2.0.4
 desc:Big Bad Delay
 author:Stephen Boyes
-provides:bigbaddelay/*
+provides:bigbaddelay/* bigbaddelay/cookdsp/*
 about:
   # Big Bad Delay
   LO-FI sampling analogue delay (bucket brigade)
