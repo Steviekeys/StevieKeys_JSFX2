@@ -1,4 +1,4 @@
-version:2.0.2
+version:2.0.3
 desc:Big Bad Delay
 author:Stephen Boyes
 provides:bigbaddelay/*
@@ -24,7 +24,7 @@ cangelog:
 
 
 import cookdsp.jsfx-inc
-//import StevieKeys_JSFX2/Delays/cookdsp.jsfx-inc
+
 
 
 slider1:200<20,600>Delay Time (mS)
