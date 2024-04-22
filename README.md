@@ -23,5 +23,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Haas Delay and Filtering (v3pre)
 * Retro Overdrive
 * Dual 360 Pan
+* Auto DeEsser (beta)
+* Hard AntiDerivative AntiAliasing Clipper (beta)
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
