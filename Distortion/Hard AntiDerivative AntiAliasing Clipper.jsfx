@@ -1,4 +1,4 @@
-version:0.6.0beta
+version:0.7.0beta
 desc:Hard Anti-Derivative Anti-Aliasing Clipper
 Author:Stephen Boyes
 about:
@@ -12,7 +12,7 @@ about:
   * Strict Clip:   Second clipping stage to catch peaks cuased by high restore
   * Out:   Output level
 changelog:
-  - First github version
+  - New Meter
 
 slider1:gain_db=0<-6,25,0.02>Drive (dB)
 slider3:high_restore=1<0,1,0.02>High Restore
@@ -77,9 +77,26 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   spl0 *= last_gain;
   spl1 *= last_gain;
   
-  cliplight = max(log10(spl0)*20,log10(spl1)*20);
-  cliplight = max(0,cliplight);
-  cliplight = smoothing = max(cliplight,0.999*smoothing);
+  LED_L = log10(abs(spl0))*20;
+  LED_R = log10(abs(spl1))*20;
+  LED_Ln5 += max(-5,LED_L)+5;
+  LED_Rn5 += max(-5,LED_R)+5;
+  LED_Ln3 += max(-3,LED_L)+3;
+  LED_Rn3 += max(-3,LED_L)+3;
+  LED_Ln1 += max(-1,LED_L)+1;
+  LED_Rn1 += max(-1,LED_R)+1;
+  LED_L0 += max(0,LED_L);
+  LED_R0 += max(0,LED_R);
+  LED_L1 += max(1,LED_L)-1;
+  LED_R1 += max(1,LED_R)-1;
+  LED_L2 += max(2,LED_L)-2;
+  LED_R2 += max(2,LED_R)-2;
+  LED_L3 += max(3,LED_L)-3;
+  LED_R3 += max(3,LED_R)-3;
+  LED_L4 += max(4,LED_L)-4;
+  LED_R4 += max(4,LED_R)-4;
+
+
 
   overL2dB = overL1dB;  overL1dB = overLdB;  overLdB = 10^(max(1,abs(spl0))/20);
   overR2dB = overR1dB;  overR1dB = overRdB;  overRdB = 10^(max(1,abs(spl1))/20);
@@ -113,7 +130,7 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   spl1 *= out_last_gain;
   out_last_gain += d_out_gain;
 
-@gfx 256 256
+@gfx 320 320
 
 
   gfxSize = min(gfx_w,gfx_h);
@@ -123,8 +140,48 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   gfx_x=gfx_y=0;
   gfx_rectto(gfx_w,gfx_h);
 
-  gfx_r=cliplight*0.9;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
-  gfx_circle(gfxSize/2,gfxSize/2,gfxSize/2,1);
+  //meter
+  gfx_r=0.0;  gfx_g=LED_Ln5;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.05),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=0.0;  gfx_g=LED_Rn5;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.05),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=0.0;  gfx_g=LED_Ln3;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.1),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=0.0;  gfx_g=LED_Rn3;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.1),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=LED_Ln1;  gfx_g=LED_Ln1;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.15),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=LED_Rn1;  gfx_g=LED_Rn1;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.15),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=LED_L0;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.2),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=LED_R0;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.2),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=LED_L1;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.25),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=LED_R1;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.25),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=LED_L2;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.3),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=LED_R2;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.3),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=LED_L3;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.35),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=LED_R3;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.35),gfxSize/3.7,gfxSize/45,1);
+  gfx_r=LED_L4;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.4),gfxSize/4.7,gfxSize/45,1);
+  gfx_r=LED_R4;  gfx_g=0.0;  gfx_b=0.0; gfx_a=1;
+  gfx_circle(gfxSize/(1/0.4),gfxSize/3.7,gfxSize/45,1);
+
+  LED_Ln5*=0.25; LED_Ln3*=0.25; LED_Ln1*=0.25; LED_L0*=0.25;
+  LED_L1*=0.25;  LED_L2*=0.25;  LED_L3*=0.25;  LED_L4*=0.25;
+  LED_Rn5*=0.25; LED_Rn3*=0.25; LED_Rn1*=0.25; LED_R0*=0.25;
+  LED_R1*=0.25;  LED_R2*=0.25;  LED_R3*=0.25;  LED_R4*=0.25;
+  
+  
+  
+  
 
   gfx_r=gfx_g=gfx_b=0.8; gfx_a=1;
   gfx_x=gfxSize/2; gfx_y=0;
@@ -172,4 +229,5 @@ gfx_drawstr("Out: Output level");
   gfx_lineto(0.5*gfxSize - 0.5*gfxSize/last_gain,0.5*gfxSize + 0.5*gfxSize/last_gain); 
   gfx_lineto(0.5*gfxsize + 0.5*gfxSize/last_gain,0.5*gfxSize - 0.5*gfxSize/last_gain);
   gfx_lineto(gfxsize,0.5*gfxSize - 0.5*gfxSize/last_gain);
+
 
