@@ -1,0 +1,91 @@
+version:0.8.0beta
+desc:pong
+author:Stephen Boyes
+description:
+  # Pong Game
+changelog:
+  - version 0.8.0
+  
+
+options:gfx_hz=60 
+
+//slider1:gain_db=0<-150,12,1>gain (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+
+
+
+@slider
+next_gain=10^(gain_db/20);
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+
+@sample
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+
+
+
+@gfx 560 420
+
+gfxSize = min(gfx_w,gfx_h);
+
+// white
+gfx_set(1,1,1);
+
+//bat movement
+control = gfx_getchar();
+left = 1818584692;
+right = 1919379572;
+control == left ? move -= 4;
+control == right ? move += 4;
+n1control == left ? move -= 3;
+n1control == right ? move += 3;
+n2control == left ? move -= 2;
+n2control == right ? move += 2;
+n2control = n1control;
+n1control = control;
+
+move = min(gfx_w-80,max(0,move));
+//bat
+gfx_rect(move,380,80,10);
+
+
+//ball movement
+x >= gfx_w-20 ? foo = -5;
+x <= 0 ? foo = 5;
+hit = 0;
+move < x+19 ? (
+  move > x-79 ? (
+    hit = 1;
+  );
+);
+y >= 360 ? (
+  y <= 380 ? (
+    hit == 1 ? (
+      bar = -4;
+    );
+  );
+);
+y >= 500 ? (
+  x = rand(gfx_w);
+  y = 0;
+  foo = sign(rand(1)-2)*4;
+);
+y <= 0 ? bar = 4;
+x += foo;
+y += bar;
+
+//ball
+gfx_rect(x,y,20,20);
+
+ 
