@@ -25,5 +25,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Dual 360 Pan
 * Auto DeEsser (beta)
 * Hard AntiDerivative AntiAliasing Clipper (beta)
+* Pong Game
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
