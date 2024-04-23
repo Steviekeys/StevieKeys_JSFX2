@@ -44,16 +44,16 @@ gfx_set(1,1,1);
 
 //bat movement
 control = gfx_getchar();
-left = 1818584692;
-right = 1919379572;
-control == left ? move -= 4;
-control == right ? move += 4;
-n1control == left ? move -= 3;
-n1control == right ? move += 3;
-n2control == left ? move -= 2;
-n2control == right ? move += 2;
-n2control = n1control;
-n1control = control;
+onleft = 1818584692;
+onright = 1919379572;
+offleft == onleft+128;
+offright == onright+128;
+control == onleft ? left = 1;
+control == onright ? right = 1;
+control == offleft? left = 0;
+control == offright ? right = 0;
+left == 1 ? move += 4;
+right == 1 ? move -= 4;
 
 move = min(gfx_w-80,max(0,move));
 //bat
