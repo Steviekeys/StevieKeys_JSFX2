@@ -1,14 +1,14 @@
-version:0.8.1beta
-desc:pong
+version:0.8.5beta
+desc:Pong Game
 author:Stephen Boyes
 description:
   # Pong Game
 changelog:
-  - version 0.8.0
+  - version 0.8.5
   
 
 options:gfx_hz=60 
-
+options:want_all_kb
 //slider1:gain_db=0<-150,12,1>gain (dB)
 
 in_pin:left input
@@ -18,7 +18,7 @@ out_pin:right output
 
 @init
 last_gain=10^(gain_db/20);
-
+score = count = 0;
 
 
 @slider
@@ -36,56 +36,63 @@ last_gain += d_gain;
 
 
 @gfx 560 420
-
 gfxSize = min(gfx_w,gfx_h);
+
+//ball movement
+x >= gfx_w-20 ? foo = -5;
+x <= 0 ? foo = 5;
+y <= 0 ? bar = 4;
+x += foo + sign(foo)*0.1*score + sign(foo)*slice;
+y += bar + sign(bar)*0.1*score - sign(bar)*slice;
 
 // white
 gfx_set(1,1,1);
 
 //bat movement
-control = gfx_getchar();
-onleft = 1818584692;
-onright = 1919379572;
-offleft == onleft+128;
-offright == onright+128;
-control == onleft ? left = 1;
-control == onright ? right = 1;
-control == offleft? left = 0;
-control == offright ? right = 0;
-left == 1 ? move += 4;
-right == 1 ? move -= 4;
+gfx_getchar(65536) == 15 ? (
+move = mouse_x-40;
+);
+
 
 move = min(gfx_w-80,max(0,move));
 //bat
 gfx_rect(move,380,80,10);
 
 
-//ball movement
-x >= gfx_w-20 ? foo = -5;
-x <= 0 ? foo = 5;
+//is ball in line with bat ?
 hit = 0;
-move < x+19 ? (
-  move > x-79 ? (
+move < x+20 ? (
+  move > x-80 ? (
     hit = 1;
   );
 );
+//winning return
 y >= 360 ? (
-  y <= 380 ? (
+  y <= 370 ? (
     hit == 1 ? (
       bar = -4;
+      score += 1;
+      slice = 0;
+      move > x+4 ?  (slice = 1;  count += 1;);
+      move < x-64 ? (slice = 1;  count += 1;);
+      slice == 0 ? count = 0;
     );
   );
 );
+//loosing serve
 y >= 500 ? (
   x = rand(gfx_w);
   y = 0;
   foo = sign(rand(1)-2)*4;
+  score = 0;
 );
-y <= 0 ? bar = 4;
-x += foo;
-y += bar;
+
+
 
 //ball
 gfx_rect(x,y,20,20);
 
- 
+//score
+gfx_x = gfx_y = 5;
+gfx_setfont(1,0,80);
+gfx_drawnumber(score,0);
