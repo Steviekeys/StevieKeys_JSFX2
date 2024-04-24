@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="93c01b781dabe492b0f4997c9f4364869b37996f">
+<index version="1" name="StevieKeys JSFX" commit="de4b9e0bba1ec5b4bf366efee43e30bb9827554f">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -438,6 +438,10 @@
       <version name="0.8.0beta" author="Stephen Boyes" time="2024-04-23T13:18:18Z">
         <changelog><![CDATA[- version 0.8.0]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/93c01b781dabe492b0f4997c9f4364869b37996f/Other/Pong%20Game.jsfx</source>
+      </version>
+      <version name="0.8.1beta" author="Stephen Boyes" time="2024-04-24T09:40:43Z">
+        <changelog><![CDATA[- version 0.8.0]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/de4b9e0bba1ec5b4bf366efee43e30bb9827554f/Other/Pong%20Game.jsfx</source>
       </version>
     </reapack>
     <reapack name="Transient Softener.jsfx" type="effect" desc="Transient Softener">
