@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="242c671f9ba2124ccecb37bd466e68e9bc03e4af">
+<index version="1" name="StevieKeys JSFX" commit="6ce77a7df2d51558524c5e81940b5df106d6e179">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -314,6 +314,11 @@
       <version name="2.0.2" author="Stephen Boyes" time="2024-02-09T18:03:42Z">
         <changelog><![CDATA[- GR meter update]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/cfe70c4a8b701f63a75813193194bd6c491e8697/Dynamics/Live%20Limit.jsfx</source>
+      </version>
+      <version name="3.0.0" author="Stephen Boyes" time="2024-04-26T22:37:03Z">
+        <changelog><![CDATA[- Adaptive peak hold
+- Release now acting in dB domain]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6ce77a7df2d51558524c5e81940b5df106d6e179/Dynamics/Live%20Limit.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Limiter.jsfx" type="effect" desc="Retro Limiter">
