@@ -1,11 +1,12 @@
-version:2.0.2
+version:3.0.0
 desc:Live Limt
 author:Stephen Boyes
 about:
   # Live Limit
     Zero latency brickwall limiter
 changelog:
-  - GR meter update
+  - Adaptive peak hold
+  - Release now acting in dB domain
  
 
 
@@ -41,24 +42,32 @@ out_pin:right output
 
 @init
 ext_tail_size = -1; //automatic silence detection
-rate=srate/2.2;
-invrate=1/(srate/2.2);
+adaptive_hold = 0.9996;
+
 
 gr_meter=1;
 gr_meter_decay = exp(1/(1*srate));
 
 
+
 function limit2(x)
-instance (alog,peak,oldpeak,GRin)
+instance (alog,last_alog,sign_x,last_sign_x,peak,peakdB,oldpeak,GRin)
 (
-  alog = 0.015625*rand(1);
-  GRin = max(1,abs(x) + alog);
-  peak = GRin-1;
-  oldpeak = oldpeak * Rspeed - invrate;
-  oldpeak = max(0,oldpeak);
-  peak = max(peak,oldpeak);
-  oldpeak = peak;
-  peak = 1/(peak+1);
+  last_alog = alog;
+  alog = rand(1);
+  sign_x = sign(x + alog * last_alog);
+  sign_x == last_sign_x ? (
+    GRin = max(abs(x),GRin);
+  ):(
+    GRin = max(abs(x),GRin * adaptive_hold);  
+  );
+  peak = max(1,GRin + 2^-12 * alog);
+  peakdB = log10(peak)*20;
+  oldpeak = oldpeak * Rspeed;
+  peakdB = max(peakdB,oldpeak);
+  oldpeak = peakdB;
+  peak = 10^(-peakdB/20);
+  last_sign_x = sign_x;
   peak = max(peak,0)
 );
 
@@ -73,13 +82,11 @@ Rspeed = exp(-1/(slider4 * 0.001 * srate));
 
 @sample
 
-spl0=spl0*inboost;
-peak0 = limit2(spl0);
+spl0 *= inboost;
+spl1 *= inboost;
 
-
-spl1=spl1*inboost;
-peak1 = limit2(spl1);
-
+peak0 = left.limit2(spl0);
+peak1 = right.limit2(spl1);
 
 //stereo GR link
 Tpeak=min(peak0,peak1);
@@ -88,10 +95,8 @@ Tpeak=min(peak0,peak1);
 Tpeak0=(Tpeak*2+Peak0)/3;
 Tpeak1=(Tpeak*2+peak1)/3;  
 
-
-spl0=spl0*Tpeak0;  //gain reduction
-spl1=spl1*Tpeak1;   //gain reduction
-
+spl0 *= Tpeak0;  //gain reduction
+spl1 *= Tpeak1;   //gain reduction
 
 spl0 = spl0*Gain;
 spl1 = spl1*Gain;
