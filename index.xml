@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="073fb691480976882c6f25c9772eb068ad14e898">
+<index version="1" name="StevieKeys JSFX" commit="f0f651d146e1187efdf2cf4aaf833355ac9a0ecd">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -267,7 +267,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 HQ Track Compressor\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 A normal compressor! featuring a subtle input stage and compression that behaves well even with fast attack and no oversampling. Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to to the rectifing and hard knee compression components.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 A normal compressor! featuring a subtle input stage and compression that behaves well even with fast attack and no oversampling. Featuring Anti-Derivative Anti-Aliasing sidechain elements, this is well suited to to the rectifying and hard knee compression components.\par}
 }
 ]]></description>
       </metadata>
