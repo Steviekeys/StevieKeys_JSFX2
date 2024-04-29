@@ -1,0 +1,235 @@
+version:0.1.0beta
+desc:HQ Track Compressor (beta)
+author:Stephen Boyes
+about:
+  # HQ Track Compressor
+  A normal compressor! featuring a subtle input stage
+  and compression that behaves well even with fast attack and no oversampling.
+  Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
+  to the rectifing and hard knee compression components.
+Changelog:
+
+slider1:thresh_db=0<-50,10,1>Threshold (dB)
+slider2:ratio_in=3<1.2,12,0.2>Ratio
+slider3:Att_in=5<0.04,30,0.02>Attack (ms)
+slider4:Rel_in=200<40,1000,1>Release (ms)
+
+slider10:gain_db=0<-100,12,1>gain (dB)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  last_thresh=10^(thresh_db/20);
+  last_gain=10^(gain_db/20);
+  gr_meter=1;
+  gr_meter_decay = exp(1/(1*srate));
+  ext_gr_meter = 0;
+  pdc_delay = 2;
+  pdc_bot_ch = 0;
+  pdc_top_ch = 2;
+
+function AA_abs_square(x0)
+instance (f0,f0n1,x0,x1)
+(
+  f0n1 = f0;
+  abs(x0-x1) <= 2^-17 ? (
+    out = abs((x0+x1)*0.5);
+    ):(
+    x0 >= 0 ? f0 = 0.5*x0^2;
+    x0 <= 0 ? f0 = -0.5*x0^2;
+    out = (f0-f0n1)/(x0-x1);
+  );
+  x1 = x0;
+  out
+);
+
+function AA_sidechain_dB(x0)
+instance (f0,f0n1,x0,x1)
+(
+  f0n1 = f0;
+  abs(x0-x1) <= 2^-17 ? (
+    out = 20*log10((x0+x1)*0.5);
+    ):(
+    f0 = 20*(log10(x0)*x0 - (1/log(10))*x0);
+    out = (f0-f0n1)/(x0-x1);
+  );
+  x1 = x0;
+  out
+);
+
+function sidechain_thresh(x0,knee)
+instance (f0,f0n1,x0,x1,knee,in)
+(
+    in = x0*0.5 + x1*0.5;
+    out =   (in/(1+knee^in))-in;
+    out += -1/(1+0.25*x0^2);
+  x1 = x0;
+  out
+);
+
+function sidechain_gain(x0)
+instance (f0,f0n1,x0,x1)
+(
+  out = 10^((x0+x1)/40);
+  x1 = x0;
+  out
+);
+
+function delay (x0)
+instance (x0,x1,x2)
+(
+  out = x2;
+  x2 = x1;
+  x1 =x0;
+  out
+);
+
+function envelope(x,a)
+instance (y,a)
+(
+  y = x + a * (y - x);
+  y
+);
+
+function logistic(x,k)
+(
+  1/(1+exp(-k*x))
+);
+
+function svf_highp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ 
+ //Soft
+ ic1eq = sin(ic1eq);
+ ic2eq = sin(ic2eq);
+ 
+ m0*v0+m1*v1+m2*v2
+);
+
+@slider
+  next_thresh=10^(thresh_db/20);
+  ratio = (ratio_in-1)/ratio_in;
+  next_gain=10^(gain_db/20);
+  knee = 4;
+  k = 8;
+  att = exp(-1/(0.001*att_in*srate));
+  rel = exp(-1/(0.001*rel_in*srate));
+  RMS = exp(-1/(0.001*(att_in*0.2)*srate));
+
+@block
+  d_thresh = (next_thresh - last_thresh)/samplesblock;
+  d_gain = (next_gain - last_gain)/samplesblock;
+
+@sample
+////input stage////
+  aspl0 = sqrt(0.004+spl0^2) - sqrt(0.004);
+  aspl1 = sqrt(0.004+spl1^2) - sqrt(0.004);
+  FM0 = 0.08*aspl0 + spl0*0.04;
+  FM1 = 0.08*aspl1 + spl1*0.04;
+  spl0 = in.left.svf_highp(spl0,5 + FM0 + 0.16*spl0,0.8);
+  spl1 = in.right.svf_highp(spl1,5 + FM1 + 0.16*spl1,0.8);
+
+////shift gain into fixed threshold////
+  spl0 /= last_thresh;
+  spl1 /= last_thresh;
+
+////dB calculation////
+  sideTOTAL  = leftabs.AA_abs_square(spl0)*0.5;
+  sideTOTAL += righabs.AA_abs_square(spl1)*0.5;
+  sideTOTAL = RMSenv.envelope(sideTOTAL,RMS);
+  sideTOTAL  = side.AA_sidechain_dB(sideTOTAL);
+
+////GR calculations////
+  overdB = -thresh.sidechain_thresh(sideTOTAL,knee);
+////Attack Release////
+  state = sideTOTAL - old_dB;
+  state = logistic(state,k);
+  envcoef = att*state + rel*(1-state);
+  overdB = ATT_REL_env.envelope(overdB,envcoef);
+  old_dB = overdB;
+////ratio////
+  overdB *= ratio;
+  sideTOTAL = sidegain.sidechain_gain(-overdB);
+
+////one sample delay////
+  spl0 = Rdel.delay(spl0);
+  spl1 = Ldel.delay(spl1);
+
+////GR////
+  spl0 *= sideTOTAL;
+  spl1 *= sideTOTAL;
+
+////output stage////
+  spl0 = out.left.svf_highp(spl0,5,0.8);
+  spl1 = out.right.svf_highp(spl1,5,0.8);
+
+////shift gain out of fixed threshold////
+  spl0 *= last_thresh;
+  spl1 *= last_thresh;
+  last_thresh += d_thresh;
+
+////output gain////
+  spl0 *= last_gain;
+  spl1 *= last_gain;
+  last_gain += d_gain;
+
+
+  sideTOTAL < gr_meter ? gr_meter=sideTOTAL : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+
+@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
+
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+  
+  meter_bot=20;
+  meter_h=min(gfx_h,32);
+  xscale=gfx_w*20/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber(log10(gr_meter)*20,1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
