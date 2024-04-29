@@ -5,8 +5,8 @@ about:
   # HQ Track Compressor
   A normal compressor! featuring a subtle input stage
   and compression that behaves well even with fast attack and no oversampling.
-  Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
-  to the rectifing and hard knee compression components.
+  Featuring Anti-Derivative Anti-Aliasing sidechain elements, this is well suited to
+  to the rectifying and hard knee compression components.
 Changelog:
 
 slider1:thresh_db=0<-50,10,1>Threshold (dB)
