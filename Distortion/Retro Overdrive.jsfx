@@ -1,4 +1,4 @@
-version:1.3.1
+version:2.0.0
 desc:Retro Overdrive
 author:Stephen Boyes
 about:
@@ -9,15 +9,25 @@ changelog:
   - v1.2 fix dc offset not always starting
   - v1.3.0 DC filter at 10Hz for all sample rates
   - v1.3.1 Add about header
+  - v1.3.2 non release GUI
+  - v2.0.0 new GUI
 // DC filter from JSFX DC filter
 // SVF filter from Andy Simper of Cytomics
 
 
+options:gfx_hz=60
+tags:distortion
+provides:Retro_Overdrive/*
 
 
-slider1:in_gain_db=0<-15,15,0.1>Input (dB)
-slider2:OD_gain_db=0<0,20,0.1>Overdrive
-slider3:gain_db=0<-15,15,0.1>Amp Gain (dB)
+filename:0,Retro_Overdrive/RetroOverdrive background.png
+filename:1,Retro_Overdrive/RetroOverdrive text.png
+filename:2,Retro_Overdrive/RetroOverdrive knob 90x90.png
+
+
+-slider1:in_gain_db=0<-15,15,0.1>Input (dB)
+-slider2:OD_gain_db=0<0,20,0.1>Overdrive
+-slider3:gain_db=0<-15,15,0.1>Amp Gain (dB)
 slider4:out_gain_db=0<-20,20,0.1>Output (dB)
 
 in_pin:left input
@@ -82,6 +92,52 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
  m0*v0+m1*v1+m2*v2
 );
 
+   /******************************* GUI Function ***********************************/
+
+  function xy(x y)
+             ( gfx_x = x; gfx_y = y; );
+   
+  function rgb(r g b)
+              ( gfx_r = r; gfx_g = g; gfx_b = b; );
+   
+  function button_rect(x,y,w,h)
+  (
+    mouse_x >= x && mouse_x <= x+w && mouse_y >= y && mouse_y <= y+h ? (
+    this.button = 1111;
+    ):(
+    this.button = 0;
+    );
+  );
+
+  function mouse_on()//instance(count)
+  (
+  1 && mouse_cap ? count += 1 : count = 0;
+  count > 0 && count < 2 ? m_on =1 : m_on = 0;
+  m_on
+  );
+  
+  function mouse_off()
+  (
+  1 && mouse_cap ? m_off = 0 : m_off = 1;
+  m_off
+  );
+  
+  function y_drag(area,cap,m_on,m_off)local(area,cap)instance(up,down,storeY,area,click,cap)
+  (
+  area && m_on ? area = 1 : area = 0;
+  area && mouse_cap && cap ? click = 1;
+  m_off == 1 ? click = 0;
+  click ? (
+    mouse_y < storeY ? (up = 1; down = 0;);
+    mouse_y > storeY ? (up = 0; down = 1;);
+  );
+  mouse_cap != cap ? click = 0;
+  storeY == mouse_y ? up=down=0;
+  storeY = mouse_y;
+  );
+  
+
+
 @slider
 next_in_gain=10^(in_gain_db/20);
 next_OD_gain=10^(OD_gain_db/20);
@@ -90,10 +146,16 @@ next_out_gain=10^(out_gain_db/20);
 
 
 @block
+//last_in_gain=10^(in_gain_db/20);
+//last_OD_gain=10^(OD_gain_db/20);
+//last_gain=10^(gain_db/20);
+//last_out_gain=10^(out_gain_db/20);
 d_in_gain = (next_in_gain - last_in_gain)/samplesblock;
 d_OD_gain = (next_OD_gain - last_OD_gain)/samplesblock;
 d_gain = (next_gain - last_gain)/samplesblock;
 d_out_gain = (next_out_gain - last_out_gain)/samplesblock;
+
+
 
 
 @sample
@@ -154,3 +216,61 @@ last_in_gain += d_in_gain;
 last_OD_gain += d_OD_gain;
 last_gain += d_gain;
 last_out_gain += d_out_gain;
+
+@gfx 450 540 // request horizontal/vertical heights (0 means dont care)
+  xy(0, 0);    gfx_blit(0, 1, 0, 0, 0, 450, 540); //background
+  xy(65,420);  gfx_blit(1, 0.8, 0);  //text
+
+  /******************************* GUI Control ***********************************/
+ax = mouse_x;  ay = mouse_y;
+  //load state change
+  mouse_on() = m_on;
+  mouse_off() = m_off;
+  aaaa = mouse_cap;
+  
+  //define the button
+  input.button_rect(90,90,90,90);
+  //setup the drag
+  input.y_drag(input.button,1,m_on,m_off);//left click drag
+  //define what happens
+  input.down ? in_gain_db=max(in_gain_db-=0.5,-15);
+  input.up ? in_gain_db=min(in_gain_db+=0.5,15);
+
+  //define the button
+  overd.button_rect(270,90,90,90);
+  //setup the drag
+  overd.y_drag(overd.button,1,m_on,m_off);//left click drag
+  //define what happens
+  overd.down ? OD_gain_db=max(OD_gain_db-=0.5,0);
+  overd.up ? OD_gain_db=min(OD_gain_db+=0.5,20);
+  
+  //define the button
+  amp.button_rect(90,270,90,90);
+  //setup the drag
+  amp.y_drag(amp.button,1,m_on,m_off);//left click drag
+  //define what happens
+  amp.down ? gain_db=max(gain_db-=0.5,-15);
+  amp.up ? gain_db=min(gain_db+=0.5,15);
+  
+  //define the button
+  output.button_rect(270,270,90,90);
+  //setup the drag
+  output.y_drag(output.button,1,m_on,m_off);//left click drag
+  //define what happens
+  output.down ? out_gain_db=max(out_gain_db-=0.5,-20);
+  output.up ? out_gain_db=min(out_gain_db+=0.5,20);
+  
+  
+  xy( 90, 90);  knob1=floor(2.1*(in_gain_db+15));  gfx_blit(2, 1, 0, 0, 90*knob1, 90, 90);
+  xy(270, 90);  knob2=floor(3.19*OD_gain_db);       gfx_blit(2, 1, 0, 0, 90*knob2, 90, 90);
+  xy( 90,270);  knob3=floor(2.12*(gain_db+15));  gfx_blit(2, 1, 0, 0, 90*knob3, 90, 90);
+  xy(270,270);  knob4=floor(1.59*(out_gain_db+20));  gfx_blit(2, 1, 0, 0, 90*knob4, 90, 90);
+
+  //knob labels
+  rgb(0.05, 0.05, 0.05);
+  xy (106, 180);  gfx_drawstr(" Input");
+  xy (280, 180);  gfx_drawstr("Overdrive");
+  xy (86, 360);   gfx_drawstr("Tube Amp Gain");
+  xy (280, 360);  gfx_drawstr(" Output");
+
+  xy (0,0);
