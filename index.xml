@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="f0f651d146e1187efdf2cf4aaf833355ac9a0ecd">
+<index version="1" name="StevieKeys JSFX" commit="7c9da868113f17fc27654c9676c0900e3ffbe066">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -549,6 +549,10 @@
         <changelog><![CDATA[- Remove discontinuity
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/f13cde44d1f5103569aeb2636b4def5009d276fe/Saturation/Smooth%20Clipper.jsfx</source>
+      </version>
+      <version name="1.2.1" author="Stephen Boyes" time="2024-04-30T18:27:02Z">
+        <changelog><![CDATA[- clean code]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/7c9da868113f17fc27654c9676c0900e3ffbe066/Saturation/Smooth%20Clipper.jsfx</source>
       </version>
     </reapack>
   </category>
