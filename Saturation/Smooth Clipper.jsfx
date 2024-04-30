@@ -1,4 +1,4 @@
-version:1.2.0
+version:1.2.1
 desc:Smooth Clipper
 author: Stephen Boyes
 about:
@@ -7,8 +7,7 @@ about:
   Hard clipper at the output to prevent levels over 0dB.
   Can be used to add vibe or as a maximiser.
 changelog:
-  - Remove discontinuity
-  - First github version
+  - clean code
 
                                                                       
 //                                                                              
@@ -60,25 +59,9 @@ x >=  1 ? e0 = a0;  x <   1 ? e0 = d0;  x <  -1 ? e0 = a0;
 0.888*e0
 );
 
-/*
-function soft_clipper2(x)
-(
-limit = 1.49841305;
-x = max(-limit,min(limit,x));
-f1 = x;
-x1 = x;
-x = x1*aaa*3;  f3 = (4*x^3 - 3*x);
-x = x1*aaa*5;  f5 = (16*x^5 - 20*x^3 + 5*x);
-x = x1*aaa*7;  f7 = (64*x^7 - 112*x^5 + 56*x^3 - 7*x);
-x = x1*aaa*9;  f9 = (256*x^9 - 576*x^7 + 432*x^5 - 120*x^3 + 9*x);
-(f1 - f3 + f5 - f7 + f9)*0.224
-);
-*/
 
 @slider
 IG = 2^((slider1)/6.02);
-//a = 1-slider2;
-//b = slider2;
 OG = 2^((slider4)/6.02);
 
 
@@ -86,8 +69,8 @@ OG = 2^((slider4)/6.02);
 spl0 = spl0*IG;
 spl1 = spl1*IG;
 
-spl0 = smooth_clip(spl0);//*a + soft_clipper2(spl0)*b;
-spl1 = smooth_clip(spl1);//*a + soft_clipper2(spl1)*b;
+spl0 = smooth_clip(spl0);
+spl1 = smooth_clip(spl1);
 
 spl0 *= OG;
 spl1 *= OG;
