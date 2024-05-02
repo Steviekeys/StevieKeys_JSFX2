@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="0998efebef606e273b273bf557289293be99fba1">
+<index version="1" name="StevieKeys JSFX" commit="4aeed5fe6a61bc4c2bcb69d965a2b23f3f421d41">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -172,6 +172,10 @@
       <version name="0.7.0beta" author="Stephen Boyes" time="2024-04-23T11:17:54Z">
         <changelog><![CDATA[- New Meter]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/4e3209d9c971213a77357c61ad246dcb4358dc29/Distortion/Hard%20AntiDerivative%20AntiAliasing%20Clipper.jsfx</source>
+      </version>
+      <version name="0.7.1beta" author="Stephen Boyes" time="2024-05-02T19:10:43Z">
+        <changelog><![CDATA[- New Meter]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/4aeed5fe6a61bc4c2bcb69d965a2b23f3f421d41/Distortion/Hard%20AntiDerivative%20AntiAliasing%20Clipper.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Distortion.jsfx" type="effect" desc="Retro Distortion">
