@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="4aeed5fe6a61bc4c2bcb69d965a2b23f3f421d41">
+<index version="1" name="StevieKeys JSFX" commit="a2fc180ebbbe6091d204a26b108404f0a607db9a">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -564,6 +564,10 @@
 - Add Flat Top option
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/26d40c412dbf6ff36a4af3d2af6c10cab459def2/Saturation/Odd%20saturation.jsfx</source>
+      </version>
+      <version name="1.3.0" author="Stephen Boyes" time="2024-05-02T20:48:58Z">
+        <changelog><![CDATA[- Multichannel support]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a2fc180ebbbe6091d204a26b108404f0a607db9a/Saturation/Odd%20saturation.jsfx</source>
       </version>
     </reapack>
     <reapack name="Smooth Clipper.jsfx" type="effect" desc="Smooth Clipper">
