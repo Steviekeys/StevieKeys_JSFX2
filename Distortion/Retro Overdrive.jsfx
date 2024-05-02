@@ -1,4 +1,4 @@
-version:2.0.0
+version:2.0.1
 desc:Retro Overdrive
 author:Stephen Boyes
 about:
@@ -11,6 +11,7 @@ changelog:
   - v1.3.1 Add about header
   - v1.3.2 non release GUI
   - v2.0.0 new GUI
+  - v2.0.1 Fixed slider bug
 // DC filter from JSFX DC filter
 // SVF filter from Andy Simper of Cytomics
 
@@ -25,9 +26,9 @@ filename:1,Retro_Overdrive/RetroOverdrive text.png
 filename:2,Retro_Overdrive/RetroOverdrive knob 90x90.png
 
 
--slider1:in_gain_db=0<-15,15,0.1>Input (dB)
--slider2:OD_gain_db=0<0,20,0.1>Overdrive
--slider3:gain_db=0<-15,15,0.1>Amp Gain (dB)
+slider1:in_gain_db=0<-15,15,0.1>Input (dB)
+slider2:OD_gain_db=0<0,20,0.1>Overdrive
+slider3:gain_db=0<-15,15,0.1>Amp Gain (dB)
 slider4:out_gain_db=0<-20,20,0.1>Output (dB)
 
 in_pin:left input
@@ -136,24 +137,23 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
   storeY = mouse_y;
   );
   
-
-
-@slider
+function mysliders()
+(
 next_in_gain=10^(in_gain_db/20);
 next_OD_gain=10^(OD_gain_db/20);
 next_gain=10^(gain_db/20);
 next_out_gain=10^(out_gain_db/20);
+);
+
+@slider
 
 
 @block
-//last_in_gain=10^(in_gain_db/20);
-//last_OD_gain=10^(OD_gain_db/20);
-//last_gain=10^(gain_db/20);
-//last_out_gain=10^(out_gain_db/20);
-d_in_gain = (next_in_gain - last_in_gain)/samplesblock;
-d_OD_gain = (next_OD_gain - last_OD_gain)/samplesblock;
-d_gain = (next_gain - last_gain)/samplesblock;
-d_out_gain = (next_out_gain - last_out_gain)/samplesblock;
+  mysliders();
+  d_in_gain = (next_in_gain - last_in_gain)/samplesblock;
+  d_OD_gain = (next_OD_gain - last_OD_gain)/samplesblock;
+  d_gain = (next_gain - last_gain)/samplesblock;
+  d_out_gain = (next_out_gain - last_out_gain)/samplesblock;
 
 
 
