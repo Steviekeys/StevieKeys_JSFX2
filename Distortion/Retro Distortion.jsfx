@@ -1,4 +1,4 @@
-version:1.2.2
+version:2.0.0
 desc:Retro Distortion
 author: Stephen Boyes
 about:
@@ -22,7 +22,8 @@ about:
 changelog:
   - first github release
   - add about info
-
+  - add GUI
+provides:Retro_Distortion/*
 ///////////////////////////////////////////////
 /         S.Boyes 2023
 ///////////////////////////////////////////////
@@ -32,13 +33,16 @@ changelog:
 / DC blocker from Cockoos JSFX
 ///////////////////////////////////////////////
 
+filename:0,Retro_Distortion/DistortionBackground.png
+filename:1,Retro_Distortion/RetroDistortionKnob 90x90.png
+filename:2,Retro_Distortion/RetroDistortionText.png
 
+options:gfx_Hz=60;
 
-
-slider1:gain_db=0<-24,12,1>Headroom
-slider2:0.5<0,1,0.01>Distortion
-slider3:0.5<0,1,0.01>Dynamic Mix
-slider4:out_gain_db=<-24,12,1>out gain (dB)
+-slider1:gain_db=0<-24,12,1>Headroom
+-slider2:0.5<0,1,0.01>Distortion
+-slider3:0.5<0,1,0.01>Dynamic Mix
+slider4:out_gain_db=<-24,12,0.5>out gain (dB)
 slider5:0<0,1,1{Distort,Saturate}>Mode
 
 in_pin:left input
@@ -118,14 +122,53 @@ function soft_clip(x)
    2/(1+exp(-2*x))-1;
 );
 
+/******************************* GUI Function ***********************************/
+
+   
+  function button_rect(x,y,w,h)
+  (
+    mouse_x >= x && mouse_x <= x+w && mouse_y >= y && mouse_y <= y+h ? (
+    this.button = 1111;
+    ):(
+    this.button = 0;
+    );
+  );
+
+  function mouse_on()//instance(count)
+  (
+  1 && mouse_cap ? count += 1 : count = 0;
+  count > 0 && count < 2 ? m_on =1 : m_on = 0;
+  m_on
+  );
+  
+  function mouse_off()
+  (
+  1 && mouse_cap ? m_off = 0 : m_off = 1;
+  m_off
+  );
+  
+  function y_drag(area,cap,m_on,m_off)local(area,cap)instance(up,down,storeY,area,click,cap)
+  (
+  area && m_on ? area = 1 : area = 0;
+  area && mouse_cap && cap ? click = 1;
+  m_off == 1 ? click = 0;
+  click ? (
+    mouse_y < storeY ? (up = 1; down = 0;);
+    mouse_y > storeY ? (up = 0; down = 1;);
+  );
+  mouse_cap != cap ? click = 0;
+  storeY == mouse_y ? up=down=0;
+  storeY = mouse_y;
+  );
+
 
 @slider
+
+@block
 next_gain=10^(-gain_db/20);
 next_gain_out=10^(out_gain_db/20);
 dyngain = slider3;
 satgain = 1-slider3;
-
-@block
 d_gain = (next_gain - last_gain)/samplesblock;
 d_gain_out = (next_gain_out - last_gain_out)/samplesblock;
 
@@ -185,3 +228,49 @@ last_gain_out += d_gain_out;
 
 spl0 = outl.soft_clip(spl0);
 spl1 = outr.soft_clip(spl1);
+
+
+@gfx 480 600
+  size = min(gfx_w/720,gfx_h/900);
+  gfx_x=gfx_y=0;  gfx_blit(0,size,0,0,0,720,900);
+  gfx_x=60*size;gfx_y=650*size; gfx_blit(2,size,0,0,0,600,200);
+  
+  /******************************* GUI Control ***********************************/
+ 
+  //load state change
+  mouse_on() = m_on;
+  mouse_off() = m_off;
+  aaaa = mouse_cap;
+  
+  //define the button
+  head.button_rect(90*size,90*size,180*size,180*size);
+  //setup the drag
+  head.y_drag(head.button,1,m_on,m_off);//left click drag
+  //define what happens
+  head.down ? gain_db=max(gain_db-=0.5,-24);
+  head.up ? gain_db=min(gain_db+=0.5,12);
+
+  //define the button
+  dist.button_rect(450*size,90*size,180*size,180*size);
+  //setup the drag
+  dist.y_drag(dist.button,1,m_on,m_off);//left click drag
+  //define what happens
+  dist.down ? slider2=max(slider2-=0.02,0);
+  dist.up ? slider2=min(slider2+=0.02,1);
+
+  //define the button
+  dyn.button_rect(270*size,210*size,180*size,180*size);
+  //setup the drag
+  dyn.y_drag(dyn.button,1,m_on,m_off);//left click drag
+  //define what happens
+  dyn.down ? slider3=max(slider3-=0.02,0);
+  dyn.up ? slider3=min(slider3+=0.02,1);
+
+  gfx_x=gfx_y=90*size;             knob1=floor(1.77*(gain_db+24)); gfx_blit(1,2*size,0,0,knob1*90,90,90);
+  gfx_x=450*size; gfx_y=90*size;   knob2=floor(63.99*slider2); gfx_blit(1,2*size,0,0,knob2*90,90,90);
+  gfx_x=270*size; gfx_y=210*size;  knob3=floor(63.99*slider3); gfx_blit(1,2*size,0,0,knob3*90,90,90);
+  
+  gfx_r=gfx_g=gfx_b=1;
+  gfx_x=135*size;  gfx_y=270*size;  gfx_drawstr("Headroom");
+  gfx_x=495*size;  gfx_y=270*size;  gfx_drawstr("Distortion");
+  gfx_x=315*size;  gfx_y=390*size;  gfx_drawstr("Dynamic Mix");
