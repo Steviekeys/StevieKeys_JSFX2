@@ -1,4 +1,4 @@
-version:1.2.0
+version:1.3.0
 desc:Odd Saturation
 author: Stephen Boyes
 about:
@@ -8,9 +8,7 @@ about:
   *Flat Top, waveform flatens off at 0dB.
   Can be used to add vibe or as a maximiser.
 changelog:
-  - Optimise code using sin rather than cos
-  - Add Flat Top option
-  - First github version
+  - Multichannel support
 
 
 //                                                                
@@ -41,16 +39,27 @@ slider6:0<0,1,1{mk1 (Wavy Top),mk2 (Flat Top)}>Waveshape Type
 
 
 
-in_pin:left input
-in_pin:right input
-out_pin:left output
-out_pin:right output
+//in_pin:left input
+//in_pin:right input
+//out_pin:left output
+//out_pin:right output
 
 @init
 ext_tail_size = -1; //automatic silence detection
 halfpi = $pi/2;
 IG = 0.7071;
+channels=num_ch;
 
+function wavytop(x)
+(
+  sin((sin(x)+x*0.5))
+);
+
+function flattop(x)
+(
+  x = max(-$pi,min($pi,x));
+  sin(halfpi*sin(halfpi*sin(0.5*x)))
+);
 
 @slider
 IG2 = 2^(slider1/6);
@@ -58,34 +67,72 @@ S = slider2;
 D = 1-S;
 OG = 2^(slider3/6);
 MXO = 2^(slider4/6);
+channels=num_ch;
 
 @sample
-
 //input gain//
-spl0 = spl0*IG2;
-spl1 = spl1*IG2;
-Wet0 = spl0*IG;
-Wet1 = spl1*IG;
+i = 0;
+while (i < channels)
+(
+  spl(i) *= IG2;
+  i += 1;
+);
+dry0 = spl0;
+dry1 = spl1;
+dry2 = spl2;
+dry3 = spl3;
+dry4 = spl4;
+dry5 = spl5;
+
+i = 0;
+while (i < channels)
+(
+  spl(i) *= IG;
+  i += 1;
+);
+
 
 //odd saturation//
 slider6 == 0 ?
 (
-  wet0 = sin((sin(wet0)+wet0*0.5));
-  wet1 = sin((sin(wet1)+wet1*0.5));
+  i = 0;
+  while (i < channels)
+  (
+    spl(i) = wavytop(spl(i));
+    i += 1;
+  );
+  //spl0 = wavytop(spl0);
+  //spl1 = wavytop(spl1);
 ):(
-  Wet0 = max(-$pi,min($pi,Wet0));
-  Wet1 = max(-$pi,min($pi,Wet1));
-  wet0 = sin(halfpi*sin(halfpi*sin(0.5*wet0)));
-  wet1 = sin(halfpi*sin(halfpi*sin(0.5*wet1)));
+  i = 0;
+  while (i < channels)
+  (
+    spl(i) = flattop(spl(i));
+    i += 1;
+  );
+  //spl0 = flattop(spl0);
+  //spl1 = flattop(spl1);
 );
 
 //mix
-spl0 = spl0*D+wet0*S;
-spl1 = spl1*D+wet1*S;
+spl0 = dry0*D+spl0*S;
+spl1 = dry1*D+spl1*S;
+spl2 = dry2*D+spl2*S;
+spl3 = dry3*D+spl3*S;
+spl4 = dry4*D+spl4*S;
+spl5 = dry5*D+spl5*S;
 
-spl0 = spl0*OG;
-spl1 = spl1*OG;
 
-spl0 = max(-MXO,min(MXO,spl0));
-spl1 = max(-MXO,min(MXO,spl1));
+i = 0;
+while (i < channels)
+(
+  spl(i) *= OG;
+  spl(i) = max(-MXO,min(MXO,spl(i)));
+  i += 1;
+);
 
+//spl0 = spl0*OG;
+//spl1 = spl1*OG;
+
+//spl0 = max(-MXO,min(MXO,spl0));
+//spl1 = max(-MXO,min(MXO,spl1));
