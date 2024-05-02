@@ -1,4 +1,4 @@
-version:0.7.0beta
+version:0.7.1beta
 desc:Hard Anti-Derivative Anti-Aliasing Clipper
 Author:Stephen Boyes
 about:
@@ -130,7 +130,7 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   spl1 *= out_last_gain;
   out_last_gain += d_out_gain;
 
-@gfx 320 320
+@gfx 460 340
 
 
   gfxSize = min(gfx_w,gfx_h);
@@ -199,11 +199,11 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   gfx_drawchar($'T');
 
 gfx_r=0;gfx_g=0.65;gfx_b=1;
-gfx_x = 4; gfx_y = 4;  
+gfx_x = 4; gfx_y = 8;  
 gfx_drawstr("Non oversampled clipper");
-gfx_x = 4; gfx_y = 16;
+gfx_x = 4; gfx_y = 20;
 gfx_drawstr("based on anti derivative");
-gfx_x = 4; gfx_y = 28;  
+gfx_x = 4; gfx_y = 32;  
 gfx_drawstr("anti aliasing methods");
 
 
