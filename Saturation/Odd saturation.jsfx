@@ -1,4 +1,4 @@
-version:1.3.0
+version:1.3.1
 desc:Odd Saturation
 author: Stephen Boyes
 about:
@@ -60,6 +60,9 @@ function flattop(x)
   x = max(-$pi,min($pi,x));
   sin(halfpi*sin(halfpi*sin(0.5*x)))
 );
+
+@block
+channels=num_ch;
 
 @slider
 IG2 = 2^(slider1/6);
