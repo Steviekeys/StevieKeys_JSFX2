@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="06c0f0dff65f84ddf28c4cce752894e6eb889181">
+<index version="1" name="StevieKeys JSFX" commit="0543cfc16ddc4b18663008146101f99460f68cca">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -342,7 +342,7 @@
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/720e7c46d454f69d0bdf1bc1b2dfa9ea516c0557/Dynamics/Limit%20Smash.jsfx</source>
       </version>
     </reapack>
-    <reapack name="Live Limit.jsfx" type="effect" desc="Live Limt">
+    <reapack name="Live Limit.jsfx" type="effect" desc="Live Limit">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
@@ -366,6 +366,11 @@
         <changelog><![CDATA[- Adaptive peak hold
 - Release now acting in dB domain]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6ce77a7df2d51558524c5e81940b5df106d6e179/Dynamics/Live%20Limit.jsfx</source>
+      </version>
+      <version name="3.0.1" author="Stephen Boyes" time="2024-05-11T16:37:25Z">
+        <changelog><![CDATA[- Adaptive peak hold
+- Release now acting in dB domain]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0543cfc16ddc4b18663008146101f99460f68cca/Dynamics/Live%20Limit.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Limiter.jsfx" type="effect" desc="Retro Limiter">
