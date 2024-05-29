@@ -1,13 +1,15 @@
-version:0.1.0beta
+version:0.1.4beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
   # HQ Track Compressor
   A normal compressor! featuring a subtle input stage
   and compression that behaves well even with fast attack and no oversampling.
-  Featuring Anti-Derivative Anti-Aliasing sidechain elements, this is well suited to
-  to the rectifying and hard knee compression components.
+  Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
+  to the rectifing and hard knee compression components.
 Changelog:
+  - changes to divide by zero fallback
+
 
 slider1:thresh_db=0<-50,10,1>Threshold (dB)
 slider2:ratio_in=3<1.2,12,0.2>Ratio
@@ -34,29 +36,32 @@ out_pin:right output
 function AA_abs_square(x0)
 instance (f0,f0n1,x0,x1)
 (
-  f0n1 = f0;
-  abs(x0-x1) <= 2^-17 ? (
-    out = abs((x0+x1)*0.5);
+  abs(x0-x1) < 2^-20 ? (
+    x0 >= 0 ? f0 = 0.5*x0^2;
+    x0 <= 0 ? f0 = -0.5*x0^2;
+    out = abs(x0-x1);
     ):(
     x0 >= 0 ? f0 = 0.5*x0^2;
     x0 <= 0 ? f0 = -0.5*x0^2;
     out = (f0-f0n1)/(x0-x1);
   );
   x1 = x0;
+  f0n1 = f0;
   out
 );
 
 function AA_sidechain_dB(x0)
 instance (f0,f0n1,x0,x1)
 (
-  f0n1 = f0;
-  abs(x0-x1) <= 2^-17 ? (
-    out = 20*log10((x0+x1)*0.5);
+  abs(x0-x1) <= 2^-20 ? (
+    f0 = 20*(log10(x0)*x0 - (1/log(10))*x0);
+    out = -120.4;
     ):(
     f0 = 20*(log10(x0)*x0 - (1/log(10))*x0);
     out = (f0-f0n1)/(x0-x1);
   );
   x1 = x0;
+  f0n1 = f0;
   out
 );
 
@@ -83,7 +88,7 @@ instance (x0,x1,x2)
 (
   out = x2;
   x2 = x1;
-  x1 =x0;
+  x1 = x0;
   out
 );
 
