@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="0543cfc16ddc4b18663008146101f99460f68cca">
+<index version="1" name="StevieKeys JSFX" commit="80ee7628e3d3cf58383726add7f9d5ee08f622aa">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -299,12 +299,16 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 HQ Track Compressor\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 A normal compressor! featuring a subtle input stage and compression that behaves well even with fast attack and no oversampling. Featuring Anti-Derivative Anti-Aliasing sidechain elements, this is well suited to to the rectifying and hard knee compression components.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 A normal compressor! featuring a subtle input stage and compression that behaves well even with fast attack and no oversampling. Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to to the rectifing and hard knee compression components.\par}
 }
 ]]></description>
       </metadata>
       <version name="0.1.0beta" author="Stephen Boyes" time="2024-04-29T20:35:28Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/073fb691480976882c6f25c9772eb068ad14e898/Dynamics/HQ%20Track%20Compressor.jsfx</source>
+      </version>
+      <version name="0.1.4beta" author="Stephen Boyes" time="2024-05-29T11:51:38Z">
+        <changelog><![CDATA[- changes to divide by zero fallback]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/80ee7628e3d3cf58383726add7f9d5ee08f622aa/Dynamics/HQ%20Track%20Compressor.jsfx</source>
       </version>
     </reapack>
     <reapack name="Limit Smash.jsfx" type="effect" desc="Limit smash [v3]">
