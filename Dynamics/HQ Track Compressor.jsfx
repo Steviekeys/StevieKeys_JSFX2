@@ -1,4 +1,4 @@
-version:0.1.4beta
+version:0.2.0beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -9,12 +9,13 @@ about:
   to the rectifing and hard knee compression components.
 Changelog:
   - changes to divide by zero fallback
+  - Input saturation control
 
-
-slider1:thresh_db=0<-50,10,1>Threshold (dB)
-slider2:ratio_in=3<1.2,12,0.2>Ratio
-slider3:Att_in=5<0.04,30,0.02>Attack (ms)
-slider4:Rel_in=200<40,1000,1>Release (ms)
+slider1:drive=0<0,31,1>Input Saturation
+slider2:thresh_db=0<-50,10,1>Threshold (dB)
+slider3:ratio_in=3<1.2,12,0.2>Ratio
+slider4:Att_in=5<0.04,30,0.02>Attack (ms)
+slider5:Rel_in=200<40,1000,1>Release (ms)
 
 slider10:gain_db=0<-100,12,1>gain (dB)
 
@@ -130,7 +131,8 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
 );
 
 @slider
-  next_thresh=10^(thresh_db/20);
+  SAT = 10^(drive/20);
+  next_thresh = 10^(thresh_db/20);
   ratio = (ratio_in-1)/ratio_in;
   next_gain=10^(gain_db/20);
   knee = 4;
@@ -149,8 +151,8 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
   aspl1 = sqrt(0.004+spl1^2) - sqrt(0.004);
   FM0 = 0.08*aspl0 + spl0*0.04;
   FM1 = 0.08*aspl1 + spl1*0.04;
-  spl0 = in.left.svf_highp(spl0,5 + FM0 + 0.16*spl0,0.8);
-  spl1 = in.right.svf_highp(spl1,5 + FM1 + 0.16*spl1,0.8);
+  spl0 = in.left.svf_highp(spl0,5 + FM0*SAT + 0.16*spl0,0.8);
+  spl1 = in.right.svf_highp(spl1,5 + FM1*SAT + 0.16*spl1,0.8);
 
 ////shift gain into fixed threshold////
   spl0 /= last_thresh;
