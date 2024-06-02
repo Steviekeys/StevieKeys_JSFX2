@@ -1,4 +1,4 @@
-version:0.2.0beta
+version:0.2.1beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -149,8 +149,8 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
 ////input stage////
   aspl0 = sqrt(0.004+spl0^2) - sqrt(0.004);
   aspl1 = sqrt(0.004+spl1^2) - sqrt(0.004);
-  FM0 = 0.08*aspl0 + spl0*0.04;
-  FM1 = 0.08*aspl1 + spl1*0.04;
+  FM0 = 0.07*aspl0 + spl0*0.05;
+  FM1 = 0.07*aspl1 + spl1*0.05;
   spl0 = in.left.svf_highp(spl0,5 + FM0*SAT + 0.16*spl0,0.8);
   spl1 = in.right.svf_highp(spl1,5 + FM1*SAT + 0.16*spl1,0.8);
 
