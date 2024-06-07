@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="dccc926d11c95a342bcff6f6bd52f09dc4e7eb0a">
+<index version="1" name="StevieKeys JSFX" commit="be5cfe916b5aadd4165eb34dcab7fa6c7970b600">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -319,6 +319,11 @@
         <changelog><![CDATA[- changes to divide by zero fallback
 - Input saturation control]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/dccc926d11c95a342bcff6f6bd52f09dc4e7eb0a/Dynamics/HQ%20Track%20Compressor.jsfx</source>
+      </version>
+      <version name="0.2.2beta" author="Stephen Boyes" time="2024-06-07T16:36:58Z">
+        <changelog><![CDATA[- more powerfull saturation control
+- Randomize stuff]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/be5cfe916b5aadd4165eb34dcab7fa6c7970b600/Dynamics/HQ%20Track%20Compressor.jsfx</source>
       </version>
     </reapack>
     <reapack name="Limit Smash.jsfx" type="effect" desc="Limit smash [v3]">
