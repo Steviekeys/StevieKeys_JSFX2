@@ -1,4 +1,4 @@
-version:0.2.1beta
+version:0.2.2beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -8,8 +8,8 @@ about:
   Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
   to the rectifing and hard knee compression components.
 Changelog:
-  - changes to divide by zero fallback
-  - Input saturation control
+  - more powerfull saturation control
+  - Randomize stuff
 
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
@@ -29,6 +29,10 @@ out_pin:right output
   last_gain=10^(gain_db/20);
   gr_meter=1;
   gr_meter_decay = exp(1/(1*srate));
+  r1 = 0.11*(rand(2)-1);
+  r2 = 0.11*(rand(2)-1);
+  r3 = 0.12*(rand(2)-1);
+  r4 = 0.12*(rand(2)-1);
   ext_gr_meter = 0;
   pdc_delay = 2;
   pdc_bot_ch = 0;
@@ -104,6 +108,49 @@ function logistic(x,k)
 (
   1/(1+exp(-k*x))
 );
+/*
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan(0.5*$pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+
+ m0*v0+m1*v1+m2*v2
+);
+*/
+
+function svf_bandp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 1;
+ m2 = 0;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ 
+ m0*v0+m1*v1+m2*v2
+);
 
 function svf_highp(v0,cutoff,Q)
 instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
@@ -123,15 +170,11 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
  
- //Soft
- ic1eq = sin(ic1eq);
- ic2eq = sin(ic2eq);
- 
  m0*v0+m1*v1+m2*v2
 );
 
 @slider
-  SAT = 10^(drive/20);
+  SAT = 10^((drive*2)/20);
   next_thresh = 10^(thresh_db/20);
   ratio = (ratio_in-1)/ratio_in;
   next_gain=10^(gain_db/20);
@@ -146,13 +189,16 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
   d_gain = (next_gain - last_gain)/samplesblock;
 
 @sample
+noise1 = rand(1)*(srate/96000);
+noise1 = svf_bandp(noise1,6.21,2.16);
+
 ////input stage////
   aspl0 = sqrt(0.004+spl0^2) - sqrt(0.004);
   aspl1 = sqrt(0.004+spl1^2) - sqrt(0.004);
   FM0 = 0.07*aspl0 + spl0*0.05;
   FM1 = 0.07*aspl1 + spl1*0.05;
-  spl0 = in.left.svf_highp(spl0,5 + FM0*SAT + 0.16*spl0,0.8);
-  spl1 = in.right.svf_highp(spl1,5 + FM1*SAT + 0.16*spl1,0.8);
+  spl0 = in.left.svf_highp(spl0,5 + r1 + FM0*SAT + 0.16*spl0,0.77);
+  spl1 = in.right.svf_highp(spl1,5 + r2 + FM1*SAT + 0.16*spl1,0.77);
 
 ////shift gain into fixed threshold////
   spl0 /= last_thresh;
@@ -185,8 +231,8 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
   spl1 *= sideTOTAL;
 
 ////output stage////
-  spl0 = out.left.svf_highp(spl0,5,0.8);
-  spl1 = out.right.svf_highp(spl1,5,0.8);
+  spl0 = out.left.svf_highp(spl0,6 + r3 + noise1,0.75);
+  spl1 = out.right.svf_highp(spl1,6 + r4 + noise1,0.75);
 
 ////shift gain out of fixed threshold////
   spl0 *= last_thresh;
