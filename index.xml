@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="be5cfe916b5aadd4165eb34dcab7fa6c7970b600">
+<index version="1" name="StevieKeys JSFX" commit="9e1102c07a24b421b9ed2a1e0f1f50fb99461445">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -506,6 +506,10 @@
       <version name="3.0.1" author="Stephen Boyes" time="2024-01-30T10:57:34Z">
         <changelog><![CDATA[- First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/fac6669c7a6aa717318e002c3e051540f85cb049/EQ/Retro-Q%20V3.jsfx</source>
+      </version>
+      <version name="3.0.2" author="Stephen Boyes" time="2024-06-08T17:05:45Z">
+        <changelog><![CDATA[- No meter]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9e1102c07a24b421b9ed2a1e0f1f50fb99461445/EQ/Retro-Q%20V3.jsfx</source>
       </version>
     </reapack>
   </category>
