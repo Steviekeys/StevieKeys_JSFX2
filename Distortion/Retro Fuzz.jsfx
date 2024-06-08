@@ -1,4 +1,4 @@
-version:2.1.1
+version:2.1.2
 desc:Retro Fuzz [V2]
 author: Stephen Boyes
 about:
@@ -23,6 +23,7 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+options:no_meter
 
 @init
 ingain=10^(slider1/20);
