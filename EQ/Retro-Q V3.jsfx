@@ -1,4 +1,4 @@
-version:3.0.1
+version:3.0.2
 desc:Retro-Q V3
 Author:Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
 
   SVF filter code from Andy Simper of cytomics
 changelog:
-  - First github version
+  - No meter
 
 //  The MIT License (MIT)
 //Copyright © 2023 Stephen Boyes
@@ -41,6 +41,8 @@ in_pin:left input
 in_pin:right input
 out_pin:left output
 out_pin:right output
+
+options:no_meter
 
 @init
 gr_meter=1;
