@@ -1,4 +1,4 @@
-version:0.2.2beta
+version:0.2.3beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -8,8 +8,8 @@ about:
   Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
   to the rectifing and hard knee compression components.
 Changelog:
-  - more powerfull saturation control
-  - Randomize stuff
+
+
 
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
@@ -24,11 +24,16 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
+filename:0,Vintage_PPM_meter.png
+
+options:gfx_hz=60
+
 @init
-  last_thresh=10^(thresh_db/20);
-  last_gain=10^(gain_db/20);
-  gr_meter=1;
-  gr_meter_decay = exp(1/(1*srate));
+  last_thresh = 10^(thresh_db/20);
+  last_gain = 10^(gain_db/20);
+  gr_meter = 1;
+  gr_meter_decay = exp(1/(0.02*srate));
+  gr_smooth   = exp(-1/(0.001*3*srate));
   r1 = 0.11*(rand(2)-1);
   r2 = 0.11*(rand(2)-1);
   r3 = 0.12*(rand(2)-1);
@@ -41,7 +46,7 @@ out_pin:right output
 function AA_abs_square(x0)
 instance (f0,f0n1,x0,x1)
 (
-  abs(x0-x1) < 2^-20 ? (
+  abs(x0-x1) < 2^-19 ? (
     x0 >= 0 ? f0 = 0.5*x0^2;
     x0 <= 0 ? f0 = -0.5*x0^2;
     out = abs(x0-x1);
@@ -58,7 +63,7 @@ instance (f0,f0n1,x0,x1)
 function AA_sidechain_dB(x0)
 instance (f0,f0n1,x0,x1)
 (
-  abs(x0-x1) <= 2^-20 ? (
+  abs(x0-x1) <= 2^-19 ? (
     f0 = 20*(log10(x0)*x0 - (1/log(10))*x0);
     out = -120.4;
     ):(
@@ -108,28 +113,7 @@ function logistic(x,k)
 (
   1/(1+exp(-k*x))
 );
-/*
-function svf_lowp(v0,cutoff,Q)
-instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
-(
- g = tan(0.5*$pi*cutoff/srate);
- k = 1/Q;
- a1 = 1/(1+g*(g+k));
- a2 = g*a1;
- a3 = g*a2;
- m0 = 0;
- m1 = 0;
- m2 = 1;
- v3 = v0-ic2eq;
- v1 = a1*ic1eq+a2*v3;
- v2 = ic2eq+a2*ic1eq+a3*v3;
 
- ic1eq = 2*v1-ic1eq;
- ic2eq = 2*v2-ic2eq;
-
- m0*v0+m1*v1+m2*v2
-);
-*/
 
 function svf_bandp(v0,cutoff,Q)
 instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
@@ -183,10 +167,12 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
   att = exp(-1/(0.001*att_in*srate));
   rel = exp(-1/(0.001*rel_in*srate));
   RMS = exp(-1/(0.001*(att_in*0.2)*srate));
+  
 
 @block
   d_thresh = (next_thresh - last_thresh)/samplesblock;
   d_gain = (next_gain - last_gain)/samplesblock;
+
 
 @sample
 noise1 = rand(1)*(srate/96000);
@@ -245,11 +231,13 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   last_gain += d_gain;
 
 
+
+  sideTOTAL = smooth.envelope(sideTOTAL,gr_smooth);
   sideTOTAL < gr_meter ? gr_meter=sideTOTAL : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
 
 
-@gfx 0 32 // request horizontal/vertical heights (0 means dont care)
-
+@gfx 256 256 // request horizontal/vertical heights (0 means dont care)
+/*
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
   
@@ -286,3 +274,12 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   gfx_drawnumber(log10(gr_meter)*20,1);
   gfx_drawchar($'d');
   gfx_drawchar($'B');
+*/
+
+  //new GR meter
+  
+  gfx_x=0; gfx_y=0;
+  GRdB = -20*log10(gr_meter);
+  GRdB = max(0,min(GRdB,20));
+  GRDisplay = floor(GRdB*4)*256;
+  gfx_blit(0,1,0,0,GRdisplay,256,256);
