@@ -1,4 +1,4 @@
-version:0.2.5beta
+version:0.2.6beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
   to the rectifing and hard knee compression components.
 Changelog:
 
-
+provides:HQ Track Compressor/*
 
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
@@ -26,6 +26,9 @@ out_pin:right output
 
 filename:0,Vintage_PPM_meter.png
 filename:1,simple_red.png
+filename:2,simple_silver.png
+filename:3,simple_blue.png
+
 
 options:gfx_hz=60
 
@@ -239,7 +242,7 @@ noise1 = svf_bandp(noise1,6.21,2.16);
 
 @gfx 1024 512 // request horizontal/vertical heights (0 means dont care)
   
-  gfx_r=gfx_g=gfx_b=0.5;
+  gfx_r=gfx_g=gfx_b=0.4;
   gfx_rect(0,0,1024,512);
 
   //new GR meter
@@ -256,19 +259,19 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   gfx_blit(1,1,0,0,drive*128,128,128);
   
   gfx_x=54+160; gfx_y=280;
-  gfx_blit(1,1,0,0,(thresh_db+50)*64,128,128);
+  gfx_blit(2,1,0,0,(thresh_db+50)*64,128,128);
   
   gfx_x=54+160*2; gfx_y=280;
-  gfx_blit(1,1,0,0,ratio_in*128,128,128);
+  gfx_blit(2,1,0,0,ratio_in*128,128,128);
   
   gfx_x=54+160*3; gfx_y=280;
-  gfx_blit(1,1,0,0,att_in*128,128,128);
+  gfx_blit(2,1,0,0,att_in*128,128,128);
   
   gfx_x=54+160*4; gfx_y=280;
-  gfx_blit(1,1,0,0,rel_in*0.1*128,128,128);
+  gfx_blit(2,1,0,0,rel_in*0.1*128,128,128);
   
   gfx_x=54+160*5; gfx_y=280;
-  gfx_blit(1,1,0,0,(gain_db+9)*128,128,128);
+  gfx_blit(3,1,0,0,(gain_db+9)*128,128,128);
   
   gfx_r=gfx_g=gfx_b=0.0;
   gfx_x=500; gfx_y=200;
