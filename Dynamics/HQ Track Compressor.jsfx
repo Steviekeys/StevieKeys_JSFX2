@@ -1,4 +1,4 @@
-version:0.2.3beta
+version:0.2.4beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -25,6 +25,7 @@ out_pin:left output
 out_pin:right output
 
 filename:0,Vintage_PPM_meter.png
+filename:1,simple_red.png
 
 options:gfx_hz=60
 
@@ -236,7 +237,7 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   sideTOTAL < gr_meter ? gr_meter=sideTOTAL : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
 
 
-@gfx 256 256 // request horizontal/vertical heights (0 means dont care)
+@gfx 256 512 // request horizontal/vertical heights (0 means dont care)
 /*
   gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
   gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
@@ -283,3 +284,8 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   GRdB = max(0,min(GRdB,20));
   GRDisplay = floor(GRdB*4)*256;
   gfx_blit(0,1,0,0,GRdisplay,256,256);
+  
+  //GUI
+  
+  gfx_x=64; gfx_y=280;
+  gfx_blit(1,1,0,0,drive*128,128,128);
