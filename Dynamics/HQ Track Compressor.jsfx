@@ -1,4 +1,4 @@
-version:0.2.4beta
+version:0.2.5beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -17,7 +17,7 @@ slider3:ratio_in=3<1.2,12,0.2>Ratio
 slider4:Att_in=5<0.04,30,0.02>Attack (ms)
 slider5:Rel_in=200<40,1000,1>Release (ms)
 
-slider10:gain_db=0<-100,12,1>gain (dB)
+slider10:gain_db=0<-9,22,1>gain (dB)
 
 in_pin:left input
 in_pin:right input
@@ -237,45 +237,10 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   sideTOTAL < gr_meter ? gr_meter=sideTOTAL : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
 
 
-@gfx 256 512 // request horizontal/vertical heights (0 means dont care)
-/*
-  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
-  gfx_r=1; gfx_g=gfx_b=0; gfx_a=0.8;
+@gfx 1024 512 // request horizontal/vertical heights (0 means dont care)
   
-  meter_bot=20;
-  meter_h=min(gfx_h,32);
-  xscale=gfx_w*20/meter_bot;
-
-  gfx_y=0;
-  gfx_x=gfx_w + log10(gr_meter)*xscale;
-  gfx_rectto(gfx_w,meter_h);
-
-  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
-
-  s2=sqrt(2)/2;
-  g = s2;
-  while(
-    gfx_x=gfx_w + log10(g)*xscale;
-    gfx_x >= 0 ? 
-    (
-      gfx_y=0;
-      gfx_lineto(gfx_x,meter_h,0);
-      gfx_y=meter_h-gfx_texth;
-      gfx_x+=2;
-      gfx_drawnumber(log10(g)*20,0);
-      gfx_drawchar($'d');
-      gfx_drawchar($'B');
-    );
-    g*=s2;
-    gfx_x >=0;
-  );
-  gfx_a=1;
-
-  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
-  gfx_drawnumber(log10(gr_meter)*20,1);
-  gfx_drawchar($'d');
-  gfx_drawchar($'B');
-*/
+  gfx_r=gfx_g=gfx_b=0.5;
+  gfx_rect(0,0,1024,512);
 
   //new GR meter
   
@@ -287,5 +252,24 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   
   //GUI
   
-  gfx_x=64; gfx_y=280;
+  gfx_x=54; gfx_y=280;
   gfx_blit(1,1,0,0,drive*128,128,128);
+  
+  gfx_x=54+160; gfx_y=280;
+  gfx_blit(1,1,0,0,(thresh_db+50)*64,128,128);
+  
+  gfx_x=54+160*2; gfx_y=280;
+  gfx_blit(1,1,0,0,ratio_in*128,128,128);
+  
+  gfx_x=54+160*3; gfx_y=280;
+  gfx_blit(1,1,0,0,att_in*128,128,128);
+  
+  gfx_x=54+160*4; gfx_y=280;
+  gfx_blit(1,1,0,0,rel_in*0.1*128,128,128);
+  
+  gfx_x=54+160*5; gfx_y=280;
+  gfx_blit(1,1,0,0,(gain_db+9)*128,128,128);
+  
+  gfx_r=gfx_g=gfx_b=0.0;
+  gfx_x=500; gfx_y=200;
+  gfx_drawstr("GUI test beta, only meter working so far");
