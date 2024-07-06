@@ -1,4 +1,4 @@
-version:0.2.6beta
+version:0.2.8beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -247,7 +247,7 @@ noise1 = svf_bandp(noise1,6.21,2.16);
 
   //new GR meter
   
-  gfx_x=0; gfx_y=0;
+  gfx_x=512-128; gfx_y=0;
   GRdB = -20*log10(gr_meter);
   GRdB = max(0,min(GRdB,20));
   GRDisplay = floor(GRdB*4)*256;
@@ -255,24 +255,43 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   
   //GUI
   
-  gfx_x=54; gfx_y=280;
-  gfx_blit(1,1,0,0,drive*128,128,128);
+  gfx_x=128; gfx_y=64;
+  gfx_blit(1,1,0,0,floor(drive*128),128,128);
   
-  gfx_x=54+160; gfx_y=280;
-  gfx_blit(2,1,0,0,(thresh_db+50)*64,128,128);
+  gfx_x=128; gfx_y=290;
+  gfx_blit(2,1,0,0,floor((thresh_db+50)*0.517)*128,128,128);
   
-  gfx_x=54+160*2; gfx_y=280;
-  gfx_blit(2,1,0,0,ratio_in*128,128,128);
+  gfx_x=128+213.3; gfx_y=290;
+  gfx_blit(2,1,0,0,floor((ratio_in-1.2)*2.88)*128,128,128);
   
-  gfx_x=54+160*3; gfx_y=280;
-  gfx_blit(2,1,0,0,att_in*128,128,128);
+  gfx_x=128+213.3*2; gfx_y=290;
+  gfx_blit(2,1,0,0,floor((att_in-0.04)*1.04)*128,128,128);
   
-  gfx_x=54+160*4; gfx_y=280;
-  gfx_blit(2,1,0,0,rel_in*0.1*128,128,128);
+  gfx_x=128+213.3*3; gfx_y=290;
+  gfx_blit(2,1,0,0,floor((rel_in-40)*0.0324)*128,128,128);
   
-  gfx_x=54+160*5; gfx_y=280;
-  gfx_blit(3,1,0,0,(gain_db+9)*128,128,128);
+  gfx_x=128+213.3*3; gfx_y=64;
+  gfx_blit(3,1,0,0,floor(gain_db+9)*128,128,128);
   
+  //text
   gfx_r=gfx_g=gfx_b=0.0;
-  gfx_x=500; gfx_y=200;
+  gfx_x=120; gfx_y=480;
   gfx_drawstr("GUI test beta, only meter working so far");
+  
+  gfx_x=160; gfx_y=230;
+  gfx_drawstr("IN");
+  
+  gfx_x=160; gfx_y=450;
+  gfx_drawstr("Threshold");
+  
+  gfx_x=160+213.3; gfx_y=450;
+  gfx_drawstr("Ratio");
+  
+  gfx_x=160+213.3*2; gfx_y=450;
+  gfx_drawstr("Attack");
+  
+  gfx_x=160+213.3*3; gfx_y=450;
+  gfx_drawstr("Release");
+  
+  gfx_x=160+213.3*3; gfx_y=230;
+  gfx_drawstr("Gain");
