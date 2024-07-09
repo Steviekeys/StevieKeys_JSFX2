@@ -25,11 +25,11 @@ in_pin:right input
 out_pin:left output
 out_pin:right output
 
-filename:0,HQcomp_back.png
-filename:1,Vintage_PPM_meter.png
-filename:2,simple_red.png
-filename:3,simple_silver.png
-filename:4,simple_blue.png
+filename:0,HQ_Track_Compressor/HQcomp_back.png
+filename:1,HQ_Track_Compressor/Vintage_PPM_meter.png
+filename:2,HQ_Track_Compressor/simple_red.png
+filename:3,HQ_Track_Compressor/simple_silver.png
+filename:4,HQ_Track_Compressor/simple_blue.png
 
 options:gfx_hz=60
 
