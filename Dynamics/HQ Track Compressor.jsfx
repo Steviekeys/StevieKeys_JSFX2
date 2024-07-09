@@ -10,7 +10,7 @@ about:
 Changelog:
   - beta GUI
 
-provides:HQ Track Compressor/*
+provides:HQ_Track_Compressor/*
 
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
