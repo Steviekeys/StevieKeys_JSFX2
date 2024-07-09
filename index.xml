@@ -788,7 +788,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dual 360 Pan\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Auto DeEsser (beta)\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Hard AntiDerivative AntiAliasing Clipper (beta)\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Pong Game\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Pong Game\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab HQ Track Compressor (beta)\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
 }
 ]]></description>
