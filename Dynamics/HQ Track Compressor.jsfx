@@ -1,6 +1,9 @@
-version:0.3.2beta
+version:0.3.3beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
+provides:
+  HQ_Track_Compressor/*
+  HQ_Track_Compressor/HQcomp_back.png
 about:
   # HQ Track Compressor
   A normal compressor! featuring a subtle input stage
@@ -11,8 +14,7 @@ Changelog:
   - beta GUI
 
 options:gfx_hz=60
-provides:HQ_Track_Compressor/*
-provides:HQ_Track_Compressor/HQcomp_back.png
+
 
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
