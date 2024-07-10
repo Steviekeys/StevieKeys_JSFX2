@@ -1,4 +1,4 @@
-version:0.3.1beta
+version:0.3.2beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 about:
@@ -10,7 +10,9 @@ about:
 Changelog:
   - beta GUI
 
+options:gfx_hz=60
 provides:HQ_Track_Compressor/*
+provides:HQ_Track_Compressor/HQcomp_back.png
 
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
@@ -31,7 +33,7 @@ filename:2,HQ_Track_Compressor/simple_red.png
 filename:3,HQ_Track_Compressor/simple_silver.png
 filename:4,HQ_Track_Compressor/simple_blue.png
 
-options:gfx_hz=60
+
 
 @init
   last_thresh = 10^(thresh_db/20);
