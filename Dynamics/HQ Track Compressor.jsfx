@@ -3,7 +3,6 @@ desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
   HQ_Track_Compressor/*
-  HQ_Track_Compressor/HQcomp_back.png
 about:
   # HQ Track Compressor
   A normal compressor! featuring a subtle input stage
