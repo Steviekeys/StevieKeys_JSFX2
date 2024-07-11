@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="d4c0d8c83d77b46982347725e8d19088ad10a681">
+<index version="1" name="StevieKeys JSFX" commit="a6fab5739809b4a20aa5debd445e7315837ac367">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -355,6 +355,15 @@
       <version name="0.3.2beta" author="Stephen Boyes" time="2024-07-10T13:20:15Z">
         <changelog><![CDATA[- beta GUI]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/d4c0d8c83d77b46982347725e8d19088ad10a681/Dynamics/HQ%20Track%20Compressor.jsfx</source>
+      </version>
+      <version name="0.3.3beta" author="Stephen Boyes" time="2024-07-11T10:50:56Z">
+        <changelog><![CDATA[- beta GUI]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a6fab5739809b4a20aa5debd445e7315837ac367/Dynamics/HQ%20Track%20Compressor.jsfx</source>
+        <source file="HQ_Track_Compressor/HQcomp_back.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a6fab5739809b4a20aa5debd445e7315837ac367/Dynamics/HQ_Track_Compressor/HQcomp_back.png</source>
+        <source file="HQ_Track_Compressor/Simple_blue.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a6fab5739809b4a20aa5debd445e7315837ac367/Dynamics/HQ_Track_Compressor/Simple_blue.png</source>
+        <source file="HQ_Track_Compressor/Simple_red.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a6fab5739809b4a20aa5debd445e7315837ac367/Dynamics/HQ_Track_Compressor/Simple_red.png</source>
+        <source file="HQ_Track_Compressor/Simple_silver.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a6fab5739809b4a20aa5debd445e7315837ac367/Dynamics/HQ_Track_Compressor/Simple_silver.png</source>
+        <source file="HQ_Track_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a6fab5739809b4a20aa5debd445e7315837ac367/Dynamics/HQ_Track_Compressor/Vintage_PPM_meter.png</source>
       </version>
     </reapack>
     <reapack name="Limit Smash.jsfx" type="effect" desc="Limit smash [v3]">
