@@ -1,4 +1,4 @@
-version:0.3.3beta
+version:0.3.6beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -11,6 +11,7 @@ about:
   to the rectifing and hard knee compression components.
 Changelog:
   - beta GUI
+  - input sat changes
 
 options:gfx_hz=60
 
@@ -50,6 +51,22 @@ filename:4,HQ_Track_Compressor/simple_blue.png
   pdc_delay = 2;
   pdc_bot_ch = 0;
   pdc_top_ch = 2;
+
+  satenv = 2.25;
+  enva = exp(-1/(0.001*satenv*srate));
+  envb = 1-enva;
+
+function gainshaper_detector (X)
+(
+(0.667+exp(-0.5*X^2))*0.64
+);
+
+function gainshaper_smoother (X)
+instance (out)
+(
+out = envb*X + enva*out;
+out
+);
 
 function AA_abs_square(x0)
 instance (f0,f0n1,x0,x1)
@@ -175,7 +192,7 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
   att = exp(-1/(0.001*att_in*srate));
   rel = exp(-1/(0.001*rel_in*srate));
   RMS = exp(-1/(0.001*(att_in*0.2)*srate));
-  
+  drive2 = 10^((drive-24)/20);  
 
 @block
   d_thresh = (next_thresh - last_thresh)/samplesblock;
@@ -187,6 +204,9 @@ noise1 = rand(1)*(srate/96000);
 noise1 = svf_bandp(noise1,6.21,2.16);
 
 ////input stage////
+  spl0 = spl0*leftinsat1.gainshaper_smoother(foo_0);
+  spl1 = spl1*righinsat1.gainshaper_smoother(foo_1);
+
   aspl0 = sqrt(0.004+spl0^2) - sqrt(0.004);
   aspl1 = sqrt(0.004+spl1^2) - sqrt(0.004);
   FM0 = 0.07*aspl0 + spl0*0.05;
@@ -194,6 +214,10 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   spl0 = in.left.svf_highp(spl0,5 + r1 + FM0*SAT + 0.16*spl0,0.77);
   spl1 = in.right.svf_highp(spl1,5 + r2 + FM1*SAT + 0.16*spl1,0.77);
 
+  foo_0 = leftinsat2.gainshaper_detector(drive2*spl0);
+  foo_1 = righinsat2.gainshaper_detector(drive2*spl1);
+spl0 *= 1.0;
+spl1 *= 1.0;
 ////shift gain into fixed threshold////
   spl0 /= last_thresh;
   spl1 /= last_thresh;
