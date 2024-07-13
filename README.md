@@ -27,5 +27,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Hard AntiDerivative AntiAliasing Clipper (beta)
 * Pong Game
 * HQ Track Compressor (beta)
+* Octave Fuzz (beta)
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
