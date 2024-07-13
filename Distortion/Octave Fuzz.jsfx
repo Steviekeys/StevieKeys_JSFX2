@@ -1,0 +1,359 @@
+version:0.5.0beta
+desc:Octave Fuzz
+author:Stephen Boyes
+about:
+  # Octave Fuzz Guitar and Vocal (beta)
+  Full Wave rectifier type effect
+  can make some signals appear octave higher, but using distortion.
+  Best used on monophonic sounds, or power chords!
+  High frequency transients should pass through almmost untouched,
+  so you can mangle a vocal, into a chipmunk/gnome/elf and still hear the esses!
+changelog:
+  - beta v0.5.0beta
+
+////////to do////////
+//GUI
+
+
+//options:gfx_Hz = 60
+//provides:Octave Fuzz/*
+
+
+slider1:boost=0<0,20,1>More Fuzz
+slider2:gain_db=0<-10,10,0.2>gain (dB)
+
+
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+options:no_meter;
+
+@init
+last_gain=10^(gain_db/20);
+last_boost=10^(boost/20);
+
+ext_tail_size = -1;
+pdc_bot_ch=0;
+pdc_top_ch=2;
+pdc_delay=2;  
+
+rms_sec = 0.3 * 0.001;
+rms_Freq = 1/(2*$pi*rms_sec);
+rms_coef = (rms_Freq/srate)/(1+(rms_Freq/srate));
+rms_coef = 1-rms_coef;
+
+a_time = 0.3;
+att_sec = a_time * 0.001;
+att_Freq = 1/(2*$pi*att_sec);
+att_coef = (att_Freq/srate)/(1+(att_Freq/srate));
+att_coef = 1-att_coef;
+
+r_time = 5;
+rel_sec = r_time * 0.001;
+rel_Freq = 1/(2*$pi*rel_sec);
+rel_coef = (rel_Freq/srate)/(1+(rel_Freq/srate));
+rel_coef = 1-rel_coef;
+
+
+function set_svf_highp(cutoff,Q)
+instance (a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+);
+
+function set_svf_lowp(cutoff,Q)
+instance (a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/Q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 0;
+ m1 = 0;
+ m2 = 1;
+);
+
+function svf_highp(v0)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+function svf_lowp(v0)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+(
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+rel_ms = 75;
+rel = -1/(srate*0.001*rel_ms);
+att_ms = 0.75;
+att = 1/(srate*0.001*att_ms);
+
+
+function slew_release(in0)
+instance(in0,x,diff,out,out1)
+(
+x = in0-out1;  //difference from last sample
+diff = min(max(x,rel),att);
+out = max(min(out1+diff,1),0);
+out1 = out;
+out
+);
+
+
+function FIR(x,cx0,cx1,cx2,cx3,cx4)
+instance(x0,x1,x2,x3,x4)
+(
+x4 = x3;
+x3 = x2;
+x2 = x1;
+x1 = x0;
+x0 = x;
+cx0*x0 + cx1*x1 + cx2*x2 + cx3*x3 +cx4*x4
+);
+
+
+function lowpass(in,Freq)
+instance(in,Fc,Freq,a,b,y)
+(
+Fc = Freq/srate;
+a = exp(-2*$pi*Fc);
+b = 1-a;
+y += b*(in-y);
+y
+);
+
+
+function FWR(x,env)
+instance (y,soft,env)
+(
+soft = env*0.17;
+soft = 0.025 + soft;
+y = x -  soft*log10(1+10^((2/soft)*x)) + 0.0060206;
+y
+);
+
+
+function AA_abs_square(x0)
+instance (f0n1,f0,x0,x1)
+(
+  f0n1 = f0;
+  abs(x0-x1) <= 2^-20 ? (
+    out = abs((x0+x1)*0.5);
+    ):(
+    x0 >= 0 ? f0 = 0.5*x0^2;
+    x0 <= 0 ? f0 = -0.5*x0^2;
+    out = (f0-f0n1)/(x0-x1);
+  );
+  x1 = x0;
+  out
+);
+
+
+function L_clip(x)
+(
+x > -0.75 ? y = x;
+x > 0.75 ? y = (0.5/(1+exp(-8*(x-0.75))))+0.5;
+x < -0.75 ? y = (-0.5/(1+exp(8*(x+0.75))))-0.5;
+y
+);
+
+
+function odddharmonic(x)
+(
+y = 1.5*x - 0.5*x^3;
+1.5*y - 0.5*y^3
+);
+
+
+////set HPfilters////
+  ////////DC block////////
+  hp0l.set_svf_highp(6,0.57);
+  hp0r.set_svf_highp(6,0.57);
+  hp1l.set_svf_highp(6,0.57);
+  hp1r.set_svf_highp(6,0.57);
+  ////////DC block////////
+  hp2l.set_svf_highp(6,0.57);
+  hp2r.set_svf_highp(6,0.57);
+  hp3l.set_svf_highp(6,0.57);
+  hp3r.set_svf_highp(6,0.57);
+  ////////detect HF level////////
+  sss.set_svf_highp(5400,1.8);
+
+////set LPfilters////
+  ////upsample////
+  lp1l.set_svf_lowp(4500,0.7071);
+  lp1r.set_svf_lowp(4500,0.7071);
+  lp2l.set_svf_lowp(4500,1);
+  lp2r.set_svf_lowp(4500,1);
+  lp3l.set_svf_lowp(4500,0.7071);
+  lp3r.set_svf_lowp(4500,0.7071);
+  ////interstage filter////
+  lp4l.set_svf_lowp(4500,0.7071);
+  lp4r.set_svf_lowp(4500,0.7071);
+  lp5l.set_svf_lowp(4500,0.7071);
+  lp5r.set_svf_lowp(4500,0.7071);
+  ////downsample
+  lp6l.set_svf_lowp(4500,0.7071);
+  lp6r.set_svf_lowp(4500,0.7071);
+  lp7l.set_svf_lowp(4500,0.7071);
+  lp7r.set_svf_lowp(4500,0.7071); 
+  ////envelope filters////
+  ess.set_svf_lowp(490,0.5);
+  t.set_svf_lowp(500,0.5);
+
+
+@slider
+next_gain=10^(gain_db/20);
+next_boost=10^(boost/20);
+
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_boost = (next_boost - last_boost)/samplesblock;
+
+
+
+@sample
+
+////////  ess   ///
+////////detect HF level////////
+side_chain = 0.5*(spl0+spl1);
+ESchain = sss.svf_highp(side_chain);
+ESlevel = sqrt(ess.svf_lowp(0.000000001+ESchain^2));
+
+////////detect average level////////
+DThresh = (0.00001+side_chain^2);  //min threshold -50dB
+DThresh = t.svf_lowp(DThresh);  //dynamic threshold
+DThresh = sqrt(DThresh);
+
+////////calculate is sound consonant or vowel////////
+consonant = 1/(1 + exp(-12*((ESlevel/DThresh)-1)));
+cx0=0.5;  cx1=0.8663;  cx2=1;  cx3=0.8663;  cx4=0.5;
+cxcx = cx0+cx1+cx2+cx3+cx4;
+cx0 /= cxcx;  cx1 /= cxcx;  cx2 /= cxcx;  cx3 /= cxcx; cx4 /= cxcx;
+consonant = fir.FIR(consonant,cx0,cx1,cx2,cx3,cx4);
+consonant = con.lowpass(consonant,300);
+consonant = slew.slew_release(consonant);
+vowel = 1-consonant;
+
+////////split signal////////
+cx0=cx1=cx2=cx3=cx4=0;  cx2=1;
+spl0 = le.FIR(spl0,cx0,cx1,cx2,cx3,cx4);
+spl1 = ri.FIR(spl1,cx0,cx1,cx2,cx3,cx4);
+spl2 = consonant*spl0;
+spl3 = consonant*spl1;
+spl0 *= vowel;
+spl1 *= vowel;
+
+
+////////Octave Fuzz////////
+  ////upsample////
+  loop (2,
+  LX1 = LX0;  RX1 = RX0;
+  LX0 = lp1l.svf_lowp(12*spl0);
+  RX0 = lp1r.svf_lowp(12*spl1);
+  LX0 = lp2l.svf_lowp(LX0);
+  RX0 = lp2r.svf_lowp(RX0);
+  LX0 = lp3l.svf_lowp(LX0);
+  RX0 = lp3r.svf_lowp(RX0);
+  spl0 = spl1 = 0;
+  );
+
+  ////////Full Wave Rectifier!////////
+  LY0 = rectL0.AA_abs_square(LX0);
+  RY0 = rectR0.AA_abs_square(RX0);
+  LY1 = rectL1.AA_abs_square(LX1);
+  RY1 = rectR1.AA_abs_square(RX1);
+  
+  ////////DC block////////
+  LY0 = hp0l.svf_highp(LY0);
+  RY0 = hp0r.svf_highp(RY0);
+  LY1 = hp1l.svf_highp(LY1);
+  RY1 = hp1r.svf_highp(RY1);
+
+  ////////More Fuzz////////
+  LY0 *= last_boost;
+  RY0 *= last_boost;
+  LY1 *= last_boost;
+  RY1 *= last_boost;
+  LY0 = L_clip(LY0)*0.85+LY0*0.15;
+  RY0 = L_clip(RY0)*0.85+RY0*0.15;
+  LY1 = L_clip(LY1)*0.85+LY1*0.15;
+  RY1 = L_clip(RY1)*0.85+RY1*0.15;
+  spl2 *= last_boost;
+  spl3 *= last_boost;
+  last_boost += d_boost;
+  
+  ////////DC block////////
+  LY0 = hp2l.svf_highp(LY0);
+  RY0 = hp2r.svf_highp(RY0);
+  LY1 = hp3l.svf_highp(LY1);
+  RY1 = hp3r.svf_highp(RY1);
+
+  ////////More Fuzz////////
+  LY0 = lp4l.svf_lowp(LY0);
+  RY0 = lp4r.svf_lowp(RY0);
+  LY1 = lp5l.svf_lowp(LY1);
+  RY1 = lp5r.svf_lowp(RY1);
+  LY0 = L_clip(LY0*2);
+  RY0 = L_clip(RY0*2);
+  LY1 = L_clip(LY1*2);
+  RY1 = L_clip(RY1*2);
+
+  ////downsample////
+  loop (2,
+  LY0 = lp6l.svf_lowp(LY0);
+  RY0 = lp6r.svf_lowp(RY0);
+  LY1 = lp7l.svf_lowp(LY1);
+  RY1 = lp7r.svf_lowp(RY1);
+  LY1 = LY0;  RY1 = RY0;
+  );
+  spl0 = LY0;
+  spl1 = RY0;
+  
+  ////clip ess////
+  spl12 = max(1,min(-1,spl12));
+  spl13 = max(1,min(-1,spl13));
+  
+  ////soften clip////
+  spl12 = spl12 - 0.33*spl12^3;
+  spl13 = spl13 - 0.33*spl13^3;
+  
+  ////////DC block////////
+  spl0 = hp3l.svf_highp(0.25*spl0+spl2);
+  spl1 = hp3r.svf_highp(0.25*spl1+spl3);
+
+
+////////output gain////////
+spl0 *= last_gain;
+spl1 *= last_gain;
+//spl2 *= last_gain;
+//spl3 *= last_gain;
+last_gain += d_gain;
+
+spl2 = 0;  spl3 = 0;
+
