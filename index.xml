@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="ba149702de898318fb6c2346bfb93206e6791d6b">
+<index version="1" name="StevieKeys JSFX" commit="1587e471f65e052766a88afdfbf2514cc5406486">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -224,6 +224,10 @@
         <source file="Retro_Distortion/DistortionBackground.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0998efebef606e273b273bf557289293be99fba1/Distortion/Retro_Distortion/DistortionBackground.png</source>
         <source file="Retro_Distortion/RetroDistortionKnob 90x90.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0998efebef606e273b273bf557289293be99fba1/Distortion/Retro_Distortion/RetroDistortionKnob%2090x90.png</source>
         <source file="Retro_Distortion/RetroDistortionText.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0998efebef606e273b273bf557289293be99fba1/Distortion/Retro_Distortion/RetroDistortionText.png</source>
+      </version>
+      <version name="2.1.0" author="Stephen Boyes" time="2024-07-14T11:56:27Z">
+        <changelog><![CDATA[- Avoid LF roll off at high samplerates]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1587e471f65e052766a88afdfbf2514cc5406486/Distortion/Retro%20Distortion.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
