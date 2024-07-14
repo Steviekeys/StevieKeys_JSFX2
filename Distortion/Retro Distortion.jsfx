@@ -1,4 +1,4 @@
-version:2.0.0
+version:2.1.0
 desc:Retro Distortion
 author: Stephen Boyes
 about:
@@ -20,9 +20,8 @@ about:
   . out gain
   Output level
 changelog:
-  - first github release
-  - add about info
-  - add GUI
+  - Avoid LF roll off at high samplerates
+
 provides:Retro_Distortion/*
 ///////////////////////////////////////////////
 /         S.Boyes 2023
@@ -53,6 +52,7 @@ out_pin:right output
 @init
 last_gain=10^(-gain_db/20);
 last_gain_out=10^(out_gain_db/20);
+DCcoef = exp(-2 * $pi *25/srate);
 
 function svf_lowp(v0,cutoff,Q)
 instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
@@ -209,8 +209,8 @@ spl0 = DYN0*dyngain + SAT0*satgain;
 spl1 = DYN1*dyngain + SAT1*satgain;
 
 //DC blocker
-otm1=0.9996*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
-otm2=0.9996*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
+otm1= DCcoef*otm1 + spl0 - itm1; itm1=spl0; spl0=otm1;
+otm2= DCcoef*otm2 + spl1 - itm2; itm2=spl1; spl1=otm2;
 
 slider5 == 1 ?
 (
