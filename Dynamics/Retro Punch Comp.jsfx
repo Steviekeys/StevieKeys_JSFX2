@@ -1,4 +1,4 @@
-version:1.0.5
+version:1.0.6
 desc:Retro Punch Comp
 Author:Stephen Boyes
 about:
@@ -12,22 +12,22 @@ about:
   * Out gain:    Controls output level, followed by soft clipper,then out drive
   * Out Drive:   Extra boost after clipper, using third harmonic waveshaper
 changelog:
-  - GR meter update
+  - update invert behavior
 
 //
 // svf filter code from andy simper of cytomics
 //
 //
 //  The MIT License (MIT)
-//Copyright © 2023 Stephen Boyes
+//Copyright Â© 2023 Stephen Boyes
 //
-//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the â€œSoftwareâ€),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
 // and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
 //The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
-//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//THE SOFTWARE IS PROVIDED â€œAS ISâ€, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
@@ -136,8 +136,10 @@ sc_on = sidechain;
 slider3 > 2.5 ? 
 (
   ratio_b = 1.018;
+  invert_limit = 18.8;
 ):(
   ratio_b = 1.0;
+  invert_limit = 60;
   slider3 < 1.5 ? ratio_b = 0.96;
   slider3 < 1.0 ? ratio_b = 0.9;
 );
@@ -170,22 +172,22 @@ spl1 = (spl1-spl1^2)*0.5*0.00002 + spl1*0.99998;
 
   spl0 <= -ratio_b ? 
   (
-    knee0 = ratio_c*spl0 - ratio_d;
+    knee0 = ratio_c*max(-invert_limit,spl0) - ratio_d;
   ):(
     ratio_b <= spl0 ? 
     (
-      knee0 = ratio_c*spl0 + ratio_d;
+      knee0 = ratio_c*min(invert_limit,spl0) + ratio_d;
     ):(
       knee0 = (3*spl0 - spl0^3)/3;
     );
   );
   spl1 <= -ratio_b ? 
   (
-    knee1 = ratio_c*spl1 - ratio_d;
+    knee1 = ratio_c*max(-invert_limit,spl1) - ratio_d;
   ):(
     ratio_b <= spl1 ? 
     (
-      knee1 = ratio_c*spl1 + ratio_d;
+      knee1 = ratio_c*min(invert_limit,spl1) + ratio_d;
     ):(
       knee1 = (3*spl1 - spl1^3)/3;
     );
