@@ -1,4 +1,4 @@
-version:0.4.2beta
+version:0.5.0beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -10,7 +10,7 @@ about:
   Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
   to the rectifing and hard knee compression components.
 Changelog:
-  - experimental bug fix
+  - GUI bug fix
 
 
 options:gfx_hz=60
@@ -21,7 +21,7 @@ slider2:thresh_db=0<-50,10,1>Threshold (dB)
 slider3:ratio_in=3<1.2,12,0.2>Ratio
 slider4:Att_in=5<0.04,30,0.02>Attack (ms)
 slider5:Rel_in=200<40,1000,1>Release (ms)
--slider6:0<0,10,1>fudge
+
 slider10:gain_db=0<-9,22,1>gain (dB)
 
 in_pin:left input
@@ -222,22 +222,22 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
   );
 
 @slider
+
+
+
+@block
   SAT = 10^((drive*2)/20);
   next_thresh = 10^(thresh_db/20);
   ratio = (ratio_in-1)/ratio_in;
   next_gain=10^(gain_db/20);
-  knee = 4;
-  k = 8;
   att = exp(-1/(0.001*att_in*srate));
   rel = exp(-1/(0.001*rel_in*srate));
   RMS = exp(-1/(0.001*(att_in*0.2)*srate));
-  drive2 = 10^((drive-24)/20);  
-
-@block
+  drive2 = 10^((drive-24)/20);SAT = 10^((drive*2)/20);
   d_thresh = (next_thresh - last_thresh)/samplesblock;
   d_gain = (next_gain - last_gain)/samplesblock;
-  fudge += 1;
-  slider6 > 10 ? slider6 = 0;
+
+
 @sample
 noise1 = rand(1)*(srate/96000);
 noise1 = svf_bandp(noise1,6.21,2.16);
@@ -268,10 +268,10 @@ spl1 *= 1.0;
   sideTOTAL  = side.AA_sidechain_dB(sideTOTAL);
 
 ////GR calculations////
-  overdB = -thresh.sidechain_thresh(sideTOTAL,knee);
+  overdB = -thresh.sidechain_thresh(sideTOTAL,4);
 ////Attack Release////
   state = sideTOTAL - old_dB;
-  state = logistic(state,k);
+  state = logistic(state,8);
   envcoef = att*state + rel*(1-state);
   overdB = ATT_REL_env.envelope(overdB,envcoef);
   old_dB = overdB;
