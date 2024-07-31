@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2719496887f47ba35f9511098318eb3139517cc9">
+<index version="1" name="StevieKeys JSFX" commit="8c54a5fda665547b091248b72dc68df5bc252518">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -180,6 +180,11 @@
       <version name="0.7.2beta" author="Stephen Boyes" time="2024-07-31T10:22:06Z">
         <changelog><![CDATA[- rectangular function prep work]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/65cb0a24e52909accb1416475a2b9200a1337954/Distortion/Hard%20AntiDerivative%20AntiAliasing%20Clipper.jsfx</source>
+      </version>
+      <version name="0.9.0beta" author="Stephen Boyes" time="2024-07-31T16:52:13Z">
+        <changelog><![CDATA[- rectangular function working
+- now one of the best non oversampling hard clippers available]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/8c54a5fda665547b091248b72dc68df5bc252518/Distortion/Hard%20AntiDerivative%20AntiAliasing%20Clipper.jsfx</source>
       </version>
     </reapack>
     <reapack name="Octave Fuzz.jsfx" type="effect" desc="Octave Fuzz">
