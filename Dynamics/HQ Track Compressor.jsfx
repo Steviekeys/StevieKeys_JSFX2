@@ -1,4 +1,4 @@
-version:0.4.0beta
+version:0.4.2beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -10,7 +10,7 @@ about:
   Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
   to the rectifing and hard knee compression components.
 Changelog:
-  - Fix bug in fallback
+  - experimental bug fix
 
 
 options:gfx_hz=60
@@ -21,7 +21,7 @@ slider2:thresh_db=0<-50,10,1>Threshold (dB)
 slider3:ratio_in=3<1.2,12,0.2>Ratio
 slider4:Att_in=5<0.04,30,0.02>Attack (ms)
 slider5:Rel_in=200<40,1000,1>Release (ms)
-
+-slider6:0<0,10,1>fudge
 slider10:gain_db=0<-9,22,1>gain (dB)
 
 in_pin:left input
@@ -236,8 +236,8 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
 @block
   d_thresh = (next_thresh - last_thresh)/samplesblock;
   d_gain = (next_gain - last_gain)/samplesblock;
-
-
+  fudge += 1;
+  slider6 > 10 ? slider6 = 0;
 @sample
 noise1 = rand(1)*(srate/96000);
 noise1 = svf_bandp(noise1,6.21,2.16);
