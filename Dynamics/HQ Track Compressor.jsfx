@@ -1,4 +1,4 @@
-version:0.5.1beta
+version:0.5.2beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -357,8 +357,8 @@ spl1 *= 1.0;
   //setup the drag
   attack.y_drag(attack.button,1,m_on,m_off);//left click drag
   //define what happens
-  attack.down ? att_in=max(att_in-=0.3,0.04);
-  attack.up ? att_in=min(att_in+=0.3,30);  
+  attack.down ? att_in=max(att_in/=1.11,0.04);
+  attack.up ? att_in=min(att_in*=1.11,30);  
   
   //define the button
   release.button_rect(766*size,256*size,128*size,128*size);
