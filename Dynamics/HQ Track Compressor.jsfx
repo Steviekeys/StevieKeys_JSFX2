@@ -1,4 +1,4 @@
-version:0.5.2beta
+version:0.5.5beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -11,6 +11,7 @@ about:
   to the rectifing and hard knee compression components.
 Changelog:
   - log scaling sliders
+  - GUI markings
 
 
 options:gfx_hz=60
@@ -19,8 +20,8 @@ options:gfx_hz=60
 slider1:drive=0<0,31,1>Input Saturation
 slider2:thresh_db=0<-50,10,1>Threshold (dB)
 slider3:ratio_in=3<1.2,12,0.2>Ratio
-slider4:Att_in=5<0.04,30,0.02:log!=5>Attack (ms)
-slider5:Rel_in=200<40,1000,1:log!=40>Release (ms)
+slider4:Att_in=5<0.04,30,0.02:sqr!=2.5>Attack (ms)
+slider5:Rel_in=260<40,1000,1:sqr!=3>Release (ms)
 
 slider10:gain_db=0<-9,22,1>gain (dB)
 
@@ -34,7 +35,7 @@ filename:1,HQ_Track_Compressor/Vintage_PPM_meter.png
 filename:2,HQ_Track_Compressor/simple_red.png
 filename:3,HQ_Track_Compressor/simple_silver.png
 filename:4,HQ_Track_Compressor/simple_blue.png
-
+filename:5,HQ_Track_Compressor/HQcomp_text.png
 
 
 @init
@@ -310,7 +311,9 @@ spl1 *= 1.0;
 @gfx 1024 512 // request horizontal/vertical heights (0 means dont care)
   
   size = min(gfx_w/1024,gfx_h/512);
-  gfx_x=gfx_y=0;  gfx_blit(0,size,0,0,0,1024,512);
+  gfx_x=gfx_y=0;
+  gfx_blit(0,size,0,0,0,1024,512);
+  gfx_blit(5,size,0,0,0,1024,512);
 
   //new GR meter
   
@@ -357,16 +360,16 @@ spl1 *= 1.0;
   //setup the drag
   attack.y_drag(attack.button,1,m_on,m_off);//left click drag
   //define what happens
-  attack.down ? att_in=max(att_in/=1.11,0.04);
-  attack.up ? att_in=min(att_in*=1.11,30);  
+  attack.down ? att_in=max(att_in -= 0.058*att_in,0.04);
+  attack.up ? att_in=min(att_in += 0.058*att_in,30);  
   
   //define the button
   release.button_rect(766*size,256*size,128*size,128*size);
   //setup the drag
   release.y_drag(release.button,1,m_on,m_off);//left click drag
   //define what happens
-  release.down ? rel_in=max(rel_in-=20,40);
-  release.up ? rel_in=min(rel_in+=20,1000);  
+  release.down ? rel_in=max(rel_in -= 0.045*rel_in,40);
+  release.up ? rel_in=min(rel_in += 0.045*rel_in + 0.0,1000);  
 
   //define the button
   gain.button_rect(766*size,64*size,128*size,128*size);
@@ -374,12 +377,8 @@ spl1 *= 1.0;
   gain.y_drag(gain.button,1,m_on,m_off);//left click drag
   //define what happens
   gain.down ? gain_db=max(gain_db-=0.2,-9);
-  gain.up ? gain_db=min(gain_db+=0.2,22);  
+  gain.up ? gain_db=min(gain_db+=0.2,22);
   
-//  gfx_x=gfx_y=90*size;             knob1=floor(1.77*(gain_db+24)); gfx_blit(1,2*size,0,0,knob1*90,90,90);
-//  gfx_x=450*size; gfx_y=90*size;   knob2=floor(63.99*slider2); gfx_blit(1,2*size,0,0,knob2*90,90,90);
-//  gfx_x=270*size; gfx_y=210*size;  knob3=floor(63.99*slider3); gfx_blit(1,2*size,0,0,knob3*90,90,90);
-
 
 
   
@@ -395,10 +394,10 @@ spl1 *= 1.0;
   gfx_blit(3,size,0,0,floor((ratio_in-1.2)*2.88)*128,128,128);
   
   gfx_x=(128+213.3*2)*size; gfx_y=290*size;
-  gfx_blit(3,size,0,0,floor((att_in-0.04)*1.04)*128,128,128);
+  gfx_blit(3,size,0,0,floor( ((att_in-0.04)/29.96)^0.4 * 31)*128,128,128);
   
   gfx_x=(128+213.3*3)*size; gfx_y=290*size;
-  gfx_blit(3,size,0,0,floor((rel_in-40)*0.0324)*128,128,128);
+  gfx_blit(3,size,0,0,floor( ((rel_in-40)/960)^0.45 * 31)*128,128,128);
   
   gfx_x=(128+213.3*3)*size; gfx_y=64*size;
   gfx_blit(4,size,0,0,floor(gain_db+9)*128,128,128);
@@ -406,25 +405,13 @@ spl1 *= 1.0;
   //text
   gfx_r=gfx_g=gfx_b=0.0;
   gfx_x=120*size; gfx_y=480*size;
-  gfx_drawstr("GUI test beta, v2");
-  
-  gfx_x=160*size; gfx_y=230*size;
-  gfx_drawstr("   IN");
-  
-  gfx_x=160*size; gfx_y=450*size;
-  gfx_drawstr("Threshold");
-  
-  gfx_x=(160+213.3)*size; gfx_y=450*size;
-  gfx_drawstr(" Ratio");
-  
-  gfx_x=(160+213.3*2)*size; gfx_y=450*size;
-  gfx_drawstr(" Attack");
-  
-  gfx_x=(160+213.3*3)*size; gfx_y=450*size;
-  gfx_drawstr(" Release");
-  
-  gfx_x=(160+213.3*3)*size; gfx_y=230*size;
-  gfx_drawstr("  Gain");
-  
-  gfx_x=(174+213.3*3)*size; gfx_y=32*size;
+  gfx_drawstr("GUI test beta, v3");
+
+  gfx_x=252*size; gfx_y=447*size;
+  gfx_drawnumber(thresh_db,1);
+
+  gfx_x=438*size; gfx_y=447*size;
+  gfx_drawnumber(ratio_in,1);
+
+  gfx_x=864*size; gfx_y=227*size;
   gfx_drawnumber(gain_db,1);
