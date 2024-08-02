@@ -1,4 +1,4 @@
-version:0.9.0beta
+version:0.9.9beta
 desc:Hard Anti-Derivative Anti-Aliasing Clipper
 Author:Stephen Boyes
 about:
@@ -29,7 +29,8 @@ out_pin:right output
 @init
 last_gain=10^(gain_db/20);
 out_last_gain=10^(out_gain_db/20);
-foo = exp(-1/(20*0.001*srate));
+//foo = 0.5;
+bar = exp(-1/(10*0.001*srate));
 pdc_bot_ch = 0;
 pdc_top_ch = 2;
 pdc_delay = 1;
@@ -66,25 +67,8 @@ instance (f1,f1n1,f1n2,f2,f2n1,f2n2,x0,x1,x2)
   x1 = x0;
 out
 );
-/*
-function AAclipper_1(x0)
-instance (f1n1,f1,x0,x1)
-(
-  abs(x0) > 1 ? (
-    f1 = x0*sign(x0)-0.5;
-  ):(
-  f1 = 0.5*x0^2;  
-  );
-  abs(x0-x1) < 2^-18 ? (
-    out = max(-1,min(1,(x0+x1)*0.5));
-    ):(
-    out = (f1-f1n1)/(x0-x1);
-    );
-  f1n1 = f1;
-  x1 = x0;
-out
-);
-*/
+
+
 function FIR(x0,z0,z1,z2)
 instance(x0,x1,x2,z0,z1,z2)
 (
@@ -135,18 +119,16 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   overR2dB = overR1dB;  overR1dB = overRdB;  overRdB = 10^(max(1,abs(spl1))/20);
   hf0 = lefthf.FIR(spl0,-0.16666667,0.333333333,-0.16666667);
   hf1 = righhf.FIR(spl1,-0.16666667,0.333333333,-0.16666667);
-  cutLdB = max(overL1dB,max(foo*overLdB,foo*overL2dB));
-  cutRdB = max(overR1dB,max(foo*overRdB,foo*overR2dB));
-  cutL2dB = max(cutLdB,cutLdB + foo*(cutL2dB-cutLdB));
-  cutR2dB = max(cutRdB,cutRdB + foo*(cutR2dB-cutRdB));
+  cutLdB = max(overL1dB,0.1665*overLdB+0.667*overL1dB+0.1665*overL2dB);
+  cutRdB = max(overR1dB,0.1665*overRdB+0.667*overR1dB+0.1665*overR2dB);
+  cutL2dB = max(cutLdB,cutLdB + bar*(cutL2dB-cutLdB));
+  cutR2dB = max(cutRdB,cutRdB + bar*(cutR2dB-cutRdB));
   cutL = log10(cutL2dB)*20;
   cutR = log10(cutR2dB)*20;
   hf0 = hf0 / cutL;
   hf1 = hf1 / cutR;  
   spl0 = leclip2.AAclipper_2(spl0);
-  spl1 = riclip2.AAclipper_2(spl1);  
-//  spl0 = leftinput.FIR(spl0,0.5,0.5,0);
-//  spl1 = righinput.FIR(spl1,0.5,0.5,0);
+  spl1 = riclip2.AAclipper_2(spl1);
   spl0 = 1*spl0 + hf0*high_restore;
   spl1 = 1*spl1 + hf1*high_restore;
   limit == 1 ? (
@@ -262,4 +244,3 @@ gfx_drawstr("Out: Output level");
   gfx_lineto(0.5*gfxSize - 0.5*gfxSize/last_gain,0.5*gfxSize + 0.5*gfxSize/last_gain); 
   gfx_lineto(0.5*gfxsize + 0.5*gfxSize/last_gain,0.5*gfxSize - 0.5*gfxSize/last_gain);
   gfx_lineto(gfxsize,0.5*gfxSize - 0.5*gfxSize/last_gain);
-
