@@ -24,7 +24,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro Overdrive
 * Dual 360 Pan
 * Auto DeEsser (beta)
-* Hard AntiDerivative AntiAliasing Clipper (beta)
+* Hard AntiDerivative AntiAliasing Clipper
 * Pong Game
 * HQ Track Compressor (beta)
 * Octave Fuzz (beta)
