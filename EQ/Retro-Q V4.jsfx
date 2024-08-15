@@ -1,0 +1,306 @@
+version:4.0.0
+desc:Retro-Q V4
+Author:Stephen Boyes
+provides:
+  Retro-Q_V4/*
+about:
+  # Retro-Q
+  Fixed frequency parellel tone shaping EQ with vibe.
+  Five band boost, with harmonics and dynamic shaping
+  Highpass, with more harmonics
+  more EQ = more harmonics.
+
+  SVF filter code from Andy Simper of cytomics
+  uses Sault oversampler libary
+  
+changelog:
+  - Version 4
+  - 5 EQ bands
+  - 12dB Highpass input (with harmonics)
+  - oversampled air band
+  - oversampled high band at or below 48Khz
+  - 6dB output DC filter and saturation
+
+import Retro-Q_V4/sb-st-oversampler.jsfx-inc
+
+
+//  The MIT License (MIT)
+//Copyright © 2024 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the Software),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
+
+
+//Parrallel state variable filter with mojo
+slider1:0<0,10,0.1>Sub
+slider2:0<0,10,0.1>Low
+slider3:0<0,10,0.1>Mid
+slider4:0<0,10,0.1>High
+slider5:0<0,10,0.1>Air
+slider6:0<0,300,5>Hi-pass
+slider7:0<-10,10,0.1>Vibe
+slider8:0<-12,12,0.1>output (dB)
+
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+options:no_meter
+
+
+
+@init
+  pdc_bot_ch = 0; pdc_top_ch = 2;
+  pdc_delay = 9;
+
+
+
+src_vibe = tgt_vibe = 10^((slider7-5)/20);
+n1 = exp(-2*$pi*(15/srate));
+
+function svf_highp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m0 = 1;
+ m1 = -k;
+ m2 = -1;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ m0*v0+m1*v1+m2*v2
+);
+
+
+function svf_bandp(v0,cutoff,os)
+instance (ic1eq,ic2eq,v0,cutoff,Q,v0,v1,v2,v3,a1,a2,a3,g,k)
+(
+ g = tan($pi*cutoff/(srate*os));
+ k = 2;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ v1
+);
+
+mid_spdc = exp(-1/(8*0.001*srate));
+high_spdc = exp(-1/(12*2*0.001*srate));
+air_spdc = exp(-1/(18*2*0.001*srate));
+
+function EZcomp2 (z,spdc)
+instance(aw,s,t,v,w)
+(
+w = 1/sqrt(1+z^2);
+v = w + (v-w)*spdc;
+t = sqrt(v);
+s = t + (s-t)*spdc;
+z*s;
+);
+
+
+lowco =exp(-2*$pi*(3/srate));
+
+function lowpass(x)
+instance(x0,x1,y)
+(
+x1 = x0;
+x0 = x;
+x = 0.5*x + 0.5*x1;
+y = x + (y-x)*lowco;
+y
+);
+
+function delay(d)
+instance(d,d0,d1,d2,d3,d4,d5,d6,d7,d8,d9)
+(
+d9 = d8;
+d8 = d7;
+d7 = d6;
+d6 = d5;
+d5 = d4;
+d4 = d3;
+d3 = d2;
+d2 = d1;
+d1 = d0;
+d0 = d;
+d9
+);
+
+@slider
+
+  Sgain = 10^(1*slider1/20)-1;
+  Lgain = 10^(1*slider2/20)-1;
+  Mgain = 10^(1*slider3/20)-1;
+  Hgain = 10^(1*slider4/20)-1;
+  Again = 10^(1*slider5/20)-1;
+
+
+TOL_0 = 0.98 + 0.04*rand(1);
+TOL_1 = 0.98 + 0.04*rand(1);
+FcHP0 = max(0.6,slider6)*TOL_0;
+FcHP1 = max(0.6,slider6)*TOL_1;
+
+
+tgt_vibe= 10^((slider7-5)/20);
+outgain = 10^(slider8/20);
+
+
+
+
+
+@block
+d_vibe = (tgt_vibe-src_vibe)/samplesblock;
+vibe = src_vibe;
+src_vibe = tgt_vibe;
+
+
+@sample
+noise = (rand(1)- rand(1)) * (srate/44100);
+HighTapenoise = noise + (HighTapenoise-noise)*n1;
+Tapenoise = HighTapenoise*0.08;
+lowtapenoise = Tapenoise*0.0001;
+
+
+
+spl0=spl0+lowtapenoise;
+spl1=spl1-lowtapenoise;
+
+
+spl0=spl0*vibe;
+spl1=spl1*vibe;
+
+
+//high pass 1
+spl0 = left1hp.svf_highp(spl0,FcHP0*HPvibe0,0.5);
+  FM0 = 0.5*HPL.EZcomp2(spl0,0.2);
+  FM0 = (2^(0.5*FM0)-0.129*FM0);
+  HPvibe0 = FM0+LowTapenoise;//modulate input
+
+spl1 = right1hp.svf_highp(spl1,FcHP1*HPvibe1,0.5);
+  FM1 = 0.5*HPR.EZcomp2(spl1,0.2);
+  FM1 = (2^(0.5*FM1)-0.129*FM1);
+  HPvibe1 = FM1-LowTapenoise;//modulate input
+ 
+
+
+leftFcSU = 55*(1+0.8*sin(SubL*0.5))+Tapenoise;
+SubL = 2.0*subleft.svf_bandp(spl0,leftFcSU,1);
+
+righFcSU = 55*(1+0.8*sin(SubR*0.5))-Tapenoise;
+SubR = 2.0*subrigh.svf_bandp(spl1,righFcSU,1);
+
+leftFcLO = 220*(1+0.8*sin(lowL*0.5))+tapenoise;
+lowL = 2.0*lowleft.svf_bandp(spl0,leftFcLO,1);
+
+righFcLO = 220*(1+0.8*sin(lowR*0.5))-tapenoise;
+lowR = 2.0*lowrigh.svf_bandp(spl1,righFcLO,1);
+
+leftFcM = 880+HighTapenoise;
+midL = 2.0*midleft.svf_bandp(spl0,leftFcM,1);
+midL = 0.5*LMW.EZcomp2(2*midL,mid_spdc);
+
+righFcM = 880-Hightapenoise;
+midR = 2.0*midrigh.svf_bandp(spl1,righFcM,1);
+midR = 0.5*RMW.EZcomp2(2*midR,mid_spdc);
+
+srate > 50000 ? (
+  highL = 2.0*highleft.svf_bandp(spl0,3520+HighTapenoise,1);
+  highL = 0.25*LHW.EZcomp2(4*highL,high_spdc);
+  highL = HLD.delay(highL);
+  highR = 2.0*highrigh.svf_bandp(spl1,3520-HighTapenoise,1);
+  highR = 0.25*RHW.EZcomp2(4*highR,high_spdc);
+  highR = HRD.delay(highR);
+):(
+  LHos.os_up2(spl0);
+    LHos.y1 = 2*highleft.svf_bandp(LHos.y1,3520+Hightapenoise,2);
+    LHos.y0 = 2*highleft.svf_bandp(LHos.y0,3520+HighTapenoise,2);
+    LHos.y1 = 0.25*LHW.EZcomp2(4*LHos.y1,high_spdc);
+    LHos.y0 = 0.25*LHW.EZcomp2(4*LHos.y0,high_spdc);
+  highL = LHos.os_down2();
+  RHos.os_up2(spl1);
+    RHos.y1 = 2*highrigh.svf_bandp(RHos.y1,3520-Hightapenoise,2);
+    RHos.y0 = 2*highrigh.svf_bandp(RHos.y0,3520-HighTapenoise,2);
+    RHos.y1 = 0.25*RHW.EZcomp2(4*RHos.y1,high_spdc);
+    RHos.y0 = 0.25*RHW.EZcomp2(4*RHos.y0,high_spdc);
+  highR = RHos.os_down2();
+);
+
+
+  LAos.os_up2(spl0);
+    LAos.y1 = 2*airleft.svf_bandp(LAos.y1,14080+Hightapenoise,2);
+    LAos.y0 = 2*airleft.svf_bandp(LAos.y0,14080+HighTapenoise,2);
+    LAos.y1 = 0.125*LAW.EZcomp2(8*LAos.y1,air_spdc);
+    LAos.y0 = 0.125*LAW.EZcomp2(8*LAos.y0,air_spdc);
+  AirL = LAos.os_down2();
+           
+  RAos.os_up2(spl1);
+    RAos.y1 = 2*airrigh.svf_bandp(RAos.y1,14080-HighTapenoise,2);
+    RAos.y0 = 2*airrigh.svf_bandp(RAos.y0,14080-HighTapenoise,2);
+    RAos.y1 = 0.125*RAW.EZcomp2(8*RAos.y1,air_spdc);
+    RAos.y0 = 0.125*RAW.EZcomp2(8*RAos.y0,air_spdc);
+  AirR = RAos.os_down2();
+
+
+
+spl0 = spl0 + midL*Mgain + lowL*Lgain + SubL*Sgain;
+spl1 = spl1 + midR*Mgain + lowR*Lgain + SubR*Sgain;
+spl0 = LD.delay(spl0);
+spl1 = RD.delay(spl1);
+
+
+
+spl0 = spl0 + AirL*Again + highL*Hgain;
+spl1 = spl1 + AirR*Again + highR*Hgain;
+
+
+
+//high pass 2
+LP0 = LPleft.lowpass(spl0);
+LP1 = LPrigh.lowpass(spl1);
+HP0 = spl0-LP0;
+HP1 = spl1-LP1;
+
+LP0 == 0 ? (
+  LP0 = 0.00004;
+);
+
+LP1 == 0 ? (
+  LP1 = 0.00004;
+);
+
+foo0 = HP0*LP0*2;
+bar0 = foo0 * (1/sqrt(1+foo0^2));
+spl0 = (bar0/LP0)*0.5;
+
+foo1 = HP1*LP1*2;
+bar1 = foo1 * (1/sqrt(1+foo1^2));
+spl1 = (bar1/LP1)*0.5;
+
+spl0 = spl0*(1/vibe)*outgain;
+spl1 = spl1*(1/vibe)*outgain;
+
+vibe += d_vibe;
+
+
