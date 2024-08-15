@@ -2,6 +2,7 @@
 
 A collection of JSFX by StevieKeys aka Stevie Boyes
 
+* Retro-Q V4
 * Odd saturation
 * Odd n Even saturation
 * Smooth Clipper
@@ -27,6 +28,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Hard AntiDerivative AntiAliasing Clipper
 * Pong Game
 * HQ Track Compressor (beta)
-* Octave Fuzz (beta)
+* Octave Fuzz
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
