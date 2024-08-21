@@ -1,11 +1,11 @@
-version:0.4.5beta
+version:0.4.6beta
 desc:Auto DeEsser (beta)
 author:Stephen Boyes
 about:
   # Auto DeEsser (beta)
   Split the vocal signal into vowels and consonants
 changelog:
-  - beta v0.4.5
+  - beta v0.4.6 CPU boost
 
 slider1:gain_db=0<-40,2,0.2>vowel gain (dB)
 slider2:thresh=<-50,0,0.2>consonant limit threshold (dB)
@@ -83,15 +83,15 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
  a1 = 1/(1+g*(g+k));
  a2 = g*a1;
  a3 = g*a2;
- m0 = 0;
- m1 = 0;
- m2 = 1;
+ //m0 = 0;
+ //m1 = 0;
+ //m2 = 1;
  v3 = v0-ic2eq;
  v1 = a1*ic1eq+a2*v3;
  v2 = ic2eq+a2*ic1eq+a3*v3;
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
- m0*v0+m1*v1+m2*v2
+ v2
 );
 
 rel_ms = 75;
@@ -152,10 +152,10 @@ d_con_gain = (next_con_gain - last_con_gain)/samplesblock;
 ////////detect HF level////////
 side_chain = 0.5*(spl0+spl1);
 ESchain = sss.svf_highp(side_chain,freq,que);
-ESlevel = sqrt(ess.svf_lowp(0.000000001+ESchain^2,520,0.5));
+ESlevel = sqrt(ess.svf_lowp(0.000000001+ESchain*ESchain,520,0.5));
 
 ////////detect average level////////
-DThresh = (0.00001+side_chain^2);  //min threshold -50dB
+DThresh = (0.00001+side_chain*side_chain);  //min threshold -50dB
 DThresh = t.svf_lowp(DThresh,510,0.5);  //dynamic threshold
 DThresh = sqrt(DThresh);
 
@@ -193,7 +193,7 @@ spl2 *= thresh_in;
 spl3 *= thresh_in;
 
 //RMS
-square = (smooth+spl2^2+spl3^2)*0.5;
+square = (smooth+spl2*spl2+spl3*spl3)*0.5;
 out = square + rms_coef*(out - square);
 rms_out = SQRT(out);
 
