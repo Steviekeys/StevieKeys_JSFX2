@@ -1,4 +1,4 @@
-version: 1.4.0
+version: 1.4.1
 desc: Odd n Even Saturation
 author: Stephen Boyes
 about:
@@ -6,7 +6,7 @@ about:
   Two stage polynomial waveshping saturation, feturing *odd and even harmonics*.
   Can be used to add vibe or as a maximiser.
 changelog:
-  - New optional DC filter (signals over 0dB may occur)
+  - CPU boost
 
 
 //                                                                
@@ -74,8 +74,8 @@ X0 = (-spl0+1)*0.382683;
 X1 = (-spl1+1)*0.382683;
 
 //even saturation 1//
-wet0 = 8*(X0^4)-8*(X0^2)+1-0.00000187195422;
-wet1 = 8*(X1^4)-8*(X1^2)+1-0.00000187195422;
+wet0 = 8*((X0*X0)*(X0*X0))-8*(X0*X0)+1-0.00000187195422;
+wet1 = 8*((X1*X1)*(X1*X1))-8*(X1*X1)+1-0.00000187195422;
 
 //dry wet mix
 spl0 = spl0*D1+wet0*S1;
@@ -86,8 +86,8 @@ X0 = (-spl0-1)*0.258818;
 X1 = (-spl1-1)*0.258818;
 
 //even saturation 2//
-wet0 = 32*(X0^6)-48*(X0^4)+18*(X0^2)-0.999993508182465;
-wet1 = 32*(X1^6)-48*(X1^4)+18*(X1^2)-0.999993508182465;
+wet0 = 32*(X0^6)-48*((X0*X0)*(X0*X0))+18*(X0*X0)-0.999993508182465;
+wet1 = 32*(X1^6)-48*((X1*X1)*(X1*X1))+18*(X1*X1)-0.999993508182465;
 
 //dry wet mix
 spl0 = spl0*D2+wet0*S2;
