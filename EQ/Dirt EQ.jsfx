@@ -1,4 +1,4 @@
-version:1.0.1
+version:1.0.2
 desc:Dirt EQ
 Author:Stephen Boyes
 about:
@@ -10,7 +10,7 @@ about:
 
   SVF filter code from Andy Simper of cytomics
 changelog:
-  - First github version
+  - CPU boost
 
 
 
@@ -243,8 +243,8 @@ spl1 = R3.svf_bell(spl1,band3_gain,band3_freq,band3_q);
 spl0 = L4.svf_bell(spl0,band4_gain,band4_freq,0.3);
 spl1 = R4.svf_bell(spl1,band4_gain,band4_freq,0.3);
 
-spl0 = spl0 + 0.015625*spl0^2;
-spl1 = spl1 - 0.015625*spl1^2;
+spl0 = spl0 + 0.015625*spl0*spl0;
+spl1 = spl1 - 0.015625*spl1*spl1;
 
 spl0 = L1HP.svf_highp(spl0,highpass_freq,highpass_q);
 spl1 = R1HP.svf_highp(spl1,highpass_freq,highpass_q);
