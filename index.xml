@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="0f2ae122c350b85814dd14b15011c06208b89e58">
+<index version="1" name="StevieKeys JSFX" commit="0b08b0db6e8098fbf2f26aad50b2b0641f8ee03e">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -872,6 +872,10 @@
       <version name="0.4.5beta" author="Stephen Boyes" time="2024-02-15T12:32:13Z">
         <changelog><![CDATA[- beta v0.4.5]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a60d79fea4cd5fbc11b39f67a6d9e30ed8796d4d/utility/Auto%20DeEsser.jsfx</source>
+      </version>
+      <version name="0.4.6beta" author="Stephen Boyes" time="2024-08-21T20:38:00Z">
+        <changelog><![CDATA[- beta v0.4.6 CPU boost]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0b08b0db6e8098fbf2f26aad50b2b0641f8ee03e/utility/Auto%20DeEsser.jsfx</source>
       </version>
     </reapack>
     <reapack name="Dual 360 Pan.jsfx" type="effect" desc="Dual 360 Pan">
