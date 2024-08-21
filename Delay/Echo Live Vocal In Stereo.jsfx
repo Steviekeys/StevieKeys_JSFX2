@@ -1,14 +1,14 @@
-version:1.1.1
+version:1.1.2
 desc:Echo Live Vocal In Stereo
 author:Stephen Boyes
 about:
   # Echo Live Vocal In Stereo (ELVIS)
   Easy to use slapback tape delay
 changelog:
-  - DC blocker
-  - reduce CPU
-  - fix coeficient calculation
-  - github release
+  - reduce CPU again
+
+
+
   
 /*******************************************************************************
 *  2023    Stephen Boyes                                                       *
@@ -141,7 +141,7 @@ RMS_aver = 1/(Averaging_time*0.001);
 Fc = RMS_aver/srate;
 b = 1 - exp(-2*$pi*Fc);
 
-square = input^2;
+square = input*input;
 mean += b*(square-mean);
 rms = sqrt(mean);
 
