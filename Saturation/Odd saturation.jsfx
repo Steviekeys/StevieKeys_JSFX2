@@ -1,4 +1,4 @@
-version:1.3.1
+version:1.3.2
 desc:Odd Saturation
 author: Stephen Boyes
 about:
@@ -8,7 +8,7 @@ about:
   *Flat Top, waveform flatens off at 0dB.
   Can be used to add vibe or as a maximiser.
 changelog:
-  - Multichannel support
+  - Correct gain formula
 
 
 //                                                                
@@ -65,11 +65,11 @@ function flattop(x)
 channels=num_ch;
 
 @slider
-IG2 = 2^(slider1/6);
+IG2 = 10^(slider1/20);
 S = slider2;
 D = 1-S;
-OG = 2^(slider3/6);
-MXO = 2^(slider4/6);
+OG = 10^(slider3/20);
+MXO = 10^(slider4/20);
 channels=num_ch;
 
 @sample
