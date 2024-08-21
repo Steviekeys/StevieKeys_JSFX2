@@ -1,4 +1,4 @@
-version:0.5.5beta
+version:0.5.6beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -12,7 +12,7 @@ about:
 Changelog:
   - log scaling sliders
   - GUI markings
-
+  - CPU boost
 
 options:gfx_hz=60
 
@@ -59,7 +59,7 @@ filename:5,HQ_Track_Compressor/HQcomp_text.png
 
 function gainshaper_detector (X)
 (
-(0.667+exp(-0.5*X^2))*0.64
+(0.667+exp(-0.5*X*X))*0.64
 );
 
 function gainshaper_smoother (X)
@@ -106,7 +106,7 @@ instance (f0,f0n1,x0,x1,knee,in)
 (
     in = x0*0.5 + x1*0.5;
     out =   (in/(1+knee^in))-in;
-    out += -1/(1+0.25*x0^2);
+    out += -1/(1+0.25*x0*x0);
   x1 = x0;
   out
 );
