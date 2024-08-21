@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="07b1201aa5ce6ce44ad0c379ffb5232082636eef">
+<index version="1" name="StevieKeys JSFX" commit="0f2ae122c350b85814dd14b15011c06208b89e58">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -700,6 +700,10 @@
       <version name="4.0.0" author="Stephen Boyes" time="2024-08-15T17:41:55Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/195d61cf4fad6c0b9415a7ea8344a5577d7f55f6/EQ/Retro-Q%20V4.jsfx</source>
         <source file="Retro-Q_V4/sb-st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/195d61cf4fad6c0b9415a7ea8344a5577d7f55f6/EQ/Retro-Q_V4/sb-st-oversampler.jsfx-inc</source>
+      </version>
+      <version name="4.0.1" author="Stephen Boyes" time="2024-08-21T13:09:09Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0f2ae122c350b85814dd14b15011c06208b89e58/EQ/Retro-Q%20V4.jsfx</source>
+        <source file="Retro-Q_V4/sb-st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0f2ae122c350b85814dd14b15011c06208b89e58/EQ/Retro-Q_V4/sb-st-oversampler.jsfx-inc</source>
       </version>
     </reapack>
   </category>
