@@ -1,4 +1,4 @@
-version:3.3.1
+version:3.3.3
 desc:Limit smash [v3]
 author:Stephen Boyes
 about:
@@ -10,7 +10,7 @@ about:
     Analogue - Digital  : Analogue=feedback  Digital=feedforward
     Release Time        : Time for gain reduction to return to 0dB after level drops
 changelog:
-  - GR meter adjust
+  - CPU boost
   
 
 
@@ -109,7 +109,7 @@ Rspeed = PD.RMS(Rspeed,c);
 
 spl0 = spl0*inboost;
 
-FF0 = sqrt(FFleft.sta_var_LPfilter(spl0^2,f2,2.618)); //FF atack
+FF0 = sqrt(FFleft.sta_var_LPfilter(spl0*spl0,f2,2.618)); //FF atack
 input0 = (FB0*Feedback + FF0*Feedforward + alog);
 //k = 8; //controls the knee
 peak0  = (log((exp(8-8*input0)+1)*(exp(8+8*input0)+1))/8)-2;
@@ -126,7 +126,7 @@ peak0 = 1/(peak0+1);  //(invert) gain needed to limit the signal to 1
 
 spl1 = spl1*inboost;
 
-FF1 = sqrt(FFright.sta_var_LPfilter(spl1^2,f2,2.618)); //FF atack
+FF1 = sqrt(FFright.sta_var_LPfilter(spl1*spl1,f2,2.618)); //FF atack
 input1 = (FB1*Feedback + FF1*Feedforward + alog);
 //k = 8; //controls the knee
 peak1  = (log((exp(8-8*input1)+1)*(exp(8+8*input1)+1))/8)-2;
@@ -148,11 +148,11 @@ Tpeak1 = (Tpeak+peak1)/2;
 
 
 spl0 = spl0*Tpeak0;  //gain reduction
-FB0 = left.RMS(spl0^2,fbRMS); //feedback for comp
+FB0 = left.RMS(spl0*spl0,fbRMS); //feedback for comp
 
 
 spl1 = spl1*Tpeak1;   //gain reduction
-FB1 = right.RMS(spl1^2,fbRMS); //feedback for comp
+FB1 = right.RMS(spl1*spl1,fbRMS); //feedback for comp
 
 
 
