@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="52445f0e494c6201998c45868564dc1bba14c8ec">
+<index version="1" name="StevieKeys JSFX" commit="128e83cf0184f33db3dfed5f103af63b5fc47c01">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -694,6 +694,10 @@
       <version name="1.0.1" author="Stephen Boyes" time="2024-01-30T10:57:19Z">
         <changelog><![CDATA[- First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3e6724b4504eec741d2d7bf5388015279dcc2698/EQ/Dirt%20EQ.jsfx</source>
+      </version>
+      <version name="1.0.2" author="Stephen Boyes" time="2024-08-21T21:32:42Z">
+        <changelog><![CDATA[- CPU boost]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/128e83cf0184f33db3dfed5f103af63b5fc47c01/EQ/Dirt%20EQ.jsfx</source>
       </version>
     </reapack>
     <reapack name="Highpass Lowpass 12dB.jsfx" type="effect" desc="Highpass Lowpass 12dB">
