@@ -1,4 +1,4 @@
-version:3.0.2
+version:3.0.3
 desc:Retro-Q V3
 Author:Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
 
   SVF filter code from Andy Simper of cytomics
 changelog:
-  - No meter
+  - cpu boost
 
 //  The MIT License (MIT)
 //Copyright © 2023 Stephen Boyes
@@ -111,7 +111,7 @@ loop
 function compressor_gain (in,Rspeed,invrate,vibe,pink,a)
 instance (v,am0,am1,am2,peak,oldpeak)
 (
-rms = in^2;
+rms = in*in;
 
 x  = rms;
 am2 = am1;
