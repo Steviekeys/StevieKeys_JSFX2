@@ -1,4 +1,4 @@
-version:1.1.4
+version:1.1.5
 desc:Wow Tape Delay
 author:Stephen Boyes
 provides:
@@ -8,7 +8,7 @@ about:
   # Wow Tape Delay
   
 changelog:
-  - fix download
+  - cpu boost
 
   
 //  The MIT License (MIT)
@@ -150,10 +150,10 @@ val2 = lhe.svf_gen(val2*dist2);  dist2 = 1 - 0.01*val2;
 val3 = rhe.svf_gen(val3*dist3);  dist3 = 1 - 0.01*val3;
 
 // saturate delay
-val0 = one.limiter(3*val0);  val0 = (3*val0 - val0^3)*0.1; 
-val1 = two.limiter(3*val1);  val1 = (3*val1 - val1^3)*0.1;
-val2 = three.limiter(2.5*val2);  val2 = (3*val2 - val2^3)*0.1*h2amount; 
-val3 = four.limiter(2.5*val3);  val3 = (3*val3 - val3^3)*0.1*h2amount;
+val0 = one.limiter(3*val0);  val0 = (3*val0 - val0*val0*val0)*0.1; 
+val1 = two.limiter(3*val1);  val1 = (3*val1 - val1*val1*val1)*0.1;
+val2 = three.limiter(2.5*val2);  val2 = (3*val2 - val2*val2*val2)*0.1*h2amount; 
+val3 = four.limiter(2.5*val3);  val3 = (3*val3 - val3*val3*val3)*0.1*h2amount;
 
 // remove DC
 otm1 = dcc*otm1 + val0 - itm1; itm1=val0; val0=otm1;
