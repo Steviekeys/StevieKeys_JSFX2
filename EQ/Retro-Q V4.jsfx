@@ -1,4 +1,4 @@
-version:4.0.0
+version:4.0.1
 desc:Retro-Q V4
 Author:Stephen Boyes
 provides:
@@ -20,6 +20,7 @@ changelog:
   - oversampled air band
   - oversampled high band at or below 48Khz
   - 6dB output DC filter and saturation
+  - CPU optimisation
 
 import Retro-Q_V4/sb-st-oversampler.jsfx-inc
 
@@ -112,7 +113,7 @@ air_spdc = exp(-1/(18*2*0.001*srate));
 function EZcomp2 (z,spdc)
 instance(aw,s,t,v,w)
 (
-w = 1/sqrt(1+z^2);
+w = 1/sqrt(1+z*z);
 v = w + (v-w)*spdc;
 t = sqrt(v);
 s = t + (s-t)*spdc;
@@ -291,16 +292,15 @@ LP1 == 0 ? (
 );
 
 foo0 = HP0*LP0*2;
-bar0 = foo0 * (1/sqrt(1+foo0^2));
+bar0 = foo0 * (1/sqrt(1+foo0*foo0));
 spl0 = (bar0/LP0)*0.5;
 
 foo1 = HP1*LP1*2;
-bar1 = foo1 * (1/sqrt(1+foo1^2));
+bar1 = foo1 * (1/sqrt(1+foo1*foo1));
 spl1 = (bar1/LP1)*0.5;
 
 spl0 = spl0*(1/vibe)*outgain;
 spl1 = spl1*(1/vibe)*outgain;
 
 vibe += d_vibe;
-
 
