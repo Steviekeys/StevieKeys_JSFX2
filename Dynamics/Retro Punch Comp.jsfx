@@ -1,4 +1,4 @@
-version:1.0.6
+version:1.0.7
 desc:Retro Punch Comp
 Author:Stephen Boyes
 about:
@@ -12,7 +12,7 @@ about:
   * Out gain:    Controls output level, followed by soft clipper,then out drive
   * Out Drive:   Extra boost after clipper, using third harmonic waveshaper
 changelog:
-  - update invert behavior
+  - CPU boost
 
 //
 // svf filter code from andy simper of cytomics
@@ -166,8 +166,8 @@ dry1 = spl1;
 
 spl0 = in0.svf_highshelf(spl0,4,1200,0.3);  //sidechain filter
 spl1 = in1.svf_highshelf(spl1,4,1200,0.3);
-spl0 = (spl0-spl0^2)*0.5*0.00002 + spl0*0.99998;
-spl1 = (spl1-spl1^2)*0.5*0.00002 + spl1*0.99998;
+spl0 = (spl0-spl0*spl0)*0.5*0.00002 + spl0*0.99998;
+spl1 = (spl1-spl1*spl1)*0.5*0.00002 + spl1*0.99998;
 
 
   spl0 <= -ratio_b ? 
@@ -178,7 +178,7 @@ spl1 = (spl1-spl1^2)*0.5*0.00002 + spl1*0.99998;
     (
       knee0 = ratio_c*min(invert_limit,spl0) + ratio_d;
     ):(
-      knee0 = (3*spl0 - spl0^3)/3;
+      knee0 = (3*spl0 - spl0*spl0*spl0)/3;
     );
   );
   spl1 <= -ratio_b ? 
@@ -189,7 +189,7 @@ spl1 = (spl1-spl1^2)*0.5*0.00002 + spl1*0.99998;
     (
       knee1 = ratio_c*min(invert_limit,spl1) + ratio_d;
     ):(
-      knee1 = (3*spl1 - spl1^3)/3;
+      knee1 = (3*spl1 - spl1*spl1*spl1)/3;
     );
   );
   overdB_left = gain_2_dB((spl0/knee0)+drift);
