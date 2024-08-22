@@ -1,4 +1,4 @@
-version:3.3.3
+version:3.3.4
 desc:Limit smash [v3]
 author:Stephen Boyes
 about:
@@ -63,7 +63,7 @@ gr_meter_decay = exp(1/(1*srate));
 function RMS(in,c)
 instance (in,c,y)
   (
-  in = 0.00005+in^2;  y += c*(in-y);
+  in = 0.00005+in*in;  y += c*(in-y);
   sqrt(y)-(0.00005)
   );
 
@@ -102,7 +102,7 @@ slider10 = Rspeed;
 alog = 0.001*(0.5-rand(1)); // noise
 alog = noise.sta_var_LPfilter(alog,f1,1);
 
-tpeak < 0.55 ? Rspeed = Rspeedin^5 : Rspeed = Rspeedin;
+tpeak < 0.55 ? Rspeed = Rspeedin*Rspeedin*Rspeedin*Rspeedin*Rspeedin : Rspeed = Rspeedin;
 Rspeed = PD.RMS(Rspeed,c);
 
 
