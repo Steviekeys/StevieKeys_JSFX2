@@ -1,4 +1,4 @@
-version:1.0.7
+version:1.0.8
 desc:Retro Punch Comp
 Author:Stephen Boyes
 about:
@@ -19,7 +19,7 @@ changelog:
 //
 //
 //  The MIT License (MIT)
-//Copyright Â© 2023 Stephen Boyes
+//Copyright © 2023 Stephen Boyes
 //
 //Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the â€œSoftwareâ€),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -27,7 +27,7 @@ changelog:
 //
 //The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
-//THE SOFTWARE IS PROVIDED â€œAS ISâ€, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
@@ -76,15 +76,15 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
  a1 = 1/(1+g*(g+k));
  a2 = g*a1;
  a3 = g*a2;
- m0 = 0;
- m1 = 0;
+ //m0 = 0;
+ //m1 = 0;
  m2 = 1;
  v3 = v0-ic2eq;
  v1 = a1*ic1eq+a2*v3;
  v2 = ic2eq+a2*ic1eq+a3*v3;
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
- m0*v0+m1*v1+m2*v2
+ /*m0*v0+m1*v1+*/m2*v2
 );
 
 function svf_highshelf(v0,bellgain_dB,cutoff,Q)
@@ -250,16 +250,16 @@ out_last_gain += out_d_gain;
 spl0 = soft_clip(spl0)*0.999;
 spl1 = soft_clip(spl1)*0.999;
 
-spl0 = (1-drive)*spl0 + drive*((3*spl0-spl0^3)*0.5);
-spl1 = (1-drive)*spl1 + drive*((3*spl1-spl1^3)*0.5);
+spl0 = (1-drive)*spl0 + drive*((3*spl0-spl0*spl0*spl0)*0.5);
+spl1 = (1-drive)*spl1 + drive*((3*spl1-spl1*spl1*spl1)*0.5);
 spl2 = spl3 = 0;
 
 
 
-/*
-spl0 = over_gain_left;
-spl1 = over_gain_righ;
-*/
+
+
+
+
 
 
 @gfx 0 32 // request horizontal/vertical heights (0 means dont care)
