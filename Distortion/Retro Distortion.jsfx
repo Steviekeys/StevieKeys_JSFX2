@@ -1,4 +1,4 @@
-version:2.1.1
+version:2.1.2
 desc:Retro Distortion
 author: Stephen Boyes
 about:
@@ -20,7 +20,7 @@ about:
   . out gain
   Output level
 changelog:
-  - Avoid LF roll off at high samplerates
+  - Download missing png files
 
 ///////////////////////////////////////////////
 /         S.Boyes 2023
@@ -34,7 +34,9 @@ changelog:
 
 options:gfx_Hz=60;
 tags:distortion
-provides:Retro_Distortion/*
+provides:Retro_Distortion/DistortionBackground.png
+provides:Retro_Distortion/RetroDistortionKnob 90x90.png
+provides:Retro_Distortion/RetroDistortionText.png
 
 
 filename:0,Retro_Distortion/DistortionBackground.png
