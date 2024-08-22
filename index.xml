@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="1350213b565c4242013791ccec9dd1f9ee04b021">
+<index version="1" name="StevieKeys JSFX" commit="2df7953c080b27036bcea542d20cd9ef3b771995">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -619,6 +619,10 @@
       <version name="3.3.3" author="Stephen Boyes" time="2024-08-21T21:18:37Z">
         <changelog><![CDATA[- CPU boost]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6e2c14106f1c48cc595f53630d10a7fd2ecabbda/Dynamics/Limit%20Smash.jsfx</source>
+      </version>
+      <version name="3.3.4" author="Stephen Boyes" time="2024-08-22T12:11:32Z">
+        <changelog><![CDATA[- CPU boost]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2df7953c080b27036bcea542d20cd9ef3b771995/Dynamics/Limit%20Smash.jsfx</source>
       </version>
     </reapack>
     <reapack name="Live Limit.jsfx" type="effect" desc="Live Limit">
