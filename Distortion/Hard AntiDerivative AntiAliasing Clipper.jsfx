@@ -1,4 +1,4 @@
-version:1.0.0
+version:1.0.1
 desc:Hard Anti-Derivative Anti-Aliasing Clipper
 Author:Stephen Boyes
 about:
@@ -12,7 +12,7 @@ about:
   * Strict Clip:   Second clipping stage to catch peaks cuased by high restore
   * Out:   Output level
 changelog:
-  - rectangular function working
+  - CPU boost
   - now one of the best non oversampling hard clippers available
 
 slider1:gain_db=0<-6,25,0.02>Drive (dB)
@@ -41,22 +41,22 @@ instance (f1,f1n1,f1n2,f2,f2n1,f2n2,x0,x1,x2)
 //calculate derivative functions
   abs(x0) >= 1 ? (
     f1 = x0*sign(x0)-0.5;
-    f2 = ((0.5*x0^2) - (1/6))*sign(x0);
+    f2 = ((x0*x0*0.5) - (1/6))*sign(x0);
   ):(
-    f1 = 0.5*x0^2;
-    f2 = (1/3)*x0^3;
+    f1 = 0.5*x0*x0;
+    f2 = x0*x0*x0*(1/3);
   );
  
   abs(x0-x1) < 2^-18 ? (
     out = 0.5 * max(-1,min(1,(x0 + 2*x1)/3));
     ):(
-    out = (x0*(f1-f1n1)-(f2-f2n1)) / ((x0-x1)^2);
+    out = (x0*(f1-f1n1)-(f2-f2n1)) / ((x0-x1)*(x0-x1));
     );
 
   abs(x2-x1) < 2^-18 ? (
   out += 0.5 * max(-1,min(1,(x2 + 2*x1)/3));
   ):(
-  out += (x2*(f1n2-f1n1)-(f2n2-f2n1)) / ((x2-x1)^2);
+  out += (x2*(f1n2-f1n1)-(f2n2-f2n1)) / ((x2-x1)*(x2-x1));
   );
 
   f1n2 = f1n1;
