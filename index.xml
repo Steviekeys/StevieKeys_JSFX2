@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="a18cf880423e12e175f086e3327cbfa332d8d42e">
+<index version="1" name="StevieKeys JSFX" commit="b00d3602c00d26960d6cfa192f16a485c6f50fbf">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -20,6 +20,9 @@
       </version>
       <version name="1.1.1" author="Stephen Boyes" time="2024-01-25T17:42:39Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a12941c8027d72d394c3afb361e6ef76062ed9e6/Bass/Bass%20X.jsfx</source>
+      </version>
+      <version name="1.1.2" author="Stephen Boyes" time="2024-08-22T11:51:11Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b00d3602c00d26960d6cfa192f16a485c6f50fbf/Bass/Bass%20X.jsfx</source>
       </version>
     </reapack>
   </category>
