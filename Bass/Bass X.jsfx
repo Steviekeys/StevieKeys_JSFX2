@@ -1,4 +1,4 @@
-version:1.1.1
+version:1.1.2
 desc:Bass X
 author:Stephen Boyes
 about:
@@ -6,8 +6,8 @@ about:
   Add harmonics to low frequency sounds to improve percieved bass even on small speakers.
   Frequencies bellow the Freq slider setting are processed and are then filtered to the harmonic bandwidth amount.
 changlog:
-  - add (Hz) to Freq slider
-  - more, about info added
+  - CPU boost
+
 
 //  Bass X 
 //                                                                
@@ -79,7 +79,8 @@ out;
 
 function soft_clip(x)
 (
-(exp(x)-exp(-x))/(exp(x)+exp(-x))
+  //(exp(x)-exp(-x))/(exp(x)+exp(-x))
+   2/(1+exp(-2*x))-1;
 );
 
 
