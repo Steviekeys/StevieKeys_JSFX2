@@ -1,4 +1,4 @@
-version:3.0.3
+version:3.0.4
 desc:Retro-Q V3
 Author:Stephen Boyes
 about:
@@ -94,9 +94,9 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
  a1 = 1/(1+g*(g+k));
  a2 = g*a1;
  a3 = g*a2;
- m0 = 0;
+ //m0 = 0;
  m1 = 1;
- m2 = 0;
+ //m2 = 0;
 loop
 (os,
  v3 = v0-ic2eq;
@@ -105,7 +105,7 @@ loop
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
  );
- m0*v0+m1*v1+m2*v2
+ /*m0*v0+*/m1*v1/*+m2*v2*/
 );
 
 function compressor_gain (in,Rspeed,invrate,vibe,pink,a)
@@ -395,4 +395,3 @@ Tpeak < gr_meter ? gr_meter=Tpeak : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_me
   gfx_drawnumber(log10(gr_meter)*20,1);
   gfx_drawchar($'d');
   gfx_drawchar($'B');
-
