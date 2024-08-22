@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="388c2f4d9db45282b35f481fa3c2aa4dd548c206">
+<index version="1" name="StevieKeys JSFX" commit="eb14f9b34131c899ae4856726fdbf1f2553a099a">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -671,6 +671,10 @@
       <version name="1.0.7" author="Stephen Boyes" time="2024-08-21T21:29:02Z">
         <changelog><![CDATA[- CPU boost]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/52445f0e494c6201998c45868564dc1bba14c8ec/Dynamics/Retro%20Punch%20Comp.jsfx</source>
+      </version>
+      <version name="1.0.8" author="Stephen Boyes" time="2024-08-22T10:07:14Z">
+        <changelog><![CDATA[- CPU boost]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/eb14f9b34131c899ae4856726fdbf1f2553a099a/Dynamics/Retro%20Punch%20Comp.jsfx</source>
       </version>
     </reapack>
   </category>
