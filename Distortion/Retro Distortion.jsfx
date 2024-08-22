@@ -1,15 +1,16 @@
-version:2.1.3
+version:2.1.4
+provides:Steviekeys2_JSFX/Distortion/Retro_Distortion/DistortionBackground.png
+provides:Distortion/Retro_Distortion/RetroDistortionKnob 90x90.png
+provides:Retro_Distortion/RetroDistortionText.png
 desc:Retro Distortion
 author: Stephen Boyes
 about:
   # Retro Distortion
   Versatile saturation/distortion effect.
   Three stages of non-linear distortion
-  
   one    -  tanh soft clipper
   two    -  a blend of 2nd harmonic and a distortion that works at all signal levels!
   three  -  tanh soft clipper
-  
   Controls -
   . Headroom
   Less headroom = more distortion from clippers and optional 2nd harmonic.
@@ -21,6 +22,7 @@ about:
   Output level
 changelog:
   - Please Download missing png files
+
 
 ///////////////////////////////////////////////
 /         S.Boyes 2023
@@ -34,9 +36,7 @@ changelog:
 
 options:gfx_Hz=60;
 tags:distortion
-provides:Steviekeys2_JSFX/Distortion/Retro_Distortion/DistortionBackground.png
-provides:Distortion/Retro_Distortion/RetroDistortionKnob 90x90.png
-provides:Retro_Distortion/RetroDistortionText.png
+
 
 
 filename:0,Retro_Distortion/DistortionBackground.png
