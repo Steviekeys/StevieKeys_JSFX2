@@ -1,8 +1,8 @@
-version:2.1.4
-provides:Steviekeys2_JSFX/Distortion/Retro_Distortion/DistortionBackground.png
-provides:Distortion/Retro_Distortion/RetroDistortionKnob 90x90.png
-provides:Retro_Distortion/RetroDistortionText.png
+version:2.1.5
 desc:Retro Distortion
+provides:Retro_Distortion/DistortionBackground.png
+provides:Retro_Distortion/RetroDistortionKnob 90x90.png
+provides:Retro_Distortion/RetroDistortionText.png
 author: Stephen Boyes
 about:
   # Retro Distortion
