@@ -1,12 +1,13 @@
-version:1.1.2
+version:1.1.3
 desc:Bass X
 author:Stephen Boyes
 about:
   # Bass enhancer
   Add harmonics to low frequency sounds to improve percieved bass even on small speakers.
   Frequencies bellow the Freq slider setting are processed and are then filtered to the harmonic bandwidth amount.
-changlog:
+changelog:
   - CPU boost
+  - fix changelog :)
 
 
 //  Bass X 
@@ -79,8 +80,7 @@ out;
 
 function soft_clip(x)
 (
-  //(exp(x)-exp(-x))/(exp(x)+exp(-x))
-   2/(1+exp(-2*x))-1;
+  2/(1+exp(-2*x))-1;
 );
 
 
