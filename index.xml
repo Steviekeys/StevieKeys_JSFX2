@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="bd8aa11d0910dd4df089517f2a4dbcd9e01fad3a">
+<index version="1" name="StevieKeys JSFX" commit="add7d8e3489ef23e544b261205672ad9a6eacb92">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -306,6 +306,13 @@
         <changelog><![CDATA[- CPU boost]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/bd8aa11d0910dd4df089517f2a4dbcd9e01fad3a/Distortion/Retro%20Distortion.jsfx</source>
         <source file="Retro_Distortion/RetroDistortionText.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/bd8aa11d0910dd4df089517f2a4dbcd9e01fad3a/Distortion/Retro_Distortion/RetroDistortionText.png</source>
+      </version>
+      <version name="2.1.7" author="Stephen Boyes" time="2024-08-22T11:15:59Z">
+        <changelog><![CDATA[- GUI download missing png files]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/add7d8e3489ef23e544b261205672ad9a6eacb92/Distortion/Retro%20Distortion.jsfx</source>
+        <source file="Retro_Distortion/DistortionBackground.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/add7d8e3489ef23e544b261205672ad9a6eacb92/Distortion/Retro_Distortion/DistortionBackground.png</source>
+        <source file="Retro_Distortion/RetroDistortionKnob 90x90.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/add7d8e3489ef23e544b261205672ad9a6eacb92/Distortion/Retro_Distortion/RetroDistortionKnob%2090x90.png</source>
+        <source file="Retro_Distortion/RetroDistortionText.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/add7d8e3489ef23e544b261205672ad9a6eacb92/Distortion/Retro_Distortion/RetroDistortionText.png</source>
       </version>
     </reapack>
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
