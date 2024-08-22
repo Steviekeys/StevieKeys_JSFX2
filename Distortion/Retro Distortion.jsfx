@@ -1,4 +1,4 @@
-version:2.1.5
+version:2.1.6
 desc:Retro Distortion
 provides:Retro_Distortion/DistortionBackground.png
 provides:Retro_Distortion/RetroDistortionKnob 90x90.png
@@ -21,7 +21,7 @@ about:
   . out gain
   Output level
 changelog:
-  - Please Download missing png files
+  - CPU boost
 
 
 ///////////////////////////////////////////////
@@ -67,15 +67,15 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
  a1 = 1/(1+g*(g+k));
  a2 = g*a1;
  a3 = g*a2;
- m0 = 0;
- m1 = 0;
+ //m0 = 0;
+ //m1 = 0;
  m2 = 1;
  v3 = v0-ic2eq;
  v1 = a1*ic1eq+a2*v3;
  v2 = ic2eq+a2*ic1eq+a3*v3;
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
- m0*v0+m1*v1+m2*v2
+ /*m0*v0+m1*v1+*/m2*v2
 );
 
 
@@ -83,7 +83,7 @@ function dyn_sat (in,z)
 instance(in,y,buff0,buff1,count,y,z,pos,pos1,RMS_Y,buffy,RMS_Z,buffz,compressor)
 (
 z = this.svf_lowp(z,4800,0.3);
-y = 0.0001+z^2;
+y = 0.0001+z*z;
 
 RMS_Y = this.y.svf_lowp(y,550,0.41);
 RMS_z = this.z.svf_lowp(z,550,0.41);
@@ -99,7 +99,7 @@ function dyn_sat_subtle (in,z)
 instance(in,y,buff0,buff1,count,y,z,pos,pos1,RMS_Y,buffy,RMS_Z,buffz,compressor)
 (
 z = this.svf_lowp(z,1150,0.2)*0.96 + z*0.04;
-y = 0.0001+z^2;
+y = 0.0001+z*z;
 
 RMS_Y = this.y.svf_lowp(y,50,0.5);
 RMS_z = this.z.svf_lowp(z,50,0.5);
@@ -117,7 +117,7 @@ out = (in*2-y*slider2)*0.5
 function sat (input)
 instance (input)
 (
-y = input^2;
+y = input*input;
 (input-y*slider2)
 );
 
@@ -193,8 +193,8 @@ spl1 = inl.soft_clip(spl1*0.8)*1.25;
 
 
 //rectify
-REC0 = sqrt(0.0001+spl0^2);
-REC1 = sqrt(0.0001+spl1^2);
+REC0 = sqrt(0.0001+spl0*spl0);
+REC1 = sqrt(0.0001+spl1*spl1);
 
 //saturation
 slider5 == 0 ?
