@@ -1,4 +1,4 @@
-version:2.1.2
+version:2.1.3
 desc:Retro Distortion
 author: Stephen Boyes
 about:
@@ -20,7 +20,7 @@ about:
   . out gain
   Output level
 changelog:
-  - Download missing png files
+  - Please Download missing png files
 
 ///////////////////////////////////////////////
 /         S.Boyes 2023
@@ -34,8 +34,8 @@ changelog:
 
 options:gfx_Hz=60;
 tags:distortion
-provides:Retro_Distortion/DistortionBackground.png
-provides:Retro_Distortion/RetroDistortionKnob 90x90.png
+provides:Steviekeys2_JSFX/Distortion/Retro_Distortion/DistortionBackground.png
+provides:Distortion/Retro_Distortion/RetroDistortionKnob 90x90.png
 provides:Retro_Distortion/RetroDistortionText.png
 
 
