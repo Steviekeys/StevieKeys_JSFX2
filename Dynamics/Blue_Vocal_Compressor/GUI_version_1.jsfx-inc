@@ -1,0 +1,40 @@
+@init
+   /******************************* GUI Function ***********************************/
+
+  function xy(x y)
+             ( gfx_x = x; gfx_y = y; );
+   
+  function rgb(r g b)
+              ( gfx_r = r; gfx_g = g; gfx_b = b; );
+   
+  function button_rect(x,y,w,h)
+  (
+    (
+    mouse_x >= x && mouse_x <= x+w && mouse_y >= y && mouse_y <= y+h ? this.button = 1:this.button = 0;
+    );
+  );
+
+  function mouse_on()//instance(count)
+  (
+  1 && mouse_cap ? count += 1 : count = 0;
+  count > 0 && count < 2 ? m_on =1 : m_on = 0;
+  m_on
+  );
+  
+  function mouse_off()
+  (
+  1 && mouse_cap ? m_off = 0 : m_off = 1;
+  m_off
+  );
+  
+  function y_drag(area,cap,m_on,m_off)local(area,cap)instance(up,down,storeY,area,click,cap)
+  (
+  area && m_on ? area = 1 : area = 0;
+  area && mouse_cap == cap ? click = 1;
+  m_off == 1 ? click = 0;
+  click && mouse_y < storeY ? (up = 1; down = 0;);
+  click && mouse_y > storeY ? (up = 0; down = 1;);
+  mouse_cap != cap ? click = 0;
+  storeY == mouse_y ? up=down=0;
+  storeY = mouse_y;
+  );
