@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2df7953c080b27036bcea542d20cd9ef3b771995">
+<index version="1" name="StevieKeys JSFX" commit="c048b1d17223d9ccbc84b7bb5590cfa79192603c">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -414,6 +414,23 @@
     </reapack>
   </category>
   <category name="Dynamics">
+    <reapack name="Blue Vocal Compressor.jsfx" type="effect" desc="Blue Vocal Compressor (beta)">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Blue Vocal Compressor (beta)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Smooth clean Opto compressor/limiter with ratio, attack, release controls and featuring colourfull output stage Controls... input gain : input gainstaging less ess : feed high frquency transients to the detector to prevent ess sounds getting louder Compression Drive : Increases compression, output compensated Output Drive : Push the output stage harder for more dirt and colour Compress - Limit : Compress = feedback 2:1 Limit = Feedforward 100:1 Attack time : Aprox time for full gain reduction Release Time : Aprox time for gain reduction to return to 0dB after level drops exact release time is dependant on amount of gain reduction and length of time in compression\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.1.0beta" author="Stephen Boyes" time="2024-08-26T19:50:05Z">
+        <changelog><![CDATA[- new code based on limit smash
+- new output stage]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c048b1d17223d9ccbc84b7bb5590cfa79192603c/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
+      </version>
+    </reapack>
     <reapack name="HQ Track Compressor.jsfx" type="effect" desc="HQ Track Compressor (beta)">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
