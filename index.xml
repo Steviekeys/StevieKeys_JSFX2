@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="c048b1d17223d9ccbc84b7bb5590cfa79192603c">
+<index version="1" name="StevieKeys JSFX" commit="47ed4fb5e0452c5bb2c1fe7184fb08de87808325">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -429,6 +429,13 @@
         <changelog><![CDATA[- new code based on limit smash
 - new output stage]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c048b1d17223d9ccbc84b7bb5590cfa79192603c/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
+      </version>
+      <version name="0.2.0beta" author="Stephen Boyes" time="2024-08-27T20:58:44Z">
+        <changelog><![CDATA[- new code based on limit smash
+- new output stage
+- GUI scaling
+- Adjust Release behaviour]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/47ed4fb5e0452c5bb2c1fe7184fb08de87808325/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
       </version>
     </reapack>
     <reapack name="HQ Track Compressor.jsfx" type="effect" desc="HQ Track Compressor (beta)">
