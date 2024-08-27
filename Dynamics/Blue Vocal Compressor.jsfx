@@ -1,4 +1,4 @@
-version:0.1.0beta
+version:0.2.0beta
 desc:Blue Vocal Compressor (beta)
 author:Stephen Boyes
 about:
@@ -17,7 +17,8 @@ about:
 changelog:
   - new code based on limit smash
   - new output stage
-
+  - GUI scaling
+  - Adjust Release behaviour
 
 
 */
@@ -326,7 +327,7 @@ peak < 0.25   ? Rspeed = (Rspeedin*Rspeedin)*(Rspeedin*Rspeedin)*(Rspeedin*Rspee
 
 
 
-OptoTime = 0.5;
+OptoTime = 0.6;
 LA = exp(-1/(OptoTime*srate));
 OPTO = peak + (OPTO-peak)*LA;
 //Rspeed = PD.RMS(Rspeed,c);
@@ -489,23 +490,15 @@ gr_meter = peak + (gr_meter-peak)*gr_meter_attack;
 
   size = min(gfx_w/1200,gfx_h/500);
 
-  gfx_r=0.3; gfx_G=0.6; gfx_b=0.9; gfx_rect(0,0,1200,500);
+  gfx_r=0.3; gfx_G=0.6; gfx_b=0.9; gfx_rect(0,0,1200*size,500*size);
 
-  gfx_x=800; gfx_y=32;
+  gfx_x=800*size; gfx_y=32*size;
   GRdB = -20*log10(gr_meter);
   GRdB = max(0,min(GRdB,20));
   GRDisplay = floor(GRdB*4)*256;
-  gfx_blit(0,1,0,0,GRdisplay,256,256);
+  gfx_blit(0,1*size,0,0,GRdisplay,256,256);
 
-/*
-  meter_bot=20;
-  meter_h=min(gfx_h,32);
-  xscale=gfx_w*20/meter_bot;
 
-  gfx_y=0;
-  gfx_x=gfx_w + log10(gr_meter)*xscale;
-  gfx_rectto(gfx_w,meter_h);
-*/
   gfx_r=gfx_g=gfx_b=0.85;
 
 
@@ -517,23 +510,34 @@ gr_meter = peak + (gr_meter-peak)*gr_meter_attack;
   mouse_off() = m_off;
 
   
-  xy(64,64);   gfx_blit(1,0.5,0,0,0,256,256);
-  xy(320,64);  gfx_blit(1,0.5,0,0,0,256,256);
-  xy(576,64);  gfx_blit(1,0.5,0,0,0,256,256);
-  xy(64,320);  gfx_blit(1,0.5,0,0,0,256,256);
-  xy(320,320); gfx_blit(1,0.5,0,0,0,256,256);
-  xy(576,320); gfx_blit(1,0.5,0,0,0,256,256);
-  xy(832,320); gfx_blit(1,0.5,0,0,0,256,256);
+  xy(64*size,64*size);    gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(304*size,64*size);   gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(544*size,64*size);   gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(64*size,320*size);   gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(304*size,320*size);  gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(544*size,320*size);  gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(784*size,320*size);  gfx_blit(1,0.5*size,0,0,0,256,256);
+  xy(1024*size,320*size); gfx_blit(1,0.5*size,0,0,0,256,256);
 
- //text
- xy(92, 212);  gfx_drawstr("   input");
- xy(338, 212); gfx_drawstr("Compression Drive");
- xy(596, 212); gfx_drawstr("Output Drive");
- xy(92, 450);  gfx_drawstr("   Ratio");
- xy(338, 450); gfx_drawstr(" Attack Time");
- xy(596, 450); gfx_drawstr("Release Time");
- xy(860, 450); gfx_drawstr(" Less Ess");
+  //text
+  xy(92*size, 212*size);   gfx_drawstr("   input");
+  xy(322*size, 212*size);  gfx_drawstr("Compression Drive");
+  xy(564*size, 212*size);  gfx_drawstr("Output Drive");
+  xy(92*size, 450*size);   gfx_drawstr("   Ratio");
+  xy(322*size, 450*size);  gfx_drawstr(" Attack Time");
+  xy(564*size, 450*size);  gfx_drawstr("Release Time");
+  xy(812*size, 450*size);  gfx_drawstr(" Less Ess");
+  xy(1054*size, 450*size); gfx_drawstr(" Out Trim");
 
+  //numerical readout
+  rgb(0.99, 0.95, 0.95);
+  xy (110*size, 50*size);   gfx_drawnumber(gain_dB,1);  gfx_drawstr(" dB");
+  xy (360*size, 50*size);   gfx_drawnumber(Drv,1);      gfx_drawstr(" dB");
+ 
+  xy (360*size, 320*size);  gfx_drawnumber(Attime,1);   gfx_drawstr(" ms");
+  xy (600*size, 320*size);  gfx_drawnumber(Reltime,1);  gfx_drawstr(" ms");
+ 
+ /*
   //define the button
   Thresh.button_rect(200,50,100,100);
 //  Thresh_fine.button_rect(200,50,100,100);
@@ -579,29 +583,9 @@ gr_meter = peak + (gr_meter-peak)*gr_meter_attack;
   //define what happens
   Release.down ? slider6=max(slider6-=5,50);
   Release.up ? slider6=min(slider6+=5,250);  
-  
-  
+  */
+ 
 
- xy(260-32,100);  knob1 = 128*floor((slider1+45)*0.62);  gfx_blit(2,0.5,0,0,knob1,128,128); //top left knob
- xy(540-32,100);  knob1 = 128*floor(slider2*1.67);       gfx_blit(2,0.5,0,0,knob1,128,128); //top right knob
- xy(120-32,250);  knob1 = 128*floor((slider3-0.6)*1.55); gfx_blit(2,0.5,0,0,knob1,128,128); //bot left knob
- xy(400-32,250);  knob1 = 128*floor((slider8-50)*0.15);  gfx_blit(2,0.5,0,0,knob1,128,128); //bot cent knob
- 
- //numerical readout
- rgb(0.99, 0.95, 0.95);
- xy (110, 50);  gfx_drawnumber(gain_dB,1);  gfx_drawstr(" dB");
- xy (360, 50);  gfx_drawnumber(Drv,1);  gfx_drawstr(" dB");
- 
- xy (360, 320);  gfx_drawnumber(Attime,1);  gfx_drawstr(" ms");
- xy (600, 320);  gfx_drawnumber(Reltime,1);  gfx_drawstr(" ms"); 
- 
- 
   //experiments
-   
-  
-  
-  
-  xy(0, 0);
 
-  
-  
+  xy(0, 0);
