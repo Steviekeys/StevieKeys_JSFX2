@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="47ed4fb5e0452c5bb2c1fe7184fb08de87808325">
+<index version="1" name="StevieKeys JSFX" commit="b1407b502f2fe6f04e3f77970529a278a37b8903">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -436,6 +436,20 @@
 - GUI scaling
 - Adjust Release behaviour]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/47ed4fb5e0452c5bb2c1fe7184fb08de87808325/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
+      </version>
+      <version name="0.2.1beta" author="Stephen Boyes" time="2024-08-28T20:33:31Z">
+        <changelog><![CDATA[- new code based on limit smash
+- new output stage
+- GUI scaling
+- Adjust Release behaviour
+- GUI elements now downloaded
+- GUI controls not operating yet]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b1407b502f2fe6f04e3f77970529a278a37b8903/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
+        <source file="Blue_Vocal_Compressor/ChiControl.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b1407b502f2fe6f04e3f77970529a278a37b8903/Dynamics/Blue_Vocal_Compressor/ChiControl.png</source>
+        <source file="Blue_Vocal_Compressor/GUI_version_1.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b1407b502f2fe6f04e3f77970529a278a37b8903/Dynamics/Blue_Vocal_Compressor/GUI_version_1.jsfx-inc</source>
+        <source file="Blue_Vocal_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b1407b502f2fe6f04e3f77970529a278a37b8903/Dynamics/Blue_Vocal_Compressor/Vintage_PPM_meter.png</source>
+        <source file="Blue_Vocal_Compressor/st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b1407b502f2fe6f04e3f77970529a278a37b8903/Dynamics/Blue_Vocal_Compressor/st-oversampler.jsfx-inc</source>
+        <source file="Blue_Vocal_Compressor/test.txt">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b1407b502f2fe6f04e3f77970529a278a37b8903/Dynamics/Blue_Vocal_Compressor/test.txt</source>
       </version>
     </reapack>
     <reapack name="HQ Track Compressor.jsfx" type="effect" desc="HQ Track Compressor (beta)">
