@@ -1,4 +1,4 @@
-version:0.2.0beta
+version:0.2.1beta
 desc:Blue Vocal Compressor (beta)
 author:Stephen Boyes
 about:
@@ -19,9 +19,10 @@ changelog:
   - new output stage
   - GUI scaling
   - Adjust Release behaviour
+  - GUI elements now downloaded
+  - GUI controls not operating yet
+provides:Blue_Vocal_Compressor/*
 
-
-*/
 //to do
 //GUI elements
 //smooth controls
@@ -37,8 +38,8 @@ changelog:
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
 *                                                                              *
 *******************************************************************************/
-//provides:Blue_Vocal_Compressor/*
-/*
+
+
 filename:0,Blue_Vocal_Compressor/Vintage_PPM_meter.png
 filename:1,Blue_Vocal_Compressor/ChiControl.png
 
