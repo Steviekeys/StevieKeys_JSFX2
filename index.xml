@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="9d09d833074cbfcac0c8a55091332246bb9fae02">
+<index version="1" name="StevieKeys JSFX" commit="a00c1ed95cf12198d2cf1125da113acedc658fc9">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -459,6 +459,15 @@
         <source file="Blue_Vocal_Compressor/GUI_version_1.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9d09d833074cbfcac0c8a55091332246bb9fae02/Dynamics/Blue_Vocal_Compressor/GUI_version_1.jsfx-inc</source>
         <source file="Blue_Vocal_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9d09d833074cbfcac0c8a55091332246bb9fae02/Dynamics/Blue_Vocal_Compressor/Vintage_PPM_meter.png</source>
         <source file="Blue_Vocal_Compressor/st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/9d09d833074cbfcac0c8a55091332246bb9fae02/Dynamics/Blue_Vocal_Compressor/st-oversampler.jsfx-inc</source>
+      </version>
+      <version name="0.5.0beta" author="Stephen Boyes" time="2024-08-30T15:21:49Z">
+        <changelog><![CDATA[- GUI bug fix
+- output stage update]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a00c1ed95cf12198d2cf1125da113acedc658fc9/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
+        <source file="Blue_Vocal_Compressor/ChiControl.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a00c1ed95cf12198d2cf1125da113acedc658fc9/Dynamics/Blue_Vocal_Compressor/ChiControl.png</source>
+        <source file="Blue_Vocal_Compressor/GUI_version_1.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a00c1ed95cf12198d2cf1125da113acedc658fc9/Dynamics/Blue_Vocal_Compressor/GUI_version_1.jsfx-inc</source>
+        <source file="Blue_Vocal_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a00c1ed95cf12198d2cf1125da113acedc658fc9/Dynamics/Blue_Vocal_Compressor/Vintage_PPM_meter.png</source>
+        <source file="Blue_Vocal_Compressor/st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a00c1ed95cf12198d2cf1125da113acedc658fc9/Dynamics/Blue_Vocal_Compressor/st-oversampler.jsfx-inc</source>
       </version>
     </reapack>
     <reapack name="HQ Track Compressor.jsfx" type="effect" desc="HQ Track Compressor (beta)">
