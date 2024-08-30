@@ -1,4 +1,4 @@
-version:0.4.0beta
+version:0.5.0beta
 desc:Blue Vocal Compressor (beta)
 author:Stephen Boyes
 about:
@@ -15,13 +15,13 @@ about:
     Release Time        : Aprox time for gain reduction to return to 0dB after level drops
     exact release time is dependant on amount of gain reduction and length of time in compression
 changelog:
-  - GUI updates
+  - GUI bug fix
   - output stage update
 provides:Blue_Vocal_Compressor/*
 
-//to do
-//GUI elements
-//smooth controls
+
+
+
 
 /*******************************************************************************
 *  2024    Stephen Boyes                                                       *
@@ -199,9 +199,9 @@ instance(x,x0,x1,y,c)
 (
   x1 = x0;
   x0 = x;
-  x = 0.5*x + 0.5*x1;
+  x = 0.50*x + 0.50*x1;
   y = x + (y-x)*c;
-  x - y
+  x0 - y
 );
 
 function lowpass(in,b)
@@ -288,12 +288,15 @@ function tanh(x)
 
 
 @slider
+
+
+
+@block
 next_gain = 10^(gain_db/20);
 next_con_gain = 10^(con_gain_db/20)-1;
 next_out_gain = 10^(out_gain/20);
 
 //limit smash @slider
-
 inboost = 10^(Drv/20);  //drive
 outcut  = 2^(-Drv/7.7);   // Auto Gain out
 Feedback    = 1-ratio;
@@ -304,7 +307,7 @@ outtrim = 10^(trim/20);
 
 
 
-@block
+
 d_gain = (next_gain - last_gain)/samplesblock;
 d_con_gain = (next_con_gain - last_con_gain)/samplesblock;
 d_out_gain = (next_out_gain - last_out_gain)/samplesblock;
@@ -472,8 +475,8 @@ spl0 = Tanh0;
 spl1 = Tanh1;
 
 //DC filter
-spl0 = DCleft2.highpass(-1.25*spl0,c);
-spl1 = DCrigh2.highpass(-1.25*spl1,c);
+spl0 = DCleft2.highpass2(-1.25*spl0,c);
+spl1 = DCrigh2.highpass2(-1.25*spl1,c);
 
 
 
