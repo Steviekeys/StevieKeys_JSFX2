@@ -1,4 +1,4 @@
-version:0.2.1beta
+version:0.4.0beta
 desc:Blue Vocal Compressor (beta)
 author:Stephen Boyes
 about:
@@ -10,17 +10,13 @@ about:
     less ess            : feed high frquency transients to the detector to prevent ess sounds getting louder
     Compression Drive   : Increases compression, output compensated
     Output Drive        : Push the output stage harder for more dirt and colour
-    Compress - Limit    : Compress = feedback 2:1  Limit = Feedforward 100:1
+    Compress - Limit    : Compress = feedback 2:1  Limit = Feedforward inf:1
     Attack time         : Aprox time for full gain reduction
     Release Time        : Aprox time for gain reduction to return to 0dB after level drops
     exact release time is dependant on amount of gain reduction and length of time in compression
 changelog:
-  - new code based on limit smash
-  - new output stage
-  - GUI scaling
-  - Adjust Release behaviour
-  - GUI elements now downloaded
-  - GUI controls not operating yet
+  - GUI updates
+  - output stage update
 provides:Blue_Vocal_Compressor/*
 
 //to do
@@ -28,7 +24,7 @@ provides:Blue_Vocal_Compressor/*
 //smooth controls
 
 /*******************************************************************************
-*  2023    Stephen Boyes                                                       *
+*  2024    Stephen Boyes                                                       *
 *  This program is free software                                               *
 *                                                                              *
 *                                                                              *
@@ -48,16 +44,16 @@ options:gfx_Hz=60
 
 
 slider1:gain_db=0<-12,12,0.2>input gain (dB)
-slider3:con_gain_db=0<0,20,0.2>less ess
+slider2:Drv=0<0,40>Compression Drive
+slider3:out_gain=0<-10,30,0.1>Output Drive (dB)
 
+slider10:ratio=0.5<0,1,0.01>Compress - Limit (ratio)
+slider11:attime=10<1,100,0.2:log=10>Attack Time (ms)
+slider12:reltime=500<50,5000,0.1:log=500>Release Time (ms)
 
-slider11:Drv=0<0,40>Compression Drive
-slider12:out_gain=0<-10,30,0.1>Output Drive (dB)
-slider13:ratio=0.5<0,1,0.01>Compress - Limit (ratio)
-slider15:attime=10<1,100,0.2:log=10>Attack Time (ms)
-slider16:reltime=500<50,5000,0.1:log=500>Release Time (ms)
+slider14:con_gain_db=0<0,20,0.2>less ess
 
-slider18:trim=0<-10,10,0.1>Out Trim
+slider16:trim=0<-10,10,0.1>Out Trim
 
 
 
@@ -189,6 +185,13 @@ diff = min(max(x,rel),att);
 out = max(min(out1+diff,1),0);
 out1 = out;
 out
+);
+
+function highpass(x,c)
+instance(x,y,c)
+(
+  y = x + (y-x)*c;
+  x - y
 );
 
 function highpass2(x,c)
@@ -469,8 +472,8 @@ spl0 = Tanh0;
 spl1 = Tanh1;
 
 //DC filter
-spl0 = DCleft2.highpass2(-1.25*spl0,c);
-spl1 = DCrigh2.highpass2(-1.25*spl1,c);
+spl0 = DCleft2.highpass(-1.25*spl0,c);
+spl1 = DCrigh2.highpass(-1.25*spl1,c);
 
 
 
@@ -510,16 +513,6 @@ gr_meter = peak + (gr_meter-peak)*gr_meter_attack;
   mouse_on() = m_on;
   mouse_off() = m_off;
 
-  
-  xy(64*size,64*size);    gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(304*size,64*size);   gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(544*size,64*size);   gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(64*size,320*size);   gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(304*size,320*size);  gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(544*size,320*size);  gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(784*size,320*size);  gfx_blit(1,0.5*size,0,0,0,256,256);
-  xy(1024*size,320*size); gfx_blit(1,0.5*size,0,0,0,256,256);
-
   //text
   xy(92*size, 212*size);   gfx_drawstr("   input");
   xy(322*size, 212*size);  gfx_drawstr("Compression Drive");
@@ -532,61 +525,86 @@ gr_meter = peak + (gr_meter-peak)*gr_meter_attack;
 
   //numerical readout
   rgb(0.99, 0.95, 0.95);
-  xy (110*size, 50*size);   gfx_drawnumber(gain_dB,1);  gfx_drawstr(" dB");
-  xy (360*size, 50*size);   gfx_drawnumber(Drv,1);      gfx_drawstr(" dB");
+  xy (110*size, 50*size);  gfx_drawnumber(gain_dB,1); gfx_drawstr(" dB");
+  xy (350*size, 50*size);  gfx_drawnumber(Drv,1);     gfx_drawstr(" dB");
  
-  xy (360*size, 320*size);  gfx_drawnumber(Attime,1);   gfx_drawstr(" ms");
-  xy (600*size, 320*size);  gfx_drawnumber(Reltime,1);  gfx_drawstr(" ms");
- 
- /*
-  //define the button
-  Thresh.button_rect(200,50,100,100);
-//  Thresh_fine.button_rect(200,50,100,100);
-   
-  //setup the drag
-  Thresh.y_drag(Thresh.button,1,m_on,m_off);//left click drag
-//  Thresh_fine.button_rect(Thresh_fine.button,9,m_on,m_off);
+  xy (350*size, 320*size); gfx_drawnumber(Attime,1);  gfx_drawstr(" ms");
+  xy (585*size, 320*size); gfx_drawnumber(Reltime,1); gfx_drawstr(" ms");
+  xy (1070*size,320*size); gfx_drawnumber(trim,2);    gfx_drawstr(" dB");
+  
+  xy (60*size, 430*size);  gfx_drawstr("2:1");
+  xy (170*size,430*size); gfx_drawstr("inf:1");
 
-   //define what happens
-  Thresh.down ? ( mouse_cap == 9 ? slider1=max(slider1-=0.1,-44) : slider1=max(slider1-=2,-44); );
-  Thresh.up ? slider1=min(slider1+=2,4);
-//  Thresh_fine.down ? slider1=max(slider1-=1,-44);
-//  Thresh_fine.up ? slider1=min(slider1+=1,4);  
-   
-  //define the button
-  Out_gain.button_rect(500,50,100,100);
-  
+  //input
+  in.button_rect(64*size,64*size,256*size,256*size); //define the button
   //setup the drag
-  Out_gain.y_drag(Out_gain.button,1,m_on,m_off);//left click drag
-  
+  in.y_drag(in.button,1,m_on,m_off);//left click drag
   //define what happens
-  Out_gain.down ? slider2=max(slider2-=0.5,0);
-  Out_gain.up ? slider2=min(slider2+=0.5,18);
-  
+  in.down ? gain_db=max(gain_db-=0.3,-12);
+  in.up ? gain_db=min(gain_db+=0.3,12);
 
-  //define the button
-  Attack.button_rect(50,200,100,100);
-  
+  //compression
+  comp.button_rect(304*size,64*size,256*size,256*size); //define the button
   //setup the drag
-  Attack.y_drag(Attack.button,1,m_on,m_off);//left click drag
-  
+  comp.y_drag(comp.button,1,m_on,m_off);//left click drag
   //define what happens
-  Attack.down ? slider5=max(slider5-=0.5,1);
-  Attack.up ? slider5=min(slider5+=0.5,20);  
-  
+  comp.down ? drv=max(drv-=0.5,0);
+  comp.up ? drv=min(drv+=0.5,40);
 
-  //define the button
-  Release.button_rect(350,200,100,100);
-  
+  //output drive
+  out_drive.button_rect(544*size,64*size,256*size,256*size);  //define the button
   //setup the drag
-  Release.y_drag(Release.button,1,m_on,m_off);//left click drag
-  
+  out_drive.y_drag(out_drive.button,1,m_on,m_off);//left click drag
   //define what happens
-  Release.down ? slider6=max(slider6-=5,50);
-  Release.up ? slider6=min(slider6+=5,250);  
-  */
- 
+  out_drive.down ? out_gain=max(out_gain-=0.5,-10);
+  out_drive.up ? out_gain=min(out_gain+=0.5,30);  
 
-  //experiments
+  //ratio
+  ratio_set.button_rect(64*size,320*size,256*size,256*size); //define the button
+  //setup the drag
+  ratio_set.y_drag(ratio_set.button,1,m_on,m_off);//left click drag
+  //define what happens
+  ratio_set.down ? ratio=max(ratio-=0.0125,0);
+  ratio_set.up ? ratio=min(ratio+=0.0125,1);  
 
-  xy(0, 0);
+  //attack
+  attack_set.button_rect(304*size,320*size,256*size,256*size); //define the button
+  //setup the drag
+  attack_set.y_drag(attack_set.button,1,m_on,m_off);//left click drag
+  //define what happens
+  attack_set.down ? attime=max(attime*=(1/1.04),1);
+  attack_set.up ? attime=min(attime*=1.04,100);  
+
+  //release
+  release_set.button_rect(544*size,320*size,256*size,256*size); //define the button
+  //setup the drag
+  release_set.y_drag(release_set.button,1,m_on,m_off);//left click drag
+  //define what happens
+  release_set.down ? reltime=max(reltime*=(1/1.04),50);
+  release_set.up ? reltime=min(reltime*=1.04,5000);  
+
+  //less ess
+  ess_set.button_rect(784*size,320*size,256*size,256*size); //define the button
+  //setup the drag
+  ess_set.y_drag(ess_set.button,1,m_on,m_off);//left click drag
+  //define what happens
+  ess_set.down ? con_gain_db=max(con_gain_db-=0.25,0);
+  ess_set.up ? con_gain_db=min(con_gain_db+=0.25,20);
+
+  //out trim
+  out_set.button_rect(1024*size,320*size,256*size,256*size); //define the button
+  //setup the drag
+  out_set.y_drag(out_set.button,1,m_on,m_off);//left click drag
+  //define what happens
+  out_set.down ? trim=max(trim-=0.25,-10);
+  out_set.up ? trim=min(trim+=0.25,10);
+
+
+  xy(64*size,64*size);    gfx_blit(1,0.5*size,0,0,floor((47/24)*(gain_db+12))*256,256,256); //input
+  xy(304*size,64*size);   gfx_blit(1,0.5*size,0,0,floor((47/40)*drv)*256,256,256); //compression drive
+  xy(544*size,64*size);   gfx_blit(1,0.5*size,0,0,floor((47/40)*(out_gain+10))*256,256,256); //output drive
+  xy(64*size,320*size);   gfx_blit(1,0.5*size,0,0,floor(ratio*47)*256,256,256); //ratio
+  xy(304*size,320*size);  gfx_blit(1,0.5*size,0,0,floor(47*((attime-1)/99)^0.29)*256,256,256); //attack time
+  xy(544*size,320*size);  gfx_blit(1,0.5*size,0,0,floor(47*((reltime-50)/4950)^0.29)*256,256,256); //release time
+  xy(784*size,320*size);  gfx_blit(1,0.5*size,0,0,floor((47/20)*con_gain_db)*256,256,256); //less ess
+  xy(1024*size,320*size); gfx_blit(1,0.5*size,0,0,floor((47/20)*(trim+10))*256,256,256); //out trim
