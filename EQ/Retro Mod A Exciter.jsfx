@@ -1,0 +1,211 @@
+version:0.1.0beta
+desc:Retro Mod A Exciter
+author:Stephen Boyes
+about:
+  # Retro Mod A Exciter
+    Based loosely on a not so secret modification to noise reduction units
+    to add more high end air to recordings
+    Controls...
+    High mix      : adds compressed high end
+    Very high mix : adds compressed very high end
+changelog:
+  - beta
+
+
+//  The MIT License (MIT)
+//Copyright © 2024 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the Software),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+
+slider1:gain_db=0<0,18,0.2>Input Gain (dB)
+slider3:slope=0<0,1,1{6dB Smooth,12dB Steep with mid dip}>High Mix Slope
+slider4:mix=0<0,1,0.02>High Mix
+slider6:Very_high_slope=0<0,1,1{6dB Smooth,12dB Steep with mid dip}>Very High Mix Slope
+slider7:very_high_mix=0<0,1,0.02>Very High Mix
+
+import Blue_Vocal_Compressor/st-oversampler.jsfx-inc
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+
+
+
+
+@init
+last_gain=10^(gain_db/20);
+Thresh = 54;
+
+ext_tail_size = -1;
+ 
+gr_meter=1;
+gr_meter_attack = exp(-1/(50*0.001*srate));
+gr_meter_decay = exp(1/(1*srate));
+
+DC_fc = 5/srate;
+DC_freq = exp(-2*$pi*DC_fc);
+
+RMS_ms = 1.2;
+RMS_speed = exp(-1/(srate*0.001*RMS_ms));
+ENV_ms = 0.6;
+ENV_speed = exp(-1/(srate*0.001*ENV_ms));
+
+
+
+function highpass(x,c)
+instance(x,y,c)
+(
+  y = x + (y-x)*c;
+  x - y
+);
+
+
+function lowpass(in,b)
+instance(in,b,y)
+(
+  y = in + b*(y-in);
+  y
+);
+
+
+
+function RMS(in,c)
+instance (in,c,y)
+(
+  in = 0.00002+in*in;
+  y = in+c*(y-in);
+  sqrt(y)
+);
+
+
+
+@slider
+effect  = mix*2;
+effect2 = very_high_mix*4;
+
+
+slope == 1 ? (
+  HP_fc = 2400/srate;
+  HP_freq = exp(-2*$pi*HP_fc);
+):(
+  HP_fc = 3000/srate;
+  HP_freq = exp(-2*$pi*HP_fc);
+);
+
+
+Very_high_slope == 1 ? (
+  VHP_fc = 7200/srate;
+  VHP_freq = exp(-2*$pi*VHP_fc);
+):(
+  VHP_fc = 9000/srate;
+  VHP_freq = exp(-2*$pi*VHP_fc);
+);
+
+@block
+next_gain = 10^(gain_db/20);
+
+
+d_gain = (next_gain - last_gain)/samplesblock;
+@sample
+
+////////input gain////////
+spl0 *= last_gain;
+spl1 *= last_gain;
+
+
+////Highpass
+High0 = Lhp.highpass(spl0,HP_freq);
+High1 = Rhp.highpass(spl1,HP_freq);
+////RMS
+HighSide0 = LRMS.RMS(High0,RMS_speed);
+HighSide1 = RRMS.RMS(High1,RMS_speed);
+////Convert to dB
+Highside0 = 20*log10(Highside0);
+Highside1 = 20*log10(Highside1);
+////Set Threshold and soft knee
+Highside0 = 1+exp(Highside0+Thresh);
+Highside1 = 1+exp(Highside1+Thresh);
+Highside0 = 0.5*log(Highside0);
+Highside1 = 0.5*log(Highside1);
+////Time envelope
+Highside0 = Lenv.lowpass(Highside0,ENV_speed);
+Highside1 = Renv.lowpass(Highside1,ENV_speed);
+////Convert to gain
+Highside0 = 10^(-Highside0/20);
+Highside1 = 10^(-Highside1/20);
+High0 *= HighSide0;
+High1 *= HighSide1;
+High0 += 0.02*(High0*High0);
+High1 += 0.02*(High1*High1);
+
+slope == 1 ? (
+  High0 = Lhp2.highpass(High0,HP_freq);
+  High1 = Rhp2.highpass(High1,HP_freq);
+):(
+  High0 = Lhp2.highpass(High0,DC_freq);
+  High1 = Rhp2.highpass(High1,DC_freq);
+
+);
+
+
+////Very Highpass
+VHigh0 = Lvhp.highpass(spl0,VHP_freq);
+VHigh1 = Rvhp.highpass(spl1,VHP_freq);
+////RMS
+VHighSide0 = LVHRMS.RMS(VHigh0,RMS_speed);
+VHighSide1 = RVHRMS.RMS(VHigh1,RMS_speed);
+////Convert to dB
+VHighside0 = 20*log10(VHighside0);
+VHighside1 = 20*log10(VHighside1);
+////Set Threshold and soft knee
+VHighside0 = 1+exp(VHighside0+Thresh);
+VHighside1 = 1+exp(VHighside1+Thresh);
+VHighside0 = 0.5*log(VHighside0);
+VHighside1 = 0.5*log(VHighside1);
+////Time envelope
+VHighside0 = vhLenv.lowpass(VHighside0,ENV_speed);
+VHighside1 = vhRenv.lowpass(VHighside1,ENV_speed);
+////Convert to gain
+VHighside0 = 10^(-VHighside0/20);
+VHighside1 = 10^(-VHighside1/20);
+VHigh0 *= VHighside0;
+VHigh1 *= VHighside1;
+VHigh0 += 0.04*(VHigh0*VHigh0);
+VHigh1 += 0.04*(VHigh1*VHigh1);
+
+Very_high_slope == 1 ? (
+  VHigh0 = Lvhp2.highpass(Vhigh0,VHP_freq);
+  VHigh1 = Rvhp2.highpass(Vhigh1,VHP_freq);
+):(
+  VHigh0 = Lvhp2.highpass(Vhigh0,DC_freq);
+  VHigh1 = Rvhp2.highpass(Vhigh1,DC_freq);
+);
+
+spl0 = spl0 + High0 * effect + VHigh0 * effect2;
+spl1 = spl1 + High1 * effect + VHigh1 * effect2;
+
+
+
+spl0 /= last_gain;
+spl1 /= last_gain;
+last_gain += d_gain;
+
+
+
+
+@gfx 1200 500 // request horizontal/vertical heights (0 means dont care)
