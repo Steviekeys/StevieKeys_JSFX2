@@ -1,4 +1,4 @@
-version:1.0.0
+version:1.0.1
 desc:Maximum Resolution Dither
 author: Stephen Boyes
 about:
@@ -8,7 +8,7 @@ about:
   If least significant bit is 0, truncate bit depth.
   If least significant bit is 1, probability of adding 1 bit onto next significant bit is 0.618 or 1 -0.618 depending on the signal polarity.
 changelog:
-  - First github version
+  - Clamp output to 0dB max
 
 
 //  Maximum Resolution Dither
@@ -60,24 +60,47 @@ spl0 += 0.97*y0;
 spl1 += 0.97*y1;
 
 
-y2 = y0;
-y3 = y1;
+
   z0 = spl0;
   z1 = spl1;
 
-spl0 *= 2^52;
-spl1 *= 2^52;
 
 slider2 == 1 ?
 (
-spl0 *= 2^-13;  spl1 *= 2^-13;
+spl0 *= 2^39;  spl1 *= 2^39;
+z2 = spl0;
+z3 = spl1;
+spl0 += noise;
+spl1 -= noise;
+spl0 -= y2*0.97;
+spl1 -= y3*0.97;
+spl0 > 2^39 ? spl0 = 2^39;
+spl1 > 2^39 ? spl1 = 2^39;
+spl0 < -(2^39) ? spl0 = -(2^39);
+spl1 < -(2^39) ? spl1 = -(2^39);
+spl0 = floor(spl0);
+spl1 = floor(spl1);
+y2 = z2-spl0;
+y3 = z3-spl1;
+):(
+spl0 *= 2^52;  spl1 *= 2^52;
+z2 = spl0;
+z3 = spl1;
+spl0 += noise;
+spl1 -= noise;
+spl0 -= y2*0.97;
+spl1 -= y3*0.97;
+spl0 > 2^52 ? spl0 = 2^52;
+spl1 > 2^52 ? spl1 = 2^52;
+spl0 < -(2^52) ? spl0 = -(2^52);
+spl1 < -(2^52) ? spl1 = -(2^52);
+spl0 = floor(spl0);
+spl1 = floor(spl1);
+y2 = z2-spl0;
+y3 = z3-spl1;
 );
 
 
-spl0 += noise;
-spl1 -= noise;
-spl0 = floor(spl0);
-spl1 = floor(spl1);
 
 
 
