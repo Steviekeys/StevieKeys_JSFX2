@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="02c9b4505127119c21c8cf3cf76a0e618041412d">
+<index version="1" name="StevieKeys JSFX" commit="055ac900920c7c7dd7a86289f977f61587fb48bc">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -644,6 +644,16 @@
         <source file="HQ_Track_Compressor/Simple_red.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2f83438e907ee931cba5399aabbe72bb554ed969/Dynamics/HQ_Track_Compressor/Simple_red.png</source>
         <source file="HQ_Track_Compressor/Simple_silver.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2f83438e907ee931cba5399aabbe72bb554ed969/Dynamics/HQ_Track_Compressor/Simple_silver.png</source>
         <source file="HQ_Track_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2f83438e907ee931cba5399aabbe72bb554ed969/Dynamics/HQ_Track_Compressor/Vintage_PPM_meter.png</source>
+      </version>
+      <version name="0.5.7beta" author="Stephen Boyes" time="2024-11-12T11:51:17Z">
+        <changelog><![CDATA[- reformat header]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ%20Track%20Compressor.jsfx</source>
+        <source file="HQ_Track_Compressor/HQcomp_back.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ_Track_Compressor/HQcomp_back.png</source>
+        <source file="HQ_Track_Compressor/HQcomp_text.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ_Track_Compressor/HQcomp_text.png</source>
+        <source file="HQ_Track_Compressor/Simple_blue.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ_Track_Compressor/Simple_blue.png</source>
+        <source file="HQ_Track_Compressor/Simple_red.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ_Track_Compressor/Simple_red.png</source>
+        <source file="HQ_Track_Compressor/Simple_silver.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ_Track_Compressor/Simple_silver.png</source>
+        <source file="HQ_Track_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/055ac900920c7c7dd7a86289f977f61587fb48bc/Dynamics/HQ_Track_Compressor/Vintage_PPM_meter.png</source>
       </version>
     </reapack>
     <reapack name="Limit Smash.jsfx" type="effect" desc="Limit smash [v3]">
