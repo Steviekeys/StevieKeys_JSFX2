@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="055ac900920c7c7dd7a86289f977f61587fb48bc">
+<index version="1" name="StevieKeys JSFX" commit="e01cba979b3bf5100e583a260c32da4ca3d0ed15">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1139,6 +1139,10 @@
       <version name="1.0.0" author="Stephen Boyes" time="2024-01-10T19:38:28Z">
         <changelog><![CDATA[- First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/46b345e4148ad0827b371cf6fbc3dbdceb6725ed/utility/Maximum%20Resolution%20Dither.jsfx</source>
+      </version>
+      <version name="1.0.1" author="Stephen Boyes" time="2024-11-12T13:12:09Z">
+        <changelog><![CDATA[- Clamp output to 0dB max]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/e01cba979b3bf5100e583a260c32da4ca3d0ed15/utility/Maximum%20Resolution%20Dither.jsfx</source>
       </version>
     </reapack>
     <reapack name="Perfect Mono.jsfx" type="effect" desc="Perfect Mono">
