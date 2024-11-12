@@ -1,0 +1,112 @@
+version:2.0.0
+desc:Transient Softener 2
+author:Stephen Boyes
+about:
+  # based very loosely on airwindows slew. distorts or compresses bright spikey transients making a softer sound.
+  use reapers delta mode to hear what parts of the sound are being shaved off.
+  
+  drive...
+  . Boosts input, and cuts output, to increase the effect.
+  
+  Ratio...
+  . Selects the transfer curve used (soft knee)
+  2:1  4:1  8:1  20:1
+  
+  Control speed (us)...
+  . Controls the envelope of the effect, shorter settings produce more distortion/aliasing.
+changelog:
+  - Github release
+
+
+
+
+//                                                                
+//  The MIT License (MIT)
+//Copyright © 2024 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                            
+//                                                                              
+// 
+
+
+
+slider1:gain_db=0<-140,12,1>Gain (dB)
+slider2:amount=0<0,42,0.1>Drive
+slider3:1<0,3,1{2:1,4:1,8:1,20:1}>Ratio
+
+slider4:100<10,1800,5>Control speed (us)
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+ext_nodenorm = 1;
+ext_tail_size = -2; 
+last_gain=10^(gain_db/20);
+last_drive = 10^(amount/20);
+last_drive *= srate/48000;
+
+
+
+function slew2(in,drive)
+instance(x,lastsamout,lpout,diff,comp,out,noise)
+(
+
+// difference from last sample
+x = drive*in-lastsamout;
+// distort slew rate
+lpout = (1+x*x) + (lpout-(1+x*x))*speed;
+comp = sqrt(1/(lpout)^ratio);
+diff = x*comp;
+
+// calculate output
+out = lastsamout+diff;
+lastsamout = out;
+out = out*(1/drive);
+out
+);
+
+
+
+@slider
+next_gain=10^(gain_db/20);
+next_drive = 10^(amount/20);
+next_drive *= srate/48000;
+
+slider3 == 0 ? ratio = 0.5;
+slider3 == 1 ? ratio = 0.75;
+slider3 == 2 ? ratio = 0.875;
+slider3 == 3 ? ratio = 0.95;
+//ratio = 1-(1/slider3);
+
+speed = exp(-1/(srate * 0.001 * 0.001 * slider4));
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_drive = (next_drive - last_drive)/samplesblock;
+
+@sample
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+
+
+spl0 = le.slew2(spl0,last_drive);
+spl1 = ri.slew2(spl1,last_drive);
+
+
+
+
+last_drive += d_drive;
