@@ -1,4 +1,4 @@
-version:3.0.2
+version:3.1.0
 desc:Haas Delay and filtering
 author:Stephen Boyes
 about:
@@ -11,6 +11,7 @@ changelog:
   - v3.0.1   change desc tag
   - v3.0.1   add changelog to reapack header
   - v3.0.2   clean filter code
+  - v3.1.0   use correct formula for wet gain
 
 // 2022 Stephen Boyes
 // This program is free software.                                              
@@ -120,7 +121,7 @@ delaytime=slider1+slider2;
 delay0.delay_set(buf0,max(delaytime,SD1));
 delay1.delay_set(buf1,max(delaytime,SD1));
 
-wetGain  =2 ^ (slider3/6);
+wetGain  = 10 ^ (slider3/20);
 
 FXonL = slider6 & 1 ? 1 : 0;
 FXonR = slider6 & 2 ? 1 : 0;
