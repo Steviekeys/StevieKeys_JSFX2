@@ -1163,7 +1163,6 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Blue Vocal Compressor (beta)\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Odd saturation\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Odd n Even saturation\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Smooth Clipper\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Live Limit\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Perfect Mono\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Punch Comp\par}
@@ -1175,6 +1174,7 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Limit Smash\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Distortion\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener 2\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Bass X\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Echo Live In Stereo\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wow Tape Delay\par}
@@ -1184,6 +1184,7 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dual 360 Pan\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Auto DeEsser (beta)\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Hard AntiDerivative AntiAliasing Clipper\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Smooth Clipper\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Pong Game\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Mod A Exciter\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Octave Fuzz\sa180\par}
