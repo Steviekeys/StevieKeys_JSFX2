@@ -1,4 +1,4 @@
-version:0.5.6beta
+version:0.5.7beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -10,11 +10,7 @@ about:
   Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
   to the rectifing and hard knee compression components.
 Changelog:
-  - log scaling sliders
-  - GUI markings
-  - CPU boost
-
-options:gfx_hz=60
+  - reformat header
 
 
 slider1:drive=0<0,31,1>Input Saturation
@@ -25,10 +21,6 @@ slider5:Rel_in=260<40,1000,1:sqr!=3>Release (ms)
 
 slider10:gain_db=0<-9,22,1>gain (dB)
 
-in_pin:left input
-in_pin:right input
-out_pin:left output
-out_pin:right output
 
 filename:0,HQ_Track_Compressor/HQcomp_back.png
 filename:1,HQ_Track_Compressor/Vintage_PPM_meter.png
@@ -36,6 +28,15 @@ filename:2,HQ_Track_Compressor/simple_red.png
 filename:3,HQ_Track_Compressor/simple_silver.png
 filename:4,HQ_Track_Compressor/simple_blue.png
 filename:5,HQ_Track_Compressor/HQcomp_text.png
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+
+options:gfx_hz=60
 
 
 @init
