@@ -1,4 +1,4 @@
-version:0.5.0beta
+version:0.5.1beta
 desc:Blue Vocal Compressor (beta)
 author:Stephen Boyes
 about:
@@ -15,10 +15,8 @@ about:
     Release Time        : Aprox time for gain reduction to return to 0dB after level drops
     exact release time is dependant on amount of gain reduction and length of time in compression
 changelog:
-  - GUI bug fix
-  - output stage update
+  - tidy code
 provides:Blue_Vocal_Compressor/*
-
 
 
 
@@ -28,19 +26,12 @@ provides:Blue_Vocal_Compressor/*
 *  This program is free software                                               *
 *                                                                              *
 *                                                                              *
-*                                                                              *
 *  This program is distributed in the hope that it will be useful,             *
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
 *                                                                              *
 *******************************************************************************/
 
-
-filename:0,Blue_Vocal_Compressor/Vintage_PPM_meter.png
-filename:1,Blue_Vocal_Compressor/ChiControl.png
-
-
-options:gfx_Hz=60
 
 
 slider1:gain_db=0<-12,12,0.2>input gain (dB)
@@ -56,10 +47,13 @@ slider14:con_gain_db=0<0,20,0.2>less ess
 slider16:trim=0<-10,10,0.1>Out Trim
 
 
-
-
 import Blue_Vocal_Compressor/st-oversampler.jsfx-inc
 import /GUI_version_1.jsfx-inc
+
+
+filename:0,Blue_Vocal_Compressor/Vintage_PPM_meter.png
+filename:1,Blue_Vocal_Compressor/ChiControl.png
+
 
 in_pin:left input
 in_pin:right input
@@ -67,6 +61,7 @@ out_pin:left output
 out_pin:right output
 
 
+options:gfx_Hz=60
 
 
 
@@ -486,8 +481,7 @@ last_out_gain += d_out_gain;
 spl0 *= outtrim;
 spl1 *= outtrim;
 
-//peak = max(0.08,peak);
-//peak < gr_meter ? gr_meter = peak + (gr_meter-peak)*0.9995 : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
 gr_meter = peak + (gr_meter-peak)*gr_meter_attack;
 
 
