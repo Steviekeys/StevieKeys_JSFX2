@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="e01cba979b3bf5100e583a260c32da4ca3d0ed15">
+<index version="1" name="StevieKeys JSFX" commit="cf37b50d0613a0d34cbcf189e4eb6fb19471b284">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1074,6 +1074,14 @@
 - v3.0.1   change desc tag
 - v3.0.1   add changelog to reapack header]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/5f7f8b51246f88d201e2316c5bf2d45d4266429c/Stereo%20Enhancers/Haas%20Delay%20and%20Filtering.jsfx</source>
+      </version>
+      <version name="3.0.2" author="Stephen Boyes" time="2024-11-12T20:53:58Z">
+        <changelog><![CDATA[- v3.0.0pre changes to filter code and sliders since v2
+- v3.0.0   change defualt values
+- v3.0.1   change desc tag
+- v3.0.1   add changelog to reapack header
+- v3.0.2   clean filter code]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/cf37b50d0613a0d34cbcf189e4eb6fb19471b284/Stereo%20Enhancers/Haas%20Delay%20and%20Filtering.jsfx</source>
       </version>
     </reapack>
   </category>
