@@ -7,7 +7,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Blue Vocal Compressor (beta)
 * Odd saturation
 * Odd n Even saturation
-* Smooth Clipper
 * Live Limit
 * Perfect Mono
 * Retro Punch Comp
@@ -19,6 +18,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Limit Smash
 * Retro Distortion
 * Transient Softener
+* Transient Softener 2
 * Bass X
 * Echo Live In Stereo
 * Wow Tape Delay
@@ -28,6 +28,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Dual 360 Pan
 * Auto DeEsser (beta)
 * Hard AntiDerivative AntiAliasing Clipper
+* Smooth Clipper
 * Pong Game
 * Retro Mod A Exciter
 * Octave Fuzz
