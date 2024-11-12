@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="b07d96ee5538eb6ea55272629cc4a12616cb482a">
+<index version="1" name="StevieKeys JSFX" commit="b5c2710cef361abfc3e9c6a9223b5dbdcf3adcf3">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -907,6 +907,25 @@
       <version name="0.8.5beta" author="Stephen Boyes" time="2024-04-24T12:24:05Z">
         <changelog><![CDATA[- version 0.8.5]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/242c671f9ba2124ccecb37bd466e68e9bc03e4af/Other/Pong%20Game.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Transient Softener 2.jsfx" type="effect" desc="Transient Softener 2">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 based very loosely on airwindows slew. distorts or compresses bright spikey transients making a softer sound.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 use reapers delta mode to hear what parts of the sound are being shaved off.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 drive... . Boosts input, and cuts output, to increase the effect.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Ratio... . Selects the transfer curve used (soft knee) 2:1 4:1 8:1 20:1\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Control speed (us)... . Controls the envelope of the effect, shorter settings produce more distortion/aliasing.\par}
+}
+]]></description>
+      </metadata>
+      <version name="2.0.0" author="Stephen Boyes" time="2024-11-12T11:21:13Z">
+        <changelog><![CDATA[- Github release]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b5c2710cef361abfc3e9c6a9223b5dbdcf3adcf3/Other/Transient%20Softener%202.jsfx</source>
       </version>
     </reapack>
     <reapack name="Transient Softener.jsfx" type="effect" desc="Transient Softener">
