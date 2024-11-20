@@ -1,0 +1,155 @@
+version:0.2
+desc:J Clip
+author:Stephen Boyes
+about:
+  # J Clip
+  soft knee clipper, featuring warmth control, which pushes the waveform down/up, softening the exit from clipping
+Changelog:
+  - version 0.2
+
+slider1:limit_db=0<-24,0,0.1>limit
+slider2:soft_knee=0.2<0,1,0.02>Knee
+slider3:gain_db=0<0,24,1>gain (dB)
+slider4:tim=50<0,250,2>warmth
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+last_limit=10^(limit_db/20);
+
+  gr_meter=1;
+  gr_meter_decay = exp(1/(1*srate));
+
+function softclipper(x)
+instance (f,gain,abs_x)
+(
+  abs_x = sqrt(x*x+(0.06/a));
+  f = log(1+exp(a*log10(abs_x)));
+  gain = 10^(-f/a);
+  x*gain
+);
+
+@slider
+next_gain=10^(gain_db/20);
+next_limit=10^(limit_db/20);
+
+a = 60*(1-log10(1+7.28*soft_knee));
+
+
+co = exp(-1/(tim * 0.001 * 0.001 * srate));
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+d_limit = (next_limit - last_limit)/samplesblock;
+
+@sample
+spl0 /= last_limit;
+spl1 /= last_limit;
+
+in0 = spl0;
+in1 = spl1;
+
+spl0 = spl0 - (e0+last_e0)*co*0.5;
+spl1 = spl1 - (e1+last_e1)*co*0.5;
+
+spl0 = L.softclipper(spl0);
+spl1 = R.softclipper(spl1);
+
+last_e0 = e0;
+last_e1 = e1;
+
+e0 = in0-spl0;
+e1 = in1-spl1;
+
+
+
+spl0 *= last_limit;
+spl1 *= last_limit;
+last_limit += d_limit;
+
+
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+grv = (min(L.gain,R.gain));
+
+
+grv < gr_meter ? gr_meter=grv : ( gr_meter*=gr_meter_decay; gr_meter>1?gr_meter=1; );
+
+@gfx 384 416
+//graph
+gfxSize = min(gfx_w,gfx_h);
+
+gfx_r=gfx_g=gfx_b=0; gfx_a=1;
+gfx_x=gfx_y=0;
+gfx_rectto(gfx_w,gfx_h);
+
+gfx_r=gfx_g=gfx_b=0.8; gfx_a=1;
+gfx_x=gfxSize/2; gfx_y=32;
+gfx_lineto(gfxSize/2,gfxSize,0);
+gfx_x=0; gfx_y=gfxSize/2;
+gfx_lineto(gfxSize,gfxSize/2,0);
+
+gfx_x = gfxSize-20; gfx_y = gfxSize/2;
+gfx_drawchar($'I');
+gfx_drawchar($'N');
+
+gfx_x = gfxSize/2+2; gfx_y = 32;
+gfx_drawchar($'O');
+gfx_drawchar($'U');
+gfx_drawchar($'T');
+
+
+  gfx_r=0.5; gfx_g=1; gfx_b=0; gfx_a=1;
+  gfx_x=0; gfx_y=gfxSize;
+  x = -1.0;
+  while(
+    y = log(1+exp(a*log10(abs(x))));
+    y = 10^(-y/a);
+    y = -x*y;
+    gfx_lineto(x*gfxSize/2+gfxSize/2,y*gfxSize/2+gfxSize/2,1);
+    (x+=0.04) <= 1.05;
+  );
+  //gfx_lineto(gfxSize,0,1);
+  
+
+//meter
+  gr_meter *= exp(1/30); gr_meter>1?gr_meter=1; // decay meter here so if the audio processing stops it doesnt "stick"
+  gfx_r=0.98; gfx_g=0.68; gfx_b=0.32; gfx_a=0.7;
+  
+  //meter_bot=40;
+  meter_h=min(gfx_h,30);
+  xscale=gfx_w*1.66;//0/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + log10(gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+
+  s2=sqrt(2)/2;
+  g = s2;
+  while(
+    gfx_x=gfx_w + log10(g)*xscale;
+    gfx_x >= 0 ? 
+    (
+      gfx_y=0;
+      gfx_lineto(gfx_x,meter_h,0);
+      gfx_y=meter_h-gfx_texth-2;
+      gfx_x+=2;
+      gfx_drawnumber(log10(g)*20,0);
+      gfx_drawchar($'d');
+      gfx_drawchar($'B');
+    );
+    g*=s2;
+    gfx_x >=0;
+  );
+  gfx_a=1;
+
+
+
