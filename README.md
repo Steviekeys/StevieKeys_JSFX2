@@ -5,10 +5,9 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro-Q V4
 * HQ Track Compressor (beta)
 * Blue Vocal Compressor (beta)
-* Odd saturation
-* Odd n Even saturation
 * Live Limit
 * Perfect Mono
+* J Clip
 * Retro Punch Comp
 * Maximum Resolution Dither
 * Dirt EQ
@@ -32,5 +31,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Pong Game
 * Retro Mod A Exciter
 * Octave Fuzz
+* Odd saturation
+* Odd n Even saturation
 
 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml
