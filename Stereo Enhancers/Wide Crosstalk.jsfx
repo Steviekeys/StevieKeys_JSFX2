@@ -1,4 +1,4 @@
-version:0.9
+version:1.0
 desc:Wide Crosstalk
 author:Stephen Boyes
 about:
@@ -207,8 +207,8 @@ d_wide = (next_wide - last_wide)/samplesblock;
 
 @sample
 //balance
-spl0 *= min(1,2-last_bal);
-spl1 *= min(1,last_bal);
+spl0 *= min(1,2-last_bal) + max(0,0.25-0.5*last_bal);
+spl1 *= min(1,last_bal) + max(0,0.5*last_bal-0.25);
 last_bal += d_bal;
 
 
