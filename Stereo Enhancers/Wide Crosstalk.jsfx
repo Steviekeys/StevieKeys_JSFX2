@@ -1,0 +1,327 @@
+version:0.9
+desc:Wide Crosstalk
+author:Stephen Boyes
+about:
+  # Wide Crosstalk (beta)
+  Adds a difused copy of input with polarity on one channel reversed and both channels swapped
+  uses
+  widens mono/mid content
+  moves some hard panned content to the opposite side (like HAAS effect but with less comb filtering when monoed)
+
+//changelog:
+//  -
+//provides:
+
+
+
+/*******************************************************************************
+*  2025    Stephen Boyes                                                       *
+*  This program is free software                                               *
+*                                                                              *
+*                                                                              *
+*  This program is distributed in the hope that it will be useful,             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                        *
+*                                                                              *
+*******************************************************************************/
+
+
+slider1:bal=0.5<0,1,0.02>Balance
+slider2:gain_db=0<-50,0,0.2>dry gain (dB)
+slider3:wide_db=-10<-50,0,0.2>wide (dB)
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_bal = 2 * bal;
+last_gain=10^(gain_db/20);
+last_wide=10^(wide_dB-11/20);
+
+
+r0  = 0.141253;
+r1  = 0.174906;
+r2  = 0.373700;
+r3  = 0.950486;
+r4  = 0.577143;
+r5  = 0.651728;
+r6  = 0.658196;
+r7  = 0.234447;
+r8  = 0.508133;
+r9  = 0.572608;
+r10 = 0.805470;
+r11 = 0.089909;
+r12 = 0.805677;
+r13 = 0.346499;
+r14 = 0.558796;
+r15 = 0.870614;
+r16 = 0.148827;
+r17 = 0.307834;
+r18 = 0.705280;
+r19 = 0.104828;
+r20 = 0.006525;
+r21 = 0.547924;
+r22 = 0.983830;
+r23 = 0.454367;
+r24 = 0.178304;
+r25 = 0.837950;
+r26 = 0.435738;
+r27 = 0.599804;
+
+
+density = srate/600;
+prems = 4.5;
+predelay = srate * 0.001 * prems;
+
+time00 = 0*density + density*r0 + predelay;
+time01 = 1*density + density*r1 + predelay;
+time02 = 2*density + density*r2 + predelay;
+time03 = 3*density + density*r3 + predelay;
+time04 = 4*density + density*r4 + predelay;
+time05 = 5*density + density*r5 + predelay;
+time06 = 6*density + density*r6 + predelay;
+time07 = 7*density + density*r7 + predelay;
+time08 = 8*density + density*r8 + predelay;
+time09 = 9*density + density*r9 + predelay;
+time10 = 10*density + density*r10 + predelay;
+time11 = 11*density + density*r11 + predelay;
+time12 = 12*density + density*r12 + predelay;
+time13 = 13*density + density*r13 + predelay;
+time14 = 14*density + density*r14 + predelay;
+time15 = 15*density + density*r15 + predelay;
+time16 = 16*density + density*r16 + predelay;
+time17 = 17*density + density*r17 + predelay;
+time18 = 18*density + density*r18 + predelay;
+time19 = 19*density + density*r19 + predelay;
+time20 = 20*density + density*r20 + predelay;
+time21 = 21*density + density*r21 + predelay;
+time22 = 22*density + density*r22 + predelay;
+time23 = 23*density + density*r23 + predelay;
+time25 = 24*density + density*r24 + predelay;
+time26 = 25*density + density*r25 + predelay;
+time27 = 26*density + density*r26 + predelay;
+time28 = 27*density + density*r27 + predelay;
+
+
+
+atime = 1000*time28/48000;
+
+function max_delay_set(buffer,ms)
+ instance(buf,size,pos)
+(
+  buf = buffer;
+  size = srate * ms * 0.001;
+  size = floor(size);
+);
+
+function write_delay(in)
+ instance(pos,buf,out,size)
+(
+  out = buf[pos];
+  buf[pos] = in;
+  pos += 1;
+  pos >= size ? pos -= size;
+  out
+);
+
+function read_delay_buffer(length_samples)
+ instance(i,pos,buf,out,size,length_samples)
+(
+  i = pos - length_samples;
+  i < 0 ? i = i+size;
+  buf[i]
+);
+
+function set_svf_bell(bellgain_dB,cutoff,Q)
+instance (ic1eq,ic2eq,a1,a2,a3,g,k,m1)
+(
+ a = 10^(bellgain_dB/40);
+ g = tan($pi*cutoff/srate);
+ k = 1/(Q*a);
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m1 = k*(a*a-1);
+);
+
+function svf_bell(v0)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m1)
+(
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+
+ v0+m1*v1
+);
+
+
+L1.set_svf_bell(6,132,2);
+R1.set_svf_bell(6,132,2);
+L2.set_svf_bell(-2,380,7);
+R2.set_svf_bell(-2,380,7);
+L3.set_svf_bell(2.5,1180,9);
+R3.set_svf_bell(2.5,1180,9);
+
+
+Fc = 100/srate;
+filt = exp(-2*$pi*Fc);
+
+function highpass(x)
+instance(y)
+(
+  y = x + (y-x)*filt;
+  x - y
+);
+
+ER1.max_delay_set(0.2*srate,100);
+ER2.max_delay_set(0.4*srate,100);
+
+
+
+
+@slider
+next_bal = 2 * bal;
+gain_db> -49.5 ? (
+  next_gain=10^(gain_db/20);
+  ):(
+  next_gain = 0;
+);
+
+wide_dB > -49.5 ? (
+  next_wide = 10^((wide_db-11)/20);
+  ):(
+  next_wide = 0;
+);
+
+@block
+d_bal  = (next_bal  - last_bal )/samplesblock;
+d_gain = (next_gain - last_gain)/samplesblock;
+d_wide = (next_wide - last_wide)/samplesblock;
+
+
+@sample
+//balance
+spl0 *= min(1,2-last_bal);
+spl1 *= min(1,last_bal);
+last_bal += d_bal;
+
+
+
+
+
+//widener
+ER1.write_delay(spl0);
+ER2.write_delay(spl1);
+ER0  = ER1.read_delay_buffer(time00);
+ER1  = ER2.read_delay_buffer(time00);
+ER0 -= ER1.read_delay_buffer(time01);
+ER1 -= ER2.read_delay_buffer(time01);
+ER0 -= ER1.read_delay_buffer(time02);
+ER1 -= ER2.read_delay_buffer(time02);
+ER0 += ER1.read_delay_buffer(time03);
+ER1 += ER2.read_delay_buffer(time03);
+ER0 -= ER1.read_delay_buffer(time04);
+ER1 -= ER2.read_delay_buffer(time04);
+ER0 += ER1.read_delay_buffer(time05);
+ER1 += ER2.read_delay_buffer(time05);
+ER0 += ER1.read_delay_buffer(time06);
+ER1 += ER2.read_delay_buffer(time06);
+
+ER00 = ER1.read_delay_buffer(time07);
+ER11 = ER2.read_delay_buffer(time07);
+ER00 += ER1.read_delay_buffer(time08);
+ER11 += ER2.read_delay_buffer(time08);
+ER00 -= ER1.read_delay_buffer(time09);
+ER11 -= ER2.read_delay_buffer(time09);
+ER00 -= ER1.read_delay_buffer(time10);
+ER11 -= ER2.read_delay_buffer(time10);
+ER00 += ER1.read_delay_buffer(time11);
+ER11 += ER2.read_delay_buffer(time11);
+ER00 -= ER1.read_delay_buffer(time12);
+ER11 -= ER2.read_delay_buffer(time12);
+ER00 += ER1.read_delay_buffer(time13);
+ER11 += ER2.read_delay_buffer(time13);
+
+ER000 = -ER1.read_delay_buffer(time14);
+ER111 = -ER2.read_delay_buffer(time14);
+ER000 -= ER1.read_delay_buffer(time15);
+ER111 -= ER2.read_delay_buffer(time15);
+ER000 -= ER1.read_delay_buffer(time16);
+ER111 -= ER2.read_delay_buffer(time16);
+ER000 += ER1.read_delay_buffer(time17);
+ER111 += ER2.read_delay_buffer(time17);
+ER000 -= ER1.read_delay_buffer(time18);
+ER111 -= ER2.read_delay_buffer(time18);
+ER000 += ER1.read_delay_buffer(time19);
+ER111 += ER2.read_delay_buffer(time19);
+ER000 -= ER1.read_delay_buffer(time20);
+ER111 -= ER2.read_delay_buffer(time20);
+
+ER0000 = ER1.read_delay_buffer(time21);
+ER1111 = ER2.read_delay_buffer(time21);
+ER0000 += ER1.read_delay_buffer(time22);
+ER1111 += ER2.read_delay_buffer(time22);
+ER0000 -= ER1.read_delay_buffer(time23);
+ER1111 -= ER2.read_delay_buffer(time23);
+ER0000 -= ER1.read_delay_buffer(time24);
+ER1111 -= ER2.read_delay_buffer(time24);
+ER0000 += ER1.read_delay_buffer(time25);
+ER1111 += ER2.read_delay_buffer(time25);
+ER0000 -= ER1.read_delay_buffer(time26);
+ER1111 -= ER2.read_delay_buffer(time26);
+ER0000 -= ER1.read_delay_buffer(time27);
+ER1111 -= ER2.read_delay_buffer(time27);
+
+
+ER0 = ER0 + 0.7*ER00 + 0.5*ER000 + 0.35*ER0000;
+ER1 = ER1 + 0.7*ER11 + 0.5*ER111 + 0.35*ER1111;
+
+ER0 = L1.svf_bell(ER0);
+ER1 = R1.svf_bell(ER1);
+ER0 = L2.svf_bell(ER0);
+ER1 = R2.svf_bell(ER1);
+ER0 = L3.svf_bell(ER0);
+ER1 = R3.svf_bell(ER1);
+
+ER0 = HP0.highpass(ER0);
+ER1 = HP1.highpass(ER1);
+
+ER0 *= last_wide;
+ER1 *= last_wide;
+last_wide += d_wide;
+
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+//swap wide channels for wider sound!
+spl0 = spl0 + ER1;
+spl1 = spl1 - ER0;
+
+@gfx
+gfx_x = 8; gfx_y = 2;
+gfx_r = 0.5; gfx_g = 0.7; gfx_b = 0.8;
+gfx_drawstr("# Wide Crosstalk (beta)
+
+Adds a difused copy of input
+
+with polarity on one channel reversed
+
+and both channels swapped
+
+
+
+uses...
+
+widens mono/mid content
+
+moves some hard panned content to the opposite side
+
+(like HAAS effect but with less comb filtering when monoed)
+");
