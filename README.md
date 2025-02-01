@@ -5,14 +5,15 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro-Q V4
 * HQ Track Compressor (beta)
 * Blue Vocal Compressor (beta)
-* Live Limit
 * Perfect Mono
 * J Clip
 * Retro Punch Comp
 * Maximum Resolution Dither
 * Dirt EQ
+* Live Limit
 * Retro-Q V3
 * Retro Fuzz
+* Hard AntiDerivative AntiAliasing Clipper
 * Retro Limiter
 * Limit Smash
 * Retro Distortion
@@ -26,7 +27,6 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro Overdrive
 * Dual 360 Pan
 * Auto DeEsser (beta)
-* Hard AntiDerivative AntiAliasing Clipper
 * Smooth Clipper
 * Pong Game
 * Retro Mod A Exciter
