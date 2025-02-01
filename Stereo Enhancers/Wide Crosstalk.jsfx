@@ -1,15 +1,15 @@
-version:1.0
+version:1.1
 desc:Wide Crosstalk
 author:Stephen Boyes
 about:
-  # Wide Crosstalk (beta)
+  # Wide Crosstalk
   Adds a difused copy of input with polarity on one channel reversed and both channels swapped
   uses
   widens mono/mid content
   moves some hard panned content to the opposite side (like HAAS effect but with less comb filtering when monoed)
 
-//changelog:
-//  -
+changelog:
+  - boost pans 3dB
 //provides:
 
 
@@ -37,7 +37,7 @@ out_pin:left output
 out_pin:right output
 
 @init
-last_bal = 2 * bal;
+last_bal = bal;
 last_gain=10^(gain_db/20);
 last_wide=10^(wide_dB-11/20);
 
@@ -186,7 +186,7 @@ ER2.max_delay_set(0.4*srate,100);
 
 
 @slider
-next_bal = 2 * bal;
+next_bal = bal;
 gain_db> -49.5 ? (
   next_gain=10^(gain_db/20);
   ):(
@@ -207,8 +207,8 @@ d_wide = (next_wide - last_wide)/samplesblock;
 
 @sample
 //balance
-spl0 *= min(1,2-last_bal) + max(0,0.25-0.5*last_bal);
-spl1 *= min(1,last_bal) + max(0,0.5*last_bal-0.25);
+spl0 *= sqrt(2)*sin(0.5*last_bal*$pi);
+spl1 *= sqrt(2)*cos(0.5*last_bal*$pi);
 last_bal += d_bal;
 
 
@@ -307,7 +307,7 @@ spl1 = spl1 - ER0;
 @gfx
 gfx_x = 8; gfx_y = 2;
 gfx_r = 0.5; gfx_g = 0.7; gfx_b = 0.8;
-gfx_drawstr("# Wide Crosstalk (beta)
+gfx_drawstr("# Wide Crosstalk
 
 Adds a difused copy of input
 
