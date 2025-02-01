@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2f57d08b1b573d2d93a55883b40500fc595e0e7c">
+<index version="1" name="StevieKeys JSFX" commit="3fd708bc387ec60e64618c4f8f96789369523fe5">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1109,6 +1109,21 @@
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/4be047465c93a065ed22b725975f5cc55aa17070/Stereo%20Enhancers/Haas%20Delay%20and%20Filtering.jsfx</source>
       </version>
     </reapack>
+    <reapack name="Wide Crosstalk.jsfx" type="effect" desc="Wide Crosstalk">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Wide Crosstalk (beta)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Adds a difused copy of input with polarity on one channel reversed and both channels swapped uses widens mono/mid content moves some hard panned content to the opposite side (like HAAS effect but with less comb filtering when monoed)\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.9" author="Stephen Boyes" time="2025-02-01T20:02:17Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3fd708bc387ec60e64618c4f8f96789369523fe5/Stereo%20Enhancers/Wide%20Crosstalk.jsfx</source>
+      </version>
+    </reapack>
   </category>
   <category name="utility">
     <reapack name="Auto DeEsser.jsfx" type="effect" desc="Auto DeEsser (beta)">
@@ -1207,23 +1222,24 @@
     </reapack>
   </category>
   <metadata>
-    <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+    <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 StevieKeys JSFX\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 StevieKeys JSFX\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 A collection of JSFX by StevieKeys aka Stevie Boyes\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V4\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab HQ Track Compressor (beta)\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Blue Vocal Compressor (beta)\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Live Limit\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Perfect Mono\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab J Clip\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Punch Comp\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Maximum Resolution Dither\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dirt EQ\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Live Limit\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V3\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Fuzz\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Hard AntiDerivative AntiAliasing Clipper\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Limiter\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Limit Smash\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Distortion\par}
@@ -1237,7 +1253,6 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Overdrive\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dual 360 Pan\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Auto DeEsser (beta)\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Hard AntiDerivative AntiAliasing Clipper\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Smooth Clipper\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Pong Game\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Mod A Exciter\par}
