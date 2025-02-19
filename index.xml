@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="216008f527b9f9c7c77cd541961931dee181036a">
+<index version="1" name="StevieKeys JSFX" commit="96d18be2fb62fa9c7307c508aa1ace03d2de7721">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -972,6 +972,24 @@
       </version>
     </reapack>
   </category>
+  <category name="Reverb">
+    <reapack name="Simple Small Room.jsfx" type="effect" desc="Simple Small Room">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Reverb testing\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 small/medium room inspired by the Geraint Luff artical, Let,s Write a Reverb\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.3" author="Stephen Boyes" time="2025-02-19T12:25:30Z">
+        <changelog><![CDATA[- 0.3 new release]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/96d18be2fb62fa9c7307c508aa1ace03d2de7721/Reverb/Simple%20Small%20Room.jsfx</source>
+      </version>
+    </reapack>
+  </category>
   <category name="Saturation">
     <reapack name="J Clip.jsfx" type="effect" desc="J Clip">
       <metadata>
@@ -1234,8 +1252,10 @@
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 StevieKeys JSFX\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 A collection of JSFX by StevieKeys aka Stevie Boyes\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wide Crosstalk\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V4\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab HQ Track Compressor (beta)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Simple Small Room\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Blue Vocal Compressor (beta)\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Perfect Mono\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab J Clip\par}
