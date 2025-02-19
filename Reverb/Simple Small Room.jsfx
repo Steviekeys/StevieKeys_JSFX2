@@ -1,0 +1,649 @@
+version:0.3
+desc:Simple Small Room
+author:Stephen Boyes
+about:
+  # Reverb testing
+    small/medium room
+    inspired by the Geraint Luff artical, Let,s Write a Reverb
+changelog:
+  - 0.3 new release
+//provides:
+
+
+
+
+//  The MIT License (MIT)
+//Copyright © 2025 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.     
+
+
+
+slider1:bal=0.5<0,1,0.01>Balance in
+slider2:gain_db=0<-50,0,0.2>Dry gain (dB)
+slider3:er_db=-8<-50,0,0.2>Early gain (dB)
+slider4:room_db=-8<-50,0,0.2>Room gain (dB)
+
+slider6:r60=1<0.4,1.8>Verb time
+
+
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_bal = bal;
+last_gain=10^(gain_db/20);
+last_er=10^(er_db-11/20);
+last_room=10^(room_db/20);
+
+
+r1  = 0.0357;
+r2  = 0.3737;
+r3  = 0.9504;
+
+r4  = 0.4771;
+r5  = 0.2513;
+r6  = 0.9581;
+r7  = 0.7344;
+
+r8  = 0.5081;
+r9  = 0.5726;
+r10 = 0.8054;
+r11 = 0.0899;
+//aaaa = rand();
+r12 = 0.3811;
+r13 = 0.3464;
+r14 = 0.4731;
+r15 = 0.8706;
+
+r16 = 0.1488;
+r17 = 0.3078;
+r18 = 0.7052;
+r19 = 0.1488;
+r20 = 0.0065;
+r21 = 0.5479;
+
+r22 = 0.9838;
+r23 = 0.4543;
+r24 = 0.1783;
+r25 = 0.8379;
+r26 = 0.1749;
+r27 = 0.5998;
+r28 = 0.3164;
+
+r29 = 0.4004;
+r30 = 0.6601;
+r31 = 0.5553;
+r32 = 0.1901;
+r33 = 0.9836;
+r34 = 0.5816;
+r35 = 0.8072;
+
+
+
+//diffuse one times
+density = srate/95; //ms window
+time01 = 0*density + density*r1;
+time02 = 1*density + density*r2;
+time03 = 2*density + density*r3;
+
+//diffuse two times
+density2 = srate/80; //ms window
+time04 = 0*density2 + density2*r4;
+time05 = 1*density2 + density2*r5;
+time06 = 2*density2 + density2*r6;
+time07 = 3*density2 + density2*r7;
+
+//diffuse three times
+density3 = srate/65; //ms window
+time08 = 0*density3 + density3*r8;
+time09 = 1*density3 + density3*r9;
+time10 = 2*density3 + density3*r10;
+time11 = 3*density3 + density3*r11;
+
+time12 = 0*density3 + density3*r8;
+time13 = 1*density3 + density3*r12;
+time14 = 2*density3 + density3*r13;
+time15 = 3*density3 + density3*r14;
+
+//difuse four times
+density6 = srate/60;
+time100 = 0*density6 + density6*r29;
+time101 = 1*density6 + density6*r30;
+time102 = 2*density6 + density6*r31;
+
+time103 = 0*density6 + density6*r32;
+time104 = 1*density6 + density6*r32;
+time105 = 2*density6 + density6*r33;
+//time106 = 2*density6 + density6*r34;
+//time107 = 3*density6 + density6*r35;
+
+
+//FDN feedback times
+density4 = srate/41; //ms window
+time16 = 0*density4 + density3*r15;
+time17 = 1*density4 + density3*r16;
+time18 = 2*density4 + density3*r17;
+time19 = 3*density4 + density3*r18;
+time20 = 0*density4 + density3*r19;
+time21 = 1*density4 + density3*r20;
+time22 = 2*density4 + density3*r21;
+time23 = 3*density4 + density3*r22;
+
+//delay out
+density5 = srate/50; //ms window
+time24 = 0*density5 + density4*r23;
+time25 = 1*density5 + density4*r24;
+time26 = 2*density5 + density4*r25;
+time27 = 0*density5 + density4*r26;
+time28 = 1*density5 + density4*r27;
+time29 = 2*density5 + density4*r28;
+
+
+
+
+function allpass_delay_set(buffer,ms)
+ instance (buf,size,pos)
+(
+  buf = buffer;
+  size = srate * ms * 0.001;
+  size = floor(size);
+);
+
+function allpass(in,co)
+ instance (pos,buf,out,size,in,co)
+(
+  out = buf[pos];
+  in = (in - out*co);
+  buf[pos] = in;
+  pos += 1;
+  pos >= size ? pos -= size;
+  out + in*co
+);
+
+
+function max_delay_set(buffer,ms)
+ instance(buf,size,pos)
+(
+  buf = buffer;
+  size = srate * ms * 0.001;
+  size = floor(size);
+);
+
+function write_delay(in)
+ instance(pos,buf,out,size)
+(
+  out = buf[pos];
+  buf[pos] = in;
+  pos += 1;
+  pos >= size ? pos -= size;
+  out
+);
+
+function read_delay_buffer(length_samples)
+ instance(i,pos,buf,out,size,length_samples)
+(
+  i = pos - length_samples;
+  i < 0 ? i = i+size;
+  buf[i]
+);
+
+function set_svf_bell(bellgain_dB,cutoff,Q)
+ instance (a1,a2,a3,g,k,m1)
+(
+ a = 10^(bellgain_dB/40);
+ g = tan($pi*cutoff/srate);
+ k = 1/(Q*a);
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m1 = k*(a*a-1);
+);
+
+function svf_bell(v0)
+ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m1)
+(
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+
+ v0+m1*v1
+);
+
+function set_svf_all(cutoff,Q)
+instance (a1,a2,a3,g,k,m0,m1,m2)
+(
+ g = tan($pi*cutoff/srate);
+ k = 1/q;
+ a1 = 1/(1+g*(g+k));
+ a2 = g*a1;
+ a3 = g*a2;
+ m1 = -2*k;
+);
+
+
+function svf_all(v0)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+(
+ v3 = v0-ic2eq;
+ v1 = a1*ic1eq+a2*v3;
+ v2 = ic2eq+a2*ic1eq+a3*v3;
+ ic1eq = 2*v1-ic1eq;
+ ic2eq = 2*v2-ic2eq;
+ v0+m1*v1
+);
+
+
+Fc = 280/srate;
+filt = exp(-2*$pi*Fc);
+
+function highpass(x)
+ instance(y)
+(
+  y = x + (y-x)*filt;
+  x - y
+);
+
+Fc2 = 1500/srate;
+filt2 = exp(-2*$pi*Fc2);
+
+function lowpass(x)
+ instance(y)
+(
+  y = x + (y-x)*filt2;
+  y
+);
+
+Fc3 = 1200/srate;
+tone_co = exp(-2*$pi*Fc3);
+
+function tone_control(x)
+ instance(x,x1,x2,y)
+(
+  x2 = 0.5*(x+x1);
+  y = x2 + (y-x2)*tone_co;
+  out = low_damp*(y - high_damp*(x-y));
+  x1 = x;
+  out
+);
+
+
+
+ER1.max_delay_set(0.1*srate,99);
+ER2.max_delay_set(0.2*srate,99);
+
+A1.max_delay_set(0.3*srate,99);
+B1.max_delay_set(0.4*srate,99);
+C1.max_delay_set(0.5*srate,99);
+D1.max_delay_set(0.6*srate,99);
+E1.max_delay_set(0.7*srate,99);
+F1.max_delay_set(0.8*srate,99);
+G1.max_delay_set(0.9*srate,99);
+H1.max_delay_set(1.0*srate,99);
+
+A2.max_delay_set(1.1*srate,99);
+B2.max_delay_set(1.2*srate,99);
+C2.max_delay_set(1.3*srate,99);
+D2.max_delay_set(1.4*srate,99);
+E2.max_delay_set(1.5*srate,99);
+F2.max_delay_set(1.6*srate,99);
+G2.max_delay_set(1.7*srate,99);
+H2.max_delay_set(1.8*srate,99);
+
+A3.max_delay_set(1.9*srate,99);
+B3.max_delay_set(2.0*srate,99);
+C3.max_delay_set(2.1*srate,99);
+D3.max_delay_set(2.2*srate,99);
+E3.max_delay_set(2.3*srate,99);
+F3.max_delay_set(2.4*srate,99);
+G3.max_delay_set(2.5*srate,99);
+H3.max_delay_set(2.6*srate,99);
+
+B5.max_delay_set(2.7*srate,99);
+C5.max_delay_set(2.8*srate,99);
+D5.max_delay_set(2.9*srate,99);
+F5.max_delay_set(3.0*srate,99);
+G5.max_delay_set(3.1*srate,99);
+H5.max_delay_set(3.2*srate,99);
+
+A4.allpass_delay_set(3.3*srate,5.75);
+B4.allpass_delay_set(3.4*srate,40.64);
+C4.allpass_delay_set(3.5*srate,47.92);
+D4.allpass_delay_set(3.6*srate,65.65);
+E4.allpass_delay_set(3.7*srate,5.75);
+F4.allpass_delay_set(3.8*srate,40.32);
+G4.allpass_delay_set(3.9*srate,47.72);
+H4.allpass_delay_set(4.0*srate,65.15);
+
+A6.max_delay_set(4.1*srate,99);
+B6.max_delay_set(4.2*srate,99);
+C6.max_delay_set(4.3*srate,99);
+D6.max_delay_set(4.4*srate,99);
+E6.max_delay_set(4.5*srate,99);
+F6.max_delay_set(4.6*srate,99);
+G6.max_delay_set(4.7*srate,99);
+H6.max_delay_set(4.8*srate,99);
+
+
+
+//speed
+adj = 2.0*$pi*1.8/srate;
+
+
+spe = exp(-1/(1.25 * 0.001 * srate));
+
+function compsaturate(x)
+instance (x,x1,xx,y,z,f)
+(
+  f = x*x;
+  xx = (f) + (xx-f)*spe;
+  f = log(1+xx);
+  y = f + (y-f)*spe;
+  f = 1/(1+(0.8*y+0.2*f));
+  z = f + (z-f)*spe;
+  
+  x*(0.75+(0.2*z+0.05*f))
+);
+
+
+
+@slider
+next_bal = bal;
+
+gain_db> -49.5 ? (
+  next_gain=10^(gain_db/20);
+  ):(
+  next_gain = 0;
+);
+
+er_db > -49.5 ? (
+  next_er = 10^((er_db-11)/20);
+  ):(
+  next_er = 0;
+);
+
+
+
+room_db > -49.5 ? (
+  next_room = 10^((room_db)/20);
+  ):(
+  next_room = 0;
+);
+
+
+
+low_damp = exp(-1/(4*r60));
+high_damp = exp(-1/(6*r60));
+
+
+
+
+
+
+@block
+d_bal  = (next_bal  - last_bal )/samplesblock;
+d_gain = (next_gain - last_gain)/samplesblock;
+d_er = (next_er - last_er)/samplesblock;
+d_plate = (next_plate - last_plate)/samplesblock;
+d_room = (next_room - last_room)/samplesblock;
+
+@sample
+//balance
+spl0 *= sqrt(2)*cos(0.5*last_bal*$pi);
+spl1 *= sqrt(2)*sin(0.5*last_bal*$pi);
+last_bal += d_bal;
+
+noise = (rand(2)-1)*2^-22;
+spl0 += noise;
+spl1 += noise;
+
+
+
+
+//Diffuse one
+ER1.write_delay(spl0);
+ER2.write_delay(spl1);
+Ain = +1.5*spl0;
+Bin = +1.2*ER1.read_delay_buffer(time01);
+Cin = -0.8*ER1.read_delay_buffer(time02);
+Din = +0.5*ER1.read_delay_buffer(time03);
+Ein = +1.5*spl1;
+Fin = +1.2*ER2.read_delay_buffer(time01);
+Gin = -0.8*ER2.read_delay_buffer(time02);
+Hin = -0.5*ER2.read_delay_buffer(time03);
+
+Aout = Ain + Bin + Cin + Din;
+Bout = Ain - Bin + Cin - Din;
+Cout = Ain + Bin - Cin - Din;
+Dout = Ain - Bin - Cin + Din;
+
+Eout = Ein + Fin + Gin + Hin;
+Fout = Ein - Fin + Gin - Hin;
+Gout = Ein + Fin - Gin - Hin;
+Hout = Ein - Fin - Gin + Hin;
+
+A1.write_delay(Aout);
+B1.write_delay(Bout);
+C1.write_delay(Cout);
+D1.write_delay(Dout);
+E1.write_delay(Eout);
+F1.write_delay(Fout);
+G1.write_delay(Gout);
+H1.write_delay(Hout);
+
+ER0 = (Bout - Cout);
+ER1 = (Fout - Gout);
+
+//Diffuse two
+Ain = +1.5*A1.read_delay_buffer(time04);
+Bin = -1.2*C1.read_delay_buffer(time05);
+Cin = -0.8*B1.read_delay_buffer(time06);
+Din = +0.5*H1.read_delay_buffer(time07);
+Ein = +1.5*E1.read_delay_buffer(time04);
+Fin = -1.2*G1.read_delay_buffer(time05);
+Gin = -0.8*F1.read_delay_buffer(time06);
+Hin = -0.5*D1.read_delay_buffer(time07);
+//matrix
+Aout = Ain + Bin + Cin + Din;
+Bout = Ain - Bin + Cin - Din;
+Cout = Ain + Bin - Cin - Din;
+Dout = Ain - Bin - Cin + Din;
+
+Eout = Ein + Fin + Gin + Hin;
+Fout = Ein - Fin + Gin - Hin;
+Gout = Ein + Fin - Gin - Hin;
+Hout = Ein - Fin - Gin + Hin;
+
+A2.write_delay(Aout);
+B2.write_delay(Bout);
+C2.write_delay(Cout);
+D2.write_delay(Dout);
+E2.write_delay(Eout);
+F2.write_delay(Fout);
+G2.write_delay(Gout);
+H2.write_delay(Hout);
+
+ER0 = ER0 + (Aout - Bout + Cout + Dout);
+ER1 = ER1 + (Eout - Fout + Gout + Hout);
+
+//Diffuse three
+Ain = +1.5*F2.read_delay_buffer(time08);
+Bin = +1.2*A2.read_delay_buffer(time09);
+Cin = -0.8*C2.read_delay_buffer(time10);
+Din = -0.5*D2.read_delay_buffer(time11);
+Ein = +1.5*B2.read_delay_buffer(time12);
+Fin = +1.2*E2.read_delay_buffer(time13);
+Gin = -0.8*G2.read_delay_buffer(time14);
+Hin = -0.5*H2.read_delay_buffer(time15);
+
+//matrix
+Aout = Ain + Bin + Cin + Din;
+Bout = Ain - Bin + Cin - Din;
+Cout = Ain + Bin - Cin - Din;
+Dout = Ain - Bin - Cin + Din;
+
+Eout = Ein + Fin + Gin + Hin;
+Fout = Ein - Fin + Gin - Hin;
+Gout = Ein + Fin - Gin - Hin;
+Hout = Ein - Fin - Gin + Hin;
+
+
+
+
+
+
+A6.write_delay(Aout);
+B6.write_delay(Bout);
+C6.write_delay(Cout);
+D6.write_delay(Dout);
+E6.write_delay(Eout);
+F6.write_delay(Fout);
+G6.write_delay(Gout);
+H6.write_delay(Hout);
+
+//Diffuse four
+Ain = 1.4*Aout;//+A6.read_delay_buffer(time100);
+Bin = -D6.read_delay_buffer(time100);
+Cin = +0.7*G6.read_delay_buffer(time101);
+Din = -0.5*B6.read_delay_buffer(time102);
+Ein = 1.4*Eout;//+E6.read_delay_buffer(time104);
+Fin = -H6.read_delay_buffer(time103);
+Gin = -0.7*C6.read_delay_buffer(time104);
+Hin = +0.5*F6.read_delay_buffer(time105);
+
+//matrix
+Aout = Ain + Bin + Cin + Din;
+Bout = Ain - Bin + Cin - Din;
+Cout = Ain + Bin - Cin - Din;
+Dout = Ain - Bin - Cin + Din;
+
+Eout = Ein + Fin + Gin + Hin;
+Fout = Ein - Fin + Gin - Hin;
+Gout = Ein + Fin - Gin - Hin;
+Hout = Ein - Fin - Gin + Hin;
+
+
+//early reflections
+ER0 = 0.125*(ER0 + (Ain + Bin + Cin - Din));
+ER1 = 0.125*(ER1 + (Ein + Fin - Gin + Hin));
+
+
+
+//FDN
+A3.write_delay( Aout+FDN_FB_A);  Ain = A3.read_delay_buffer(time16);
+B3.write_delay( Bout+FDN_FB_B);  Bin = B3.read_delay_buffer(time17);
+C3.write_delay( Cout+FDN_FB_H);  Cin = C3.read_delay_buffer(time18);
+D3.write_delay( Dout+FDN_FB_C);  Din = D3.read_delay_buffer(time19);
+E3.write_delay( Eout+FDN_FB_E);  Ein = E3.read_delay_buffer(time20);
+F3.write_delay( Fout+FDN_FB_F);  Fin = F3.read_delay_buffer(time21);
+G3.write_delay( Gout+FDN_FB_D);  Gin = G3.read_delay_buffer(time22);
+H3.write_delay( Hout+FDN_FB_G);  Hin = H3.read_delay_buffer(time23);
+
+//tone control feedback
+Ain = tca.tone_control(Ain);
+Bin = tcb.tone_control(Bin);
+Cin = tcc.tone_control(Cin);
+Din = tcd.tone_control(Din);
+
+Ein = tce.tone_control(Ein);
+Fin = tcf.tone_control(Fin);
+Gin = tcg.tone_control(Gin);
+Hin = tch.tone_control(Hin);
+
+//matrix
+FDN_FB_A = Aout = 0.5*( Ain-Bin-Cin-Din);
+FDN_FB_B = Bout = 0.5*(-Ain+Bin-Cin-Din);
+FDN_FB_C = Cout = 0.5*(-Ain-Bin+Cin-Din);
+FDN_FB_D = Dout = 0.5*(-Ain-Bin-Cin+Din);
+
+FDN_FB_E = Eout = 0.5*( Ein-Fin-Gin-Hin);
+FDN_FB_F = Fout = 0.5*(-Ein+Fin-Gin-Hin);
+FDN_FB_G = Gout = 0.5*(-Ein-Fin+Gin-Hin);
+FDN_FB_H = Hout = 0.5*(-Ein-Fin-Gin+Hin);
+
+
+//compress feedback
+FDN_FB_A = csa.compsaturate(FDN_FB_A);
+FDN_FB_B = csb.compsaturate(FDN_FB_B);
+FDN_FB_C = csc.compsaturate(FDN_FB_C);
+FDN_FB_D = csd.compsaturate(FDN_FB_D);
+
+FDN_FB_E = cse.compsaturate(FDN_FB_E);
+FDN_FB_F = csf.compsaturate(FDN_FB_F);
+FDN_FB_G = csg.compsaturate(FDN_FB_G);
+FDN_FB_H = csh.compsaturate(FDN_FB_H);
+
+
+
+
+tone1 = 2000*cos(pos);
+tone2 = 1200*sin(pos);
+
+pos=pos+adj;
+(pos >= 2.0*$pi) ? pos -= 2.0*$pi;
+
+
+
+//svf allpass feedback
+svfa.set_svf_all(2581+tone1,0.5);  FDN_FB_A = svfa.svf_all(FDN_FB_A);
+svfb.set_svf_all(2684+tone2,0.5);  FDN_FB_B = svfb.svf_all(FDN_FB_B);
+svfc.set_svf_all(2468-tone1,0.5);  FDN_FB_C = svfc.svf_all(FDN_FB_C);
+svfd.set_svf_all(2519-tone2,0.5);  FDN_FB_D = svfd.svf_all(FDN_FB_D);
+svfe.set_svf_all(2095-tone2,0.5);  FDN_FB_E = svfe.svf_all(FDN_FB_E);
+svff.set_svf_all(2643-tone1,0.5);  FDN_FB_F = svff.svf_all(FDN_FB_F);
+svfg.set_svf_all(2294+tone2,0.5);  FDN_FB_G = svfg.svf_all(FDN_FB_G);
+svfh.set_svf_all(2902+tone1,0.5);  FDN_FB_H = svfh.svf_all(FDN_FB_H);
+
+
+
+
+B5.write_delay(Bout);  Bout = B5.read_delay_buffer(time24);
+C5.write_delay(Cout);  Cout = C5.read_delay_buffer(time25);
+D5.write_delay(Dout);  Dout = D5.read_delay_buffer(time26);
+
+F5.write_delay(Fout);  Fout = F5.read_delay_buffer(time27);
+G5.write_delay(Gout);  Gout = G5.read_delay_buffer(time28);
+H5.write_delay(Hout);  Hout = H5.read_delay_buffer(time29);
+
+
+RM0 = (0.02*Aout+0.0141*Bout+0.01*Cout+0.00707*Hout);
+RM1 = (0.02*Eout+0.0141*Fout+0.01*Gout+0.00707*Dout);
+
+
+ER0 *= last_er;
+ER1 *= last_er;
+last_er += d_er;
+
+
+RM0 *= last_room;
+RM1 *= last_room;
+last_room += d_room;
+
+
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+//
+spl0 = spl0 + out0.highpass(ERL.highpass(ER0 + 0.000*ER0*ER0) + RM0);
+spl1 = spl1 + out1.highpass(ERR.highpass(ER1 - 0.000*ER1*ER1) + RM1);
+
+
+
+@gfx
