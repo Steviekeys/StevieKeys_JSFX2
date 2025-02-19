@@ -5,6 +5,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Wide Crosstalk
 * Retro-Q V4
 * HQ Track Compressor (beta)
+* Simple Small Room
 * Blue Vocal Compressor (beta)
 * Perfect Mono
 * J Clip
