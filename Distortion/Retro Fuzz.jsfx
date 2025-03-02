@@ -1,5 +1,6 @@
-version:2.1.2
+version:2.1.3
 desc:Retro Fuzz [V2]
+provides:retro fuzz/*
 author: Stephen Boyes
 about:
   # Retro Fuzz
@@ -9,7 +10,7 @@ changelog:
   - fix GUI
 
 options:gfx_hz=60
-provides:retro fuzz/*
+
 filename:0,retro fuzz/fuzz.png
 filename:1,retro fuzz/guitar_strat_fuzz.png
 filename:2,retro fuzz/guitar_strat_volume.png
