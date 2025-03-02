@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="96d18be2fb62fa9c7307c508aa1ace03d2de7721">
+<index version="1" name="StevieKeys JSFX" commit="6e177f0ebfa718152caefc16780176eaa1206a83">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -330,11 +330,11 @@
     </reapack>
     <reapack name="Retro Fuzz.jsfx" type="effect" desc="Retro Fuzz [V2]">
       <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro Fuzz\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Retro Fuzz\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 High gain distortion. easy to use.\par}
 }
 ]]></description>
@@ -363,6 +363,14 @@
       <version name="2.1.2" author="Stephen Boyes" time="2024-06-08T17:16:07Z">
         <changelog><![CDATA[- fix GUI]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3261da1bc38c8779910fcc8aa0c57e96ee39e5f5/Distortion/Retro%20Fuzz.jsfx</source>
+      </version>
+      <version name="2.1.3" author="Stephen Boyes" time="2025-03-02T17:58:32Z">
+        <changelog><![CDATA[- fix GUI]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6e177f0ebfa718152caefc16780176eaa1206a83/Distortion/Retro%20Fuzz.jsfx</source>
+        <source file="retro fuzz/fuzz.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6e177f0ebfa718152caefc16780176eaa1206a83/Distortion/retro%20fuzz/fuzz.png</source>
+        <source file="retro fuzz/guitar_strat_fuzz.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6e177f0ebfa718152caefc16780176eaa1206a83/Distortion/retro%20fuzz/guitar_strat_fuzz.png</source>
+        <source file="retro fuzz/guitar_strat_volume.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6e177f0ebfa718152caefc16780176eaa1206a83/Distortion/retro%20fuzz/guitar_strat_volume.png</source>
+        <source file="retro fuzz/test.test">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/6e177f0ebfa718152caefc16780176eaa1206a83/Distortion/retro%20fuzz/test.test</source>
       </version>
     </reapack>
     <reapack name="Retro Overdrive.jsfx" type="effect" desc="Retro Overdrive">
