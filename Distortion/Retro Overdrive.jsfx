@@ -1,5 +1,6 @@
-version:2.0.1
+version:2.0.2
 desc:Retro Overdrive
+provides:Retro_Overdrive/*
 author:Stephen Boyes
 about:
   # my attempt at making a overdrive peddle driving a tube amp.
@@ -18,7 +19,7 @@ changelog:
 
 options:gfx_hz=60
 tags:distortion
-provides:Retro_Overdrive/*
+
 
 
 filename:0,Retro_Overdrive/RetroOverdrive background.png
