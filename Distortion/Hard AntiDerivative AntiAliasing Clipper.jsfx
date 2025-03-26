@@ -1,4 +1,4 @@
-version:1.0.1
+version:1.0.2
 desc:Hard Anti-Derivative Anti-Aliasing Clipper
 Author:Stephen Boyes
 about:
@@ -12,8 +12,8 @@ about:
   * Strict Clip:   Second clipping stage to catch peaks cuased by high restore
   * Out:   Output level
 changelog:
-  - CPU boost
-  - now one of the best non oversampling hard clippers available
+  - Improve GUI scaling
+
 
 slider1:gain_db=0<-6,25,0.02>Drive (dB)
 slider3:high_restore=1<0,1,0.02>High Restore
@@ -204,38 +204,49 @@ d_out_gain = (out_next_gain - out_last_gain)/samplesblock;
   gfx_x=0; gfx_y=gfxSize/2;
   gfx_lineto(gfxSize,gfxSize/2,0);
 
-  gfx_x = gfxSize-20; gfx_y = gfxSize/2;
+  gfx_setfont(1,0,gfxsize*0.0375);
+
+  gfx_x = gfxSize*0.965; gfx_y = gfxSize*0.5;
   gfx_drawchar($'I');
   gfx_drawchar($'N');
 
-  gfx_x = gfxSize/2+2; gfx_y = 0;
+  gfx_x = gfxSize*0.51; gfx_y = 0;
   gfx_drawchar($'O');
   gfx_drawchar($'U');
   gfx_drawchar($'T');
 
+font_gfx_scale = gfxsize*0.02;
+
+
 gfx_r=0;gfx_g=0.65;gfx_b=1;
-gfx_x = 4; gfx_y = 8;  
+gfx_x = font_gfx_scale; gfx_y = font_gfx_scale*2;  
+
 gfx_drawstr("Non oversampled clipper");
-gfx_x = 4; gfx_y = 20;
+gfx_x = font_gfx_scale; gfx_y = font_gfx_scale*4;
 gfx_drawstr("based on anti derivative");
-gfx_x = 4; gfx_y = 32;  
+gfx_x = font_gfx_scale; gfx_y = font_gfx_scale*6;  
 gfx_drawstr("anti aliasing methods");
 
 
-gfx_x = gfxSize/2+4; gfx_y = gfxSize/2+4;  
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*26;  
 gfx_drawstr("controls...");
-gfx_x = gfxSize/2+4; gfx_y = gfxSize/2+28;
-gfx_drawstr("Drive: Level compensated
-clipping drive");
-gfx_x = gfxSize/2+4; gfx_y = gfxSize/2+60;
-gfx_drawstr("High Restore: Restores high
-frequencies near half sample rate
-lost by anti derivative method");
-gfx_x = gfxSize/2+4; gfx_y = gfxSize/2+94;
-gfx_drawstr("Strict Clip: Second clipping stage
-to catch peaks cuased by
-High Restore");
-gfx_x = gfxSize/2+4; gfx_y = gfxSize/2+126;
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*28;
+gfx_drawstr("Drive: Level compensated");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*30;
+gfx_drawstr("clipping drive");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*32;
+gfx_drawstr("High Restore: Restores high");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*34;
+gfx_drawstr("frequencies near half sample rate");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*36;
+gfx_drawstr("lost by anti derivative method");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*38;
+gfx_drawstr("Strict Clip: Second clipping stage");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*40;
+gfx_drawstr("to catch peaks cuased by");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*42;
+gfx_drawstr("High Restore");
+gfx_x = font_gfx_scale*25.5; gfx_y = font_gfx_scale*44;
 gfx_drawstr("Out: Output level");
 
   gfx_r=0.5;  gfx_g=1;  gfx_b=0;  gfx_a=1;
