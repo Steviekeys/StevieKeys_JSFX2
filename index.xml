@@ -1288,9 +1288,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Perfect Mono\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab J Clip\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Punch Comp\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Maximum Resolution Dither\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Trapezoid PDF Dither\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Dirt EQ\par}
-{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Live Limit\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro-Q V3\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Fuzz\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Hard AntiDerivative AntiAliasing Clipper\par}
@@ -1311,6 +1310,8 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Pong Game\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Mod A Exciter\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Octave Fuzz\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Live Limit\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Maximum Resolution Dither\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Odd saturation\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Odd n Even saturation\sa180\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 https://github.com/Steviekeys/StevieKeys_JSFX2/raw/master/index.xml\par}
