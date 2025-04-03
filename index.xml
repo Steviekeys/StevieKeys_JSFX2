@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="942aaff88161aff2802bac91e03ffa6e0adfacbe">
+<index version="1" name="StevieKeys JSFX" commit="1e942906e2dcaa5ccec6718c7ba76b0395355c3d">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1254,6 +1254,22 @@
         <changelog><![CDATA[- version 1
 - First github version]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b8e125fc8c2a81f9a5298cc5d5655e677a89a9f1/utility/Perfect%20Mono.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="Trapezoid PDF Dither.jsfx" type="effect" desc="Trapezoid PDF Dither">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Normal TPDF noise is just a random value between minus half a bit and half a bit added to a second value of the same amplitude.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 It is possible to store one value and use it twice with the second version inverted, shifting the noise to higher frequencies. This plugin uses the value three times, why do that? It is not the optimal amount of noise? Well adding a third copy with normal polarity still reduces the noise for low and mid frequencies and causes a dip in high mids, with an increase above this, resulting in subjectively less high frequency hiss. Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.9" author="Stephen Boyes" time="2025-04-03T10:34:04Z">
+        <changelog><![CDATA[- Beta]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1e942906e2dcaa5ccec6718c7ba76b0395355c3d/utility/Trapezoid%20PDF%20Dither.jsfx</source>
       </version>
     </reapack>
   </category>
