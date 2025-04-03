@@ -10,9 +10,8 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Perfect Mono
 * J Clip
 * Retro Punch Comp
-* Maximum Resolution Dither
+* Trapezoid PDF Dither
 * Dirt EQ
-* Live Limit
 * Retro-Q V3
 * Retro Fuzz
 * Hard AntiDerivative AntiAliasing Clipper
@@ -33,6 +32,8 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Pong Game
 * Retro Mod A Exciter
 * Octave Fuzz
+* Live Limit
+* Maximum Resolution Dither
 * Odd saturation
 * Odd n Even saturation
 
