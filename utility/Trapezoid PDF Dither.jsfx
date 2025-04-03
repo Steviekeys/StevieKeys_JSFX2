@@ -1,0 +1,218 @@
+version:0.9
+desc:Trapezoid PDF Dither
+author: Stephen Boyes
+about:
+  # Normal TPDF noise is just a random value between minus half a bit and half a bit added to a second value of the same amplitude.
+  It is possible to store one value and use it twice with the second version inverted, shifting the noise to higher frequencies.
+  This plugin uses the value three times, why do that? It is not the optimal amount of noise?
+  Well adding a third copy with normal polarity still reduces the noise for low and mid frequencies
+  and causes a dip in high mids, with an increase above this,
+  resulting in subjectively less high frequency hiss.
+  Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison
+changelog:
+   - Beta
+
+
+//  Trapezoid PDF Dither
+//  The MIT License (MIT)
+//Copyright © 2025 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.    
+
+
+slider1:gain_db=0<-1,1,0.05>Trim (dB)
+slider2:bitdepth=16<8,24,4>Bitdepth
+slider4:type=0<0,2,1{Trap PDF  [ shaped ],Tri   PDF  [ shaped ],Tri PDF flat}>Noise Type
+slider5:shape=0<0,1,1{None,First order}>Noise Shape
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_gain=10^(gain_db/20);
+ext_nodenorm = 1;
+
+
+one.seed_a = floor(rand(999999999));
+two.seed_a = floor(rand(999999999));
+//a_rpdf = 1664525;
+//c_rpdf = 1013904223;
+//m_rpdf = 4294967296-1;
+//mi_rpdf = 2^-32;
+range1 = 2^-24;
+range2 = 2^-32;
+
+
+function RPDF()
+instance(seed_a,seed_b)
+(
+  seed_b = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
+  seed_a = (1664525 * seed_b + 1013904223) & 0xFFFFFFFF;
+  out = (seed_a  & 0xFFFFFF00) + (Seed_b & 0xFFFFFF00)*range1;
+  outout = (out * range2)-0.5;
+);
+
+/*
+function biquad(x)
+instance(x,x0,x1,x2,y,y0,y1,y2)
+(
+  f0 = 10;
+  dBgain = 0;
+  A = 10^(dBgain/40);
+  w0 = 2*$pi*f0/srate;
+  Q = 1.2;
+  alpha = sin(w0)/(2*Q);
+  
+  b0 = 0;
+  b1 = 0;
+  b2 = 0;
+  a0 = 0;
+  a1 = 0;
+  a2 = 0;
+  
+  b0 /= a0;
+  b1 /= a0;
+  b2 /= a0;
+  a1 /= a0;
+  a2 /= a0;
+  
+  x2 = x1;
+  x1 = x0;
+  x0 = x;
+  y2 = y1;
+  y1 = y0;
+  y0 = (b0)*x0 + (b1)*x1 + (b2)*x2 - (a1)*y1 - (a2)*y2;
+  y0
+);
+*/
+
+
+
+@slider
+next_gain=10^(gain_db/20);
+multip = 2^(bitdepth-1);
+divide = 1/multip;
+
+
+@block
+d_gain = (next_gain - last_gain)/samplesblock;
+
+
+@sample
+spl0 *= last_gain;
+spl1 *= last_gain;
+last_gain += d_gain;
+
+
+type == 0 ? (
+  srate > 50000 ? (
+    n0_e = n0_d;
+    n0_d = n0_c;
+    n0_c = n0_b;
+    n0_b = n0_a;
+    n0_a = one.RPDF();
+    
+    n1_e = n1_d;
+    n1_d = n1_c;
+    n1_c = n1_b;
+    n1_b = n1_a;
+    n1_a = two.RPDF();
+    
+    noise0 = n0_a - n0_c + n0_e;
+    noise1 = n1_a - n1_c + n1_e;
+  
+  ):(
+    n0_c = n0_b;
+    n0_b = n0_a;
+    n0_a = one.RPDF();
+    
+    n1_c = n1_b;
+    n1_b = n1_a;
+    n1_a = two.RPDF();
+    
+    noise0 = n0_a - n0_b + n0_c;
+    noise1 = n1_a - n1_b + n1_c;
+  );
+);
+
+
+type == 1 ? (
+  n0_b = n0_a;
+  n0_a = one.RPDF();
+
+  n1_b = n1_a;
+  n1_a = two.RPDF();
+
+  noise0 = n0_a - n0_b;
+  noise1 = n1_a - n1_b;
+);
+
+
+type == 2 ? (
+  noise0 = one.RPDF() - one.RPDF();
+  noise1 = two.RPDF() - two.RPDF();
+);
+
+
+spl0 *= multip;
+spl1 *= multip;
+
+
+shape > 0.5 ? (
+  spl0 += e0;
+  spl1 += e1;
+  in0 = spl0;
+  in1 = spl1;
+);
+
+
+spl0 += noise0;
+spl1 += noise1;
+
+
+spl0 = max(-multip,min(multip,spl0));
+spl1 = max(-multip,min(multip,spl1));
+
+
+spl0 = floor(spl0+0.5);
+spl1 = floor(spl1+0.5);
+
+shape > 0.5 ? (
+  e0 = (in0 - spl0);
+  e1 = (in1 - spl1);
+);
+
+spl0 *= divide;
+spl1 *= divide;
+
+
+
+
+@gfx 432 324
+size = min(gfx_w,gfx_h*2);
+gfx_r=gfx_g=gfx_b=0.85;
+gfx_x=0;
+gfx_y=0;
+gfx_setfont(1,0,size*0.05,0);
+gfx_drawstr("Trap PDF [shaped]...
+coloured dither using a third random number
+to create a dip in upper midrange frequencies.
+
+Tri    PDF [shaped]...
+coloured dither with slightly more noise in
+high frequencies and less in low frequencies.
+
+Tri    PDF  flat...
+standard dither, flat frequency response.");
