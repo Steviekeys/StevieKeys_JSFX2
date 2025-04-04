@@ -1,9 +1,9 @@
-version:2.0.4
+version:2.0.5
 desc:Retro Overdrive
 provides:
-  Distortion/Retro_Overdrivre/RetroOverdrive background.png
-  Distortion/Retro_Overdrivre/RetroOverdrive knob 90x90.png
-  Distortion/Retro_Overdrivre/RetroOverdrive text.png
+  Retro_Overdrivre/RetroOverdrive background.png
+  Retro_Overdrivre/RetroOverdrive text.png  
+  Retro_Overdrivre/RetroOverdrive knob 90x90.png
 author:Stephen Boyes
 about:
   # my attempt at making a overdrive peddle driving a tube amp.
@@ -16,7 +16,7 @@ changelog:
   - v1.3.2 non release GUI
   - v2.0.0 new GUI
   - v2.0.1 Fixed slider bug
-  - v2.0.4 Atempt fix for png files not found
+  - v2.0.5 Atempt fix for png files not found
 // DC filter from JSFX DC filter
 // SVF filter from Andy Simper of Cytomics
 
