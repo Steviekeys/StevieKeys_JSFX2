@@ -1,4 +1,4 @@
-version:0.1.0beta
+version:1.0.0
 desc:Retro Mod A Exciter
 author:Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
     High mix      : adds compressed high end
     Very high mix : adds compressed very high end
 changelog:
-  - beta
+  - end of beta
 
 
 //  The MIT License (MIT)
