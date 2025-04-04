@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="2f3eab035fa654e6527b2fc8a97b1543be6da522">
+<index version="1" name="StevieKeys JSFX" commit="08d044dc1720ed5762c02eab4092449766a8abfd">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -450,6 +450,20 @@
         <source file="Retro_Overdrivre/RetroOverdrive background.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2f3eab035fa654e6527b2fc8a97b1543be6da522/Distortion/Retro_Overdrivre/RetroOverdrive%20background.png</source>
         <source file="Retro_Overdrivre/RetroOverdrive text.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2f3eab035fa654e6527b2fc8a97b1543be6da522/Distortion/Retro_Overdrivre/RetroOverdrive%20text.png</source>
         <source file="Retro_Overdrivre/RetroOverdrive knob 90x90.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2f3eab035fa654e6527b2fc8a97b1543be6da522/Distortion/Retro_Overdrivre/RetroOverdrive%20knob%2090x90.png</source>
+      </version>
+      <version name="2.0.6" author="Stephen Boyes" time="2025-04-04T10:59:46Z">
+        <changelog><![CDATA[- v1.1 fix click from dc offset
+- v1.2 fix dc offset not always starting
+- v1.3.0 DC filter at 10Hz for all sample rates
+- v1.3.1 Add about header
+- v1.3.2 non release GUI
+- v2.0.0 new GUI
+- v2.0.1 Fixed slider bug
+- v2.0.6 fix for png files not found typo]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/08d044dc1720ed5762c02eab4092449766a8abfd/Distortion/Retro%20Overdrive.jsfx</source>
+        <source file="Retro_Overdrive/RetroOverdrive background.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/08d044dc1720ed5762c02eab4092449766a8abfd/Distortion/Retro_Overdrive/RetroOverdrive%20background.png</source>
+        <source file="Retro_Overdrive/RetroOverdrive text.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/08d044dc1720ed5762c02eab4092449766a8abfd/Distortion/Retro_Overdrive/RetroOverdrive%20text.png</source>
+        <source file="Retro_Overdrive/RetroOverdrive knob 90x90.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/08d044dc1720ed5762c02eab4092449766a8abfd/Distortion/Retro_Overdrive/RetroOverdrive%20knob%2090x90.png</source>
       </version>
     </reapack>
   </category>
