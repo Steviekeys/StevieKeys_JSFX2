@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="e5a5b62612f6a77a358fe9b605920760398d2adc">
+<index version="1" name="StevieKeys JSFX" commit="7d4e20fe1eb0a4859466ceeb476db139618fec7b">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -855,25 +855,28 @@
     </reapack>
     <reapack name="Highpass Lowpass 12dB.jsfx" type="effect" desc="Highpass Lowpass 12dB">
       <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Highpass Lowpass 12dB\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Highpass Lowpass 12dB\par}
 }
 ]]></description>
       </metadata>
       <version name="0.8.0" author="Stephen Boyes" time="2024-02-02T12:03:25Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/2b1d89e387a46cc405108b05cc71ffd712eb5f76/EQ/Highpass%20Lowpass%2012dB.jsfx</source>
       </version>
+      <version name="1.0.0" author="Stephen Boyes" time="2025-04-04T10:10:33Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/7d4e20fe1eb0a4859466ceeb476db139618fec7b/EQ/Highpass%20Lowpass%2012dB.jsfx</source>
+      </version>
     </reapack>
     <reapack name="Retro Mod A Exciter.jsfx" type="effect" desc="Retro Mod A Exciter">
       <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Retro Mod A Exciter\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Retro Mod A Exciter\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 Based loosely on a not so secret modification to noise reduction units to add more high end air to recordings Controls... High mix : adds compressed high end Very high mix : adds compressed very high end\par}
 }
 ]]></description>
@@ -881,6 +884,10 @@
       <version name="0.1.0beta" author="Stephen Boyes" time="2024-09-06T18:23:13Z">
         <changelog><![CDATA[- beta]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b07d96ee5538eb6ea55272629cc4a12616cb482a/EQ/Retro%20Mod%20A%20Exciter.jsfx</source>
+      </version>
+      <version name="1.0.0" author="Stephen Boyes" time="2025-04-04T10:09:46Z">
+        <changelog><![CDATA[- end of beta]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/30c3e12497aa3eb9669324847dbe4af2d570650f/EQ/Retro%20Mod%20A%20Exciter.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro-Q V3.jsfx" type="effect" desc="Retro-Q V3">
