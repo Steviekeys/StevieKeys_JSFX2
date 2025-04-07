@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="08d044dc1720ed5762c02eab4092449766a8abfd">
+<index version="1" name="StevieKeys JSFX" commit="fdffb646284a5b5c789b1d6f0a4d5a66503419c8">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1319,6 +1319,10 @@
       <version name="0.9" author="Stephen Boyes" time="2025-04-03T10:34:04Z">
         <changelog><![CDATA[- Beta]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1e942906e2dcaa5ccec6718c7ba76b0395355c3d/utility/Trapezoid%20PDF%20Dither.jsfx</source>
+      </version>
+      <version name="1.0" author="Stephen Boyes" time="2025-04-07T15:12:00Z">
+        <changelog><![CDATA[- fix positive clip value to represent actual maximum fixed point value (half_total_bits-1)]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/fdffb646284a5b5c789b1d6f0a4d5a66503419c8/utility/Trapezoid%20PDF%20Dither.jsfx</source>
       </version>
     </reapack>
   </category>
