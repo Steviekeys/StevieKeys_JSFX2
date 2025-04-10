@@ -1,4 +1,4 @@
-version:1.0.0
+version:1.0.1
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
@@ -24,7 +24,6 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
  a1 = 1/(1+g*(g+k));
  a2 = g*a1;
  a3 = g*a2;
- m0 = 1;
  m1 = -k;
  m2 = -1;
  v3 = v0-ic2eq;
@@ -32,7 +31,7 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
  v2 = ic2eq+a2*ic1eq+a3*v3;
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
- m0*v0+m1*v1+m2*v2
+ v0+m1*v1+m2*v2
 );
 
 function svf_lowp(v0,cutoff,Q)
@@ -43,16 +42,21 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
  a1 = 1/(1+g*(g+k));
  a2 = g*a1;
  a3 = g*a2;
- m0 = 0;
- m1 = 0;
- m2 = 1;
  v3 = v0-ic2eq;
  v1 = a1*ic1eq+a2*v3;
  v2 = ic2eq+a2*ic1eq+a3*v3;
  ic1eq = 2*v1-ic1eq;
  ic2eq = 2*v2-ic2eq;
- m0*v0+m1*v1+m2*v2
+ v2
 );
+
+function RPDF()
+instance(seed_a,seed_b)
+(
+  seed_a = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
+  outout = (seed_a * 2^-32)-0.5;
+);
+
 
 @slider
 freq1 = highp;
@@ -77,3 +81,8 @@ lowselect != 0 ? (
 spl0 = LL.svf_lowp(spl0,freq2,LQ);
 spl1 = RL.svf_lowp(spl1,freq2,LQ);
 );
+ana3 = ana2;
+ana2 = ana;
+ana = ana.rpdf()*2^-25;
+spl0 *= 1+ana-ana2+ana3;
+spl1 *= 1-ana+ana2-ana3;
