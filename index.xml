@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="224f5cb37245ba29e517e0fc95f7dd8b2586eb77">
+<index version="1" name="StevieKeys JSFX" commit="0e78aaec49ea52dae65cfde40d85cac50597f234">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -900,6 +900,9 @@
       </version>
       <version name="1.0.0" author="Stephen Boyes" time="2025-04-04T10:10:33Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/7d4e20fe1eb0a4859466ceeb476db139618fec7b/EQ/Highpass%20Lowpass%2012dB.jsfx</source>
+      </version>
+      <version name="1.0.1" author="Stephen Boyes" time="2025-04-10T20:59:49Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/0e78aaec49ea52dae65cfde40d85cac50597f234/EQ/Highpass%20Lowpass%2012dB.jsfx</source>
       </version>
     </reapack>
     <reapack name="Retro Mod A Exciter.jsfx" type="effect" desc="Retro Mod A Exciter">
