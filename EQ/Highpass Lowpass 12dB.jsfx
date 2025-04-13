@@ -81,8 +81,8 @@ lowselect != 0 ? (
 spl0 = LL.svf_lowp(spl0,freq2,LQ);
 spl1 = RL.svf_lowp(spl1,freq2,LQ);
 );
-ana3 = ana2;
+
 ana2 = ana;
 ana = ana.rpdf()*2^-25;
-spl0 *= 1+ana-ana2+ana3;
-spl1 *= 1-ana+ana2-ana3;
+spl0 += ana-ana2;
+spl1 -= ana-ana2;
