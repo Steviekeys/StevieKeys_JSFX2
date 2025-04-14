@@ -49,9 +49,9 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
  ic2eq = 2*v2-ic2eq;
  v2
 );
-
+seed_a = rand(999998)+1;
 function RPDF()
-instance(seed_a,seed_b)
+instance(seed_a)
 (
   seed_a = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
   outout = (seed_a * 2^-32)-0.5;
