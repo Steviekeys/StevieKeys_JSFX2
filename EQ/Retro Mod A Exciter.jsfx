@@ -1,4 +1,4 @@
-version:1.0.0
+version:1.0.1
 desc:Retro Mod A Exciter
 author:Stephen Boyes
 about:
@@ -92,7 +92,14 @@ instance (in,c,y)
   sqrt(y)
 );
 
+seed_a = rand(999998)+1;
 
+function RPDF()
+instance(seed_a)
+(
+  seed_a = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
+  outout = (seed_a * 2^-32)-0.5;
+);
 
 @slider
 effect  = mix*2;
@@ -206,6 +213,10 @@ spl1 /= last_gain;
 last_gain += d_gain;
 
 
+ana2 = ana;
+ana = ana.rpdf()*2^-24;
+spl0 += ana-ana2;
+spl1 -= ana-ana2;
 
 
 @gfx 1200 500 // request horizontal/vertical heights (0 means dont care)
