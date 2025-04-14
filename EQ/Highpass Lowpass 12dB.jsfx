@@ -1,4 +1,4 @@
-version:1.0.1
+version:1.0.2
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
@@ -83,6 +83,6 @@ spl1 = RL.svf_lowp(spl1,freq2,LQ);
 );
 
 ana2 = ana;
-ana = ana.rpdf()*2^-25;
+ana = ana.rpdf()*2^-24;
 spl0 += ana-ana2;
 spl1 -= ana-ana2;
