@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="4e2ab2d7a8195b8236a78eb37e4d726244083f59">
+<index version="1" name="StevieKeys JSFX" commit="3122cf58556b0c40ac761a2f3ef477accfeae696">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1224,6 +1224,9 @@
       </version>
       <version name="1.1" author="Stephen Boyes" time="2025-02-01T21:30:17Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/216008f527b9f9c7c77cd541961931dee181036a/Stereo%20Enhancers/Wide%20Crosstalk.jsfx</source>
+      </version>
+      <version name="1.2" author="Stephen Boyes" time="2025-04-15T12:07:40Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3122cf58556b0c40ac761a2f3ef477accfeae696/Stereo%20Enhancers/Wide%20Crosstalk.jsfx</source>
       </version>
     </reapack>
   </category>
