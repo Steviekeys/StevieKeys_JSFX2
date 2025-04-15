@@ -1,4 +1,4 @@
-version:1.1
+version:1.2
 desc:Wide Crosstalk
 author:Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
   moves some hard panned content to the opposite side (like HAAS effect but with less comb filtering when monoed)
 
 changelog:
-  - boost pans 3dB
+  - make output non deterministic
 //provides:
 
 
@@ -303,6 +303,11 @@ last_gain += d_gain;
 //swap wide channels for wider sound!
 spl0 = spl0 + ER1;
 spl1 = spl1 - ER0;
+
+mid_n = (rand()-0.5)*2^-24;
+sid_n = (rand()-0.5)*2^-24;
+spl0 += mid_n + sid_n;
+spl1 += mid_n - sid_n;
 
 @gfx
 gfx_x = 8; gfx_y = 2;
