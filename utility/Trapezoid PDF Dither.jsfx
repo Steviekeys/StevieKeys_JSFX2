@@ -1,4 +1,4 @@
-version:1.0
+version:1.1
 desc:Trapezoid PDF Dither
 author: Stephen Boyes
 about:
@@ -10,7 +10,7 @@ about:
   resulting in subjectively less high frequency hiss.
   Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison
 changelog:
-   - fix positive clip value to represent actual maximum fixed point value (half_total_bits-1)
+   - optimize CPU for TPDF flat
 
 
 //  Trapezoid PDF Dither
@@ -161,8 +161,10 @@ type == 1 ? (
 
 
 type == 2 ? (
-  noise0 = one.RPDF() - one.RPDF();
-  noise1 = two.RPDF() - two.RPDF();
+  noise0 = noise1 = one.RPDF();
+  two = two.RPDF();
+  noise0 += two;
+  noise1 -= two;
 );
 
 
