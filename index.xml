@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="e3fbbc6215c28bfb12a4d22539e3b673d7dc33f6">
+<index version="1" name="StevieKeys JSFX" commit="8ea834dc332da09e98f2f6413a7e6d1b90a16fef">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1364,6 +1364,11 @@
         <changelog><![CDATA[- improve randomness of RNG most significant bits.
 - fix DC ofset from V1.4]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/e3fbbc6215c28bfb12a4d22539e3b673d7dc33f6/utility/Trapezoid%20PDF%20Dither.jsfx</source>
+      </version>
+      <version name="1.6" author="Stephen Boyes" time="2025-07-17T22:03:25Z">
+        <changelog><![CDATA[- improve randomness of RNG most significant bits.
+- fix for v1.3/V1.4/v1.5 bad code!]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/8ea834dc332da09e98f2f6413a7e6d1b90a16fef/utility/Trapezoid%20PDF%20Dither.jsfx</source>
       </version>
     </reapack>
   </category>
