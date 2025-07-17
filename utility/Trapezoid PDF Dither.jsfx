@@ -1,4 +1,4 @@
-version:1.1
+version:1.2
 desc:Trapezoid PDF Dither
 author: Stephen Boyes
 about:
@@ -10,7 +10,7 @@ about:
   resulting in subjectively less high frequency hiss.
   Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison
 changelog:
-   - optimize CPU for TPDF flat
+   - improve randomness of RNG most significant bits.
 
 
 //  Trapezoid PDF Dither
@@ -60,7 +60,8 @@ instance(seed_a,seed_b)
 (
   seed_b = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
   seed_a = (1664525 * seed_b + 1013904223) & 0xFFFFFFFF;
-  out = (seed_a  & 0xFFFFFF00) + (Seed_b & 0xFFFFFF00)*range1;
+  //out = (seed_a  & 0xFFFFFF00) + (Seed_b & 0xFFFFFF00)*range1;
+  out = (seed_a  & 0xFFFFFF00)*(seed_a  & 0xFFFFFF00) + 0.5*(Seed_b & 0xFFFFFF00)*(Seed_b & 0xFFFFFF00);
   outout = (out * range2)-0.5;
 );
 
