@@ -1,4 +1,4 @@
-version:1.4
+version:1.5
 desc:Trapezoid PDF Dither
 author: Stephen Boyes
 about:
@@ -11,7 +11,7 @@ about:
   Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison
 changelog:
    - improve randomness of RNG most significant bits.
-
+   - fix DC ofset from V1.4
 
 //  Trapezoid PDF Dither
 //  The MIT License (MIT)
@@ -62,7 +62,7 @@ instance(seed_a,seed_b)
   seed_a = (1664525 * seed_b + 1013904223) & 0xFFFFFFFF;
   out_a = (seed_a & 0xFFFFFF00)*range1;
   out_b = (Seed_b & 0xFFFFFF00)*range1;
-  outout = out_a*out_a + 0.5*out_b*out_b;
+  outout = (out_a*out_a + 0.5*out_b*out_b)-0.5;
   //out = (seed_a  & 0xFFFFFF00) + (Seed_b & 0xFFFFFF00)*range1;
   //out = (seed_a  & 0xFFFFFF00)*(seed_a  & 0xFFFFFF00) + 0.5*(Seed_b & 0xFFFFFF00)*(Seed_b & 0xFFFFFF00);
   //outout = (out * range2)-0.5;
