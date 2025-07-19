@@ -1,4 +1,4 @@
-version:1.7
+version:1.8
 desc:Trapezoid PDF Dither
 author: Stephen Boyes
 about:
@@ -10,8 +10,8 @@ about:
   resulting in subjectively less high frequency hiss.
   Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison
 changelog:
-   - improve randomness of RNG most significant bits.
-   - fix for v1.3~v1.6 bad code!
+   - improve description
+
 
 //  Trapezoid PDF Dither
 //  The MIT License (MIT)
@@ -185,4 +185,4 @@ coloured dither with slightly more noise in
 high frequencies and less in low frequencies.
 
 Tri    PDF  flat...
-standard dither, flat frequency response.");
+almost standard dither, flat frequency response, uses algorithm that might be used by a well known plugin manufacturer, that saves some CPU, by reusing RNGs.");
