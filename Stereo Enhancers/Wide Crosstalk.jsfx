@@ -1,4 +1,4 @@
-version:1.2
+version:2.0
 desc:Wide Crosstalk
 author:Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
   moves some hard panned content to the opposite side (like HAAS effect but with less comb filtering when monoed)
 
 changelog:
-  - make output non deterministic
+  - Adjustable High Pass for wet signal
 //provides:
 
 
@@ -29,6 +29,7 @@ changelog:
 slider1:bal=0.5<0,1,0.02>Balance
 slider2:gain_db=0<-50,0,0.2>dry gain (dB)
 slider3:wide_db=-10<-50,0,0.2>wide (dB)
+slider4:wide_hp=100<40,500,20>HighPass wide
 
 
 in_pin:left input
@@ -169,7 +170,7 @@ L3.set_svf_bell(2.5,1180,9);
 R3.set_svf_bell(2.5,1180,9);
 
 
-Fc = 100/srate;
+Fc = wide_hp/srate;
 filt = exp(-2*$pi*Fc);
 
 function highpass(x)
@@ -198,6 +199,9 @@ wide_dB > -49.5 ? (
   ):(
   next_wide = 0;
 );
+
+Fc = wide_hp/srate;
+filt = exp(-2*$pi*Fc);
 
 @block
 d_bal  = (next_bal  - last_bal )/samplesblock;
