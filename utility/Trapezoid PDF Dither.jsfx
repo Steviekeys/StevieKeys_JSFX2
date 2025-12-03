@@ -1,4 +1,4 @@
-version:1.8
+version:1.9
 desc:Trapezoid PDF Dither
 author: Stephen Boyes
 about:
@@ -10,7 +10,7 @@ about:
   resulting in subjectively less high frequency hiss.
   Shaped Triangular PDF (sometimes called highpass TPDF) and Flat TPDF is included as well for comparison
 changelog:
-   - improve description
+   - improve RNG
 
 
 //  Trapezoid PDF Dither
@@ -53,17 +53,17 @@ two.seed_a = floor(rand(999999999));
 
 range1 = 2^-4;
 range2 = 2^-32;
-
+DC = 2^31;
 
 function RPDF()
 instance(seed_a,seed_b,out_a,out_b,out,outout)
 (
   seed_b = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
   seed_a = (1664525 * seed_b + 1013904223) & 0xFFFFFFFF;
-  out_a = (seed_a & 0xF0000F0F);
-  out_b = (Seed_b & 0xFFFF0F0F)*range1;
+  out_a = ((seed_a & 0xF0000F0F)-DC);
+  out_b = ((Seed_b & 0xFFFF0F0F)-DC)*range1;
   out = (out_a + out_b);
-  outout = (out * range2)-0.5;
+  outout = (out * range2);
 );
 
 
