@@ -1,4 +1,4 @@
-version:1.9
+version:1.10
 desc:Trapezoid PDF Dither
 author: Stephen Boyes
 about:
@@ -45,13 +45,13 @@ last_gain=10^(gain_db/20);
 ext_nodenorm = 1;
 
 
-one.seed_a = floor(rand(999999999));
-two.seed_a = floor(rand(999999999));
-//a_rpdf = 1664525;
-//c_rpdf = 1013904223;
+one.seed_a = ceil(rand(49999999));
+two.seed_a = ceil(rand(49999999)+  50000000);
+one.seed_b = ceil(rand(49999999)+ 100000000);
+two.seed_b = ceil(rand(49999999)+ 150000000);
 //m_rpdf = 4294967296-1;
 
-range1 = 2^-4;
+range1 = 2^-8;
 range2 = 2^-32;
 DC = 2^31;
 
@@ -60,8 +60,8 @@ instance(seed_a,seed_b,out_a,out_b,out,outout)
 (
   seed_b = (1664525 * seed_a + 1013904223) & 0xFFFFFFFF;
   seed_a = (1664525 * seed_b + 1013904223) & 0xFFFFFFFF;
-  out_a = ((seed_a & 0xF0000F0F)-DC);
-  out_b = ((Seed_b & 0xFFFF0F0F)-DC)*range1;
+  out_a = ((seed_a & 0xFF0F0F00)-DC);
+  out_b = ((Seed_b & 0xF0F0FFFF)-DC)*range1;
   out = (out_a + out_b);
   outout = (out * range2);
 );
@@ -186,3 +186,4 @@ high frequencies and less in low frequencies.
 
 Tri    PDF  flat...
 almost standard dither, flat frequency response, uses algorithm that might be used by a well known plugin manufacturer, that saves some CPU, by reusing RNGs.");
+
