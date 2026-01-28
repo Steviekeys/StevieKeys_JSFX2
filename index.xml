@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="929b18c997ed8d5dcdb6f31d67355e71269d0544">
+<index version="1" name="StevieKeys JSFX" commit="a31cdc1e4a901fa73cce699446bd9e500077c7a8">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -474,11 +474,11 @@
   <category name="Dynamics">
     <reapack name="Blue Vocal Compressor.jsfx" type="effect" desc="Blue Vocal Compressor (beta)">
       <metadata>
-        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \b \fs36 Blue Vocal Compressor (beta)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Blue Vocal Compressor (beta)\par}
 {\pard \ql \f0 \sa180 \li0 \fi0 Smooth clean Opto compressor/limiter with ratio, attack, release controls and featuring colourfull output stage Controls... input gain : input gainstaging less ess : feed high frquency transients to the detector to prevent ess sounds getting louder Compression Drive : Increases compression, output compensated Output Drive : Push the output stage harder for more dirt and colour Compress - Limit : Compress = feedback 2:1 Limit = Feedforward inf:1 Attack time : Aprox time for full gain reduction Release Time : Aprox time for gain reduction to return to 0dB after level drops exact release time is dependant on amount of gain reduction and length of time in compression\par}
 }
 ]]></description>
@@ -534,6 +534,14 @@
         <source file="Blue_Vocal_Compressor/GUI_version_1.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/02c9b4505127119c21c8cf3cf76a0e618041412d/Dynamics/Blue_Vocal_Compressor/GUI_version_1.jsfx-inc</source>
         <source file="Blue_Vocal_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/02c9b4505127119c21c8cf3cf76a0e618041412d/Dynamics/Blue_Vocal_Compressor/Vintage_PPM_meter.png</source>
         <source file="Blue_Vocal_Compressor/st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/02c9b4505127119c21c8cf3cf76a0e618041412d/Dynamics/Blue_Vocal_Compressor/st-oversampler.jsfx-inc</source>
+      </version>
+      <version name="0.6.0beta" author="Stephen Boyes" time="2026-01-28T18:30:01Z">
+        <changelog><![CDATA[- tidy code]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a31cdc1e4a901fa73cce699446bd9e500077c7a8/Dynamics/Blue%20Vocal%20Compressor.jsfx</source>
+        <source file="Blue_Vocal_Compressor/ChiControl.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a31cdc1e4a901fa73cce699446bd9e500077c7a8/Dynamics/Blue_Vocal_Compressor/ChiControl.png</source>
+        <source file="Blue_Vocal_Compressor/GUI_version_1.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a31cdc1e4a901fa73cce699446bd9e500077c7a8/Dynamics/Blue_Vocal_Compressor/GUI_version_1.jsfx-inc</source>
+        <source file="Blue_Vocal_Compressor/Vintage_PPM_meter.png">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a31cdc1e4a901fa73cce699446bd9e500077c7a8/Dynamics/Blue_Vocal_Compressor/Vintage_PPM_meter.png</source>
+        <source file="Blue_Vocal_Compressor/st-oversampler.jsfx-inc">https://github.com/Steviekeys/StevieKeys_JSFX2/raw/a31cdc1e4a901fa73cce699446bd9e500077c7a8/Dynamics/Blue_Vocal_Compressor/st-oversampler.jsfx-inc</source>
       </version>
     </reapack>
     <reapack name="HQ Track Compressor.jsfx" type="effect" desc="HQ Track Compressor (beta)">
