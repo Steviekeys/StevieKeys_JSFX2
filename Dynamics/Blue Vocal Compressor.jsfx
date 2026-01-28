@@ -1,4 +1,4 @@
-version:0.5.1beta
+version:0.6.0beta
 desc:Blue Vocal Compressor (beta)
 author:Stephen Boyes
 about:
@@ -322,17 +322,16 @@ alog = noise.sta_var_LPfilter(alog,f1,1);
 alog2= 0.00125*(rand(2)-1);
 
 Rspeed = Rspeedin;
-peak < 0.7071 ? Rspeed = Rspeedin*Rspeedin;
-peak < 0.5    ? Rspeed = (Rspeedin*Rspeedin)*(Rspeedin*Rspeedin);
-peak < 0.354  ? Rspeed = (Rspeedin*Rspeedin)*(Rspeedin*Rspeedin)*(Rspeedin*Rspeedin);
-peak < 0.25   ? Rspeed = (Rspeedin*Rspeedin)*(Rspeedin*Rspeedin)*(Rspeedin*Rspeedin)*(Rspeedin*Rspeedin);
+peak < 0.7071 ? Rspeed = sqr(Rspeedin);
+peak < 0.5    ? Rspeed = sqr(Rspeedin)*sqr(Rspeedin);
+peak < 0.354  ? Rspeed = sqr(Rspeedin)*sqr(Rspeedin)*sqr(Rspeedin);
+peak < 0.25   ? Rspeed = sqr(Rspeedin)*sqr(Rspeedin)*sqr(Rspeedin)*sqr(Rspeedin);
 
 
 
 OptoTime = 0.6;
 LA = exp(-1/(OptoTime*srate));
 OPTO = peak + (OPTO-peak)*LA;
-//Rspeed = PD.RMS(Rspeed,c);
 Rspeed = Rspeed^OPTO; 
 
 spl0 = spl0*inboost;
