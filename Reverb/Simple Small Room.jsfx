@@ -1,4 +1,4 @@
-version:0.3
+version:0.5
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,7 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.3 new release
+  - 0.5
 //provides:
 
 
@@ -44,10 +44,12 @@ out_pin:left output
 out_pin:right output
 
 @init
-last_bal = bal;
-last_gain=10^(gain_db/20);
-last_er=10^(er_db-11/20);
-last_room=10^(room_db/20);
+  last_bal = 0.5*bal*$pi;
+  last_gain=10^(gain_db/20);
+  last_er=10^(er_db-11/20);
+  last_room=10^(room_db/20);
+  last_low_damp = exp(-1/(4*r60));
+  last_high_damp = exp(-1/(6*r60));
 
 
 r1  = 0.0357;
@@ -154,7 +156,7 @@ time29 = 2*density5 + density4*r28;
 
 
 
-
+/*
 function allpass_delay_set(buffer,ms)
  instance (buf,size,pos)
 (
@@ -173,7 +175,7 @@ function allpass(in,co)
   pos >= size ? pos -= size;
   out + in*co
 );
-
+*/
 
 function max_delay_set(buffer,ms)
  instance(buf,size,pos)
@@ -322,15 +324,6 @@ F5.max_delay_set(3.0*srate,99);
 G5.max_delay_set(3.1*srate,99);
 H5.max_delay_set(3.2*srate,99);
 
-A4.allpass_delay_set(3.3*srate,5.75);
-B4.allpass_delay_set(3.4*srate,40.64);
-C4.allpass_delay_set(3.5*srate,47.92);
-D4.allpass_delay_set(3.6*srate,65.65);
-E4.allpass_delay_set(3.7*srate,5.75);
-F4.allpass_delay_set(3.8*srate,40.32);
-G4.allpass_delay_set(3.9*srate,47.72);
-H4.allpass_delay_set(4.0*srate,65.15);
-
 A6.max_delay_set(4.1*srate,99);
 B6.max_delay_set(4.2*srate,99);
 C6.max_delay_set(4.3*srate,99);
@@ -364,7 +357,7 @@ instance (x,x1,xx,y,z,f)
 
 
 @slider
-next_bal = bal;
+next_bal = 0.5*bal*$pi;
 
 gain_db> -49.5 ? (
   next_gain=10^(gain_db/20);
@@ -388,28 +381,34 @@ room_db > -49.5 ? (
 
 
 
-low_damp = exp(-1/(4*r60));
-high_damp = exp(-1/(6*r60));
-
-
-
-
+  next_low_damp = exp(-1/(4*r60));
+  next_high_damp = exp(-1/(6*r60));
+  minus22bit = 2^-22;
+  sroot2 = sqrt(2);
 
 
 @block
-d_bal  = (next_bal  - last_bal )/samplesblock;
-d_gain = (next_gain - last_gain)/samplesblock;
-d_er = (next_er - last_er)/samplesblock;
-d_plate = (next_plate - last_plate)/samplesblock;
-d_room = (next_room - last_room)/samplesblock;
+  d_bal  = (next_bal  - last_bal )/samplesblock;
+  d_gain = (next_gain - last_gain)/samplesblock;
+  d_er = (next_er - last_er)/samplesblock;
+  d_plate = (next_plate - last_plate)/samplesblock;
+  d_room = (next_room - last_room)/samplesblock;
+  d_low_damp = (next_low_damp - last_low_damp)/samplesblock;
+  d_high_damp = (next_high_damp - last_high_damp)/samplesblock;
+
 
 @sample
+low_damp = last_low_damp;
+high_damp = last_high_damp;
+last_low_damp += d_low_damp;
+last_high_damp += d_high_damp;
+
 //balance
-spl0 *= sqrt(2)*cos(0.5*last_bal*$pi);
-spl1 *= sqrt(2)*sin(0.5*last_bal*$pi);
+spl0 *= sroot2*cos(last_bal);
+spl1 *= sroot2*sin(last_bal);
 last_bal += d_bal;
 
-noise = (rand(2)-1)*2^-22;
+noise = (rand(2)-1)*minus22bit;
 spl0 += noise;
 spl1 += noise;
 
@@ -641,8 +640,8 @@ spl1 *= last_gain;
 last_gain += d_gain;
 
 //
-spl0 = spl0 + out0.highpass(ERL.highpass(ER0 + 0.000*ER0*ER0) + RM0);
-spl1 = spl1 + out1.highpass(ERR.highpass(ER1 - 0.000*ER1*ER1) + RM1);
+spl0 = spl0 + out0.highpass(ERL.highpass(ER0) + RM0);
+spl1 = spl1 + out1.highpass(ERR.highpass(ER1) + RM1);
 
 
 
