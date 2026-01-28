@@ -1,11 +1,11 @@
-version:0.2
+version:0.3
 desc:J Clip
 author:Stephen Boyes
 about:
   # J Clip
   soft knee clipper, featuring warmth control, which pushes the waveform down/up, softening the exit from clipping
 Changelog:
-  - version 0.2
+  - version 0.3
 
 slider1:limit_db=0<-24,0,0.1>limit
 slider2:soft_knee=0.2<0,1,0.02>Knee
@@ -23,6 +23,10 @@ last_limit=10^(limit_db/20);
 
   gr_meter=1;
   gr_meter_decay = exp(1/(1*srate));
+  in1 = in0 = 0;
+  e0 = e1 = 0;
+  last_e0 = 0;
+  last_e1 = 0;
 
 function softclipper(x)
 instance (f,gain,abs_x)
