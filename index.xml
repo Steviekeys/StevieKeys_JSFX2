@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="a31cdc1e4a901fa73cce699446bd9e500077c7a8">
+<index version="1" name="StevieKeys JSFX" commit="ab83944a58f0e60bc3479322130ec594535243d1">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1032,6 +1032,25 @@
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/b5c2710cef361abfc3e9c6a9223b5dbdcf3adcf3/Other/Transient%20Softener%202.jsfx</source>
       </version>
     </reapack>
+    <reapack name="Transient softener 3.jsfx" type="effect" desc="Transient softener 3">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Can be used to reduce spikey treble, or as a vinyl acceleration limiter.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Threshold... . Highs over the threshold get compressed.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Time (us)... . Controls the envelope of the effect, shorter settings produce more intermodulation distortion, ailising artifacts are reduced already in the side chain. Knee... . Soft knee function giving smooth transition into compression.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 High-pre-boost... . gentle shelving boost before the detector, and controled by the crossover.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Crossover (Hz)... . Effect starts over this frequency\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Dry... . Mix in dry signal (High-pre-boost still active).\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.1" author="Stephen Boyes" time="2026-02-19T19:26:45Z">
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/ab83944a58f0e60bc3479322130ec594535243d1/Other/Transient%20softener%203.jsfx</source>
+      </version>
+    </reapack>
     <reapack name="Transient Softener.jsfx" type="effect" desc="Transient Softener">
       <metadata>
         <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
@@ -1437,6 +1456,7 @@
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Retro Distortion\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener 2\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Transient Softener 3\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Bass X\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Echo Live In Stereo\par}
 {\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wow Tape Delay\par}
