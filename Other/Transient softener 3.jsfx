@@ -1,0 +1,390 @@
+desc:Transient softener 3
+version:0.1
+author:Stephen Boyes
+about:
+  # Can be used to reduce spikey treble, or as a vinyl acceleration limiter.
+  
+  Threshold...
+  . Highs over the threshold get compressed.
+  
+  Time (us)...
+  . Controls the envelope of the effect, shorter settings produce more intermodulation distortion,
+    ailising artifacts are reduced already in the side chain.
+  Knee...
+  . Soft knee function giving smooth transition into compression.
+  
+  High-pre-boost...
+  . gentle shelving boost before the detector, and controled by the crossover.
+  
+  Crossover (Hz)...
+  . Effect starts over this frequency
+  
+  Dry...
+  . Mix in dry signal (High-pre-boost still active).
+  
+changelog:
+  - beta
+
+
+
+
+//                                                                
+//  The MIT License (MIT)
+//Copyright © 2026 Stephen Boyes
+//
+//Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                                                            
+//                                                                              
+// 
+
+
+
+slider1:Thr_db=-20<-32,-8,0.5>Threshold (dB)
+
+slider3:1500<500,2500,20>Time (uS)
+slider4:kn=12<0,24>Knee
+
+slider6:boost=0<0,5,0.1>High pre-boost
+slider7:cross=6000<4000,8000>Crossover (Hz)
+slider8:0.5<0,1,0.02>Dry
+
+-slider10:0<-12,0>reduction
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+last_Thr = Thr_db;
+
+
+  ext_tail_size = -1; //automatic silence detection
+  //rate=srate;
+  pdc_bot_ch=0;
+  pdc_top_ch=2;
+  pdc_delay=96;
+  
+  rel1 = exp(-1/(slider3*0.001*0.001*srate));
+  rel2 = exp(-1/(0.5*slider3*0.001*0.001*srate));
+  highgain = 10^(boost/20);
+  rategain = srate/48000;
+  rategain_dB = 20*log10(rategain);
+  Fc = 10/srate;
+  slewrate = exp(-2*$pi*Fc);
+  
+  a0 = exp(-2*$pi*cross/srate);
+  
+  length=192;
+  hlength=96;
+  delaylen = hlength;
+
+  pos = 1;
+  meter = 0;
+  mdecay = exp(-1/(0.4*srate));
+
+function gain_to_dB(x)
+(
+  log10(x)*20
+);
+
+function dB_to_gain(x)
+(
+  10^(x/20)
+);
+
+function timing(x,sp)
+instance(x,y,sp)
+(
+  y = x + sp*(y-x);
+  y
+);
+
+
+
+
+  halfpi = $pi/2;
+  fir =1500;
+  tap =1000;
+
+
+
+
+@slider
+  last_Thr = Thr_db;
+  knee = max(0.06,kn);
+
+  a0 = exp(-2*$pi*cross/srate);
+
+  rel1 = exp(-1/(slider3*0.001*0.001*srate));
+  rel2 = exp(-1/(0.5*slider3*0.001*0.001*srate));
+  highgain = 10^(boost/20);
+  dmix = slider8;
+  wmix = 1-dmix;
+
+
+@block
+
+//sinc 90deg hilbert
+  sinc=0;
+  tap[0]=0;
+  loop(96,
+    sinc+=1;
+    //tap[sinc] = (1-cos(sinc*$pi*z))/(sinc*$pi*z);
+    tap[sinc] = 2*sin(0.4999989*$pi*sinc) / ($pi*sinc);
+    tap[sinc]*= 32*sin($pi*sinc/32) / ($pi*sinc);
+    tap[sinc]*=sin(0.4999989*$pi*sinc);
+    tap[sinc]*= 1;//gain correction
+    //tap[sinc]*= (cos(sinc*$pi/242));//window
+  );
+
+
+
+  halfpi = $pi/2;
+  fir =1500;
+  tap =1000;
+  
+
+
+@sample
+
+  VUsq = max(0.0001 , max(sqr(spl0),sqr(spl1)));
+  VUabs = sqrt(VUsq);
+  VUdB = 20*log10(VUabs);
+  
+
+//remove lows
+  zero0 = pole0;
+  zero1 = pole1;
+  pole0 = spl0 + a0*(pole0-spl0);
+  pole1 = spl1 + a0*(pole1-spl1);
+  low0 = 0.5*pole0+0.5*zero0;
+  low1 = 0.5*pole1+0.5*zero1;
+  spl0 = spl0-low0;
+  spl1 = spl1-low1;
+
+//pre boost
+  spl0 *= highgain;
+  spl1 *= highgain;
+
+
+
+
+//calc slew rate
+  spl0n1 = spl0n0;
+  spl0n0 = spl0;
+  spl0 = spl0 - spl0n1*slewrate;
+  spl1n1 = spl1n0;
+  spl1n0 = spl1;
+  spl1 = spl1 - spl1n1*slewrate;
+
+//delay lows
+  dpoint=delaypos*2;
+  outs1=dpoint[3000];
+  outs2=dpoint[3001];
+
+  dpoint[3000]=low0;
+  dpoint[3001]=low1;
+  
+  (delaypos+=1) >= delaylen ? delaypos=0;
+  
+  low0=outs1;
+  low1=outs2;
+
+
+
+fir=1500;
+fir[196]=fir[195]; fir[195]=fir[194];
+fir[194]=fir[193]; fir[193]=fir[192]; fir[192]=fir[191]; fir[191]=fir[190]; fir[190]=fir[189];
+fir[189]=fir[188]; fir[188]=fir[187]; fir[187]=fir[186]; fir[186]=fir[185]; fir[185]=fir[184];
+fir[184]=fir[183]; fir[183]=fir[182]; fir[182]=fir[181]; fir[181]=fir[180]; fir[180]=fir[179];
+fir[179]=fir[178]; fir[178]=fir[177]; fir[177]=fir[176]; fir[176]=fir[175]; fir[175]=fir[174];
+fir[174]=fir[173]; fir[173]=fir[172]; fir[172]=fir[171]; fir[171]=fir[170]; fir[170]=fir[169];
+fir[169]=fir[168]; fir[168]=fir[167]; fir[167]=fir[166]; fir[166]=fir[165]; fir[165]=fir[164];
+fir[164]=fir[163]; fir[163]=fir[162]; fir[162]=fir[161]; fir[161]=fir[160]; fir[160]=fir[159];
+fir[159]=fir[158]; fir[158]=fir[157]; fir[157]=fir[156]; fir[156]=fir[155]; fir[155]=fir[154];
+fir[154]=fir[153]; fir[153]=fir[152]; fir[152]=fir[151]; fir[151]=fir[150]; fir[150]=fir[149];
+fir[149]=fir[148]; fir[148]=fir[147]; fir[147]=fir[146]; fir[146]=fir[145]; fir[145]=fir[144];
+fir[144]=fir[143]; fir[143]=fir[142]; fir[142]=fir[141]; fir[141]=fir[140]; fir[140]=fir[139];
+fir[139]=fir[138]; fir[138]=fir[137]; fir[137]=fir[136]; fir[136]=fir[135]; fir[135]=fir[134];
+fir[134]=fir[133]; fir[133]=fir[132]; fir[132]=fir[131]; fir[131]=fir[130]; fir[130]=fir[129];
+fir[129]=fir[128]; fir[128]=fir[127]; fir[127]=fir[126]; fir[126]=fir[125]; fir[125]=fir[124];
+fir[124]=fir[123]; fir[123]=fir[122]; fir[122]=fir[121]; fir[121]=fir[120]; fir[120]=fir[119];
+fir[119]=fir[118]; fir[118]=fir[117]; fir[117]=fir[116]; fir[116]=fir[115]; fir[115]=fir[114];
+fir[114]=fir[113]; fir[113]=fir[112]; fir[112]=fir[111]; fir[111]=fir[110]; fir[110]=fir[109];
+fir[109]=fir[108]; fir[108]=fir[107]; fir[107]=fir[106]; fir[106]=fir[105]; fir[105]=fir[104];
+fir[104]=fir[103]; fir[103]=fir[102]; fir[102]=fir[101]; fir[101]=fir[100]; fir[100]=fir[99];
+fir[99]=fir[98]; fir[98]=fir[97]; fir[97]=fir[96]; fir[96]=fir[95]; fir[95]=fir[94];
+fir[94]=fir[93]; fir[93]=fir[92]; fir[92]=fir[91]; fir[91]=fir[90]; fir[90]=fir[89];
+fir[89]=fir[88]; fir[88]=fir[87]; fir[87]=fir[86]; fir[86]=fir[85]; fir[85]=fir[84];
+fir[84]=fir[83]; fir[83]=fir[82]; fir[82]=fir[81]; fir[81]=fir[80]; fir[80]=fir[79];
+fir[79]=fir[78]; fir[78]=fir[77]; fir[77]=fir[76]; fir[76]=fir[75]; fir[75]=fir[74];
+fir[74]=fir[73]; fir[73]=fir[72]; fir[72]=fir[71]; fir[71]=fir[70]; fir[70]=fir[69];
+fir[69]=fir[68]; fir[68]=fir[67]; fir[67]=fir[66]; fir[66]=fir[65]; fir[65]=fir[64];
+fir[64]=fir[63]; fir[63]=fir[62]; fir[62]=fir[61]; fir[61]=fir[60]; fir[60]=fir[59];
+fir[59]=fir[58]; fir[58]=fir[57]; fir[57]=fir[56]; fir[56]=fir[55]; fir[55]=fir[54];
+fir[54]=fir[53]; fir[53]=fir[52]; fir[52]=fir[51]; fir[51]=fir[50]; fir[50]=fir[49];
+fir[49]=fir[48]; fir[48]=fir[47]; fir[47]=fir[46]; fir[46]=fir[45]; fir[45]=fir[44];
+fir[44]=fir[43]; fir[43]=fir[42]; fir[42]=fir[41]; fir[41]=fir[40]; fir[40]=fir[39];
+fir[39]=fir[38]; fir[38]=fir[37]; fir[37]=fir[36]; fir[36]=fir[35]; fir[35]=fir[34];
+fir[34]=fir[33]; fir[33]=fir[32]; fir[32]=fir[31]; fir[31]=fir[30]; fir[30]=fir[29];
+fir[29]=fir[28]; fir[28]=fir[27]; fir[27]=fir[26]; fir[26]=fir[25]; fir[25]=fir[24];
+fir[24]=fir[23]; fir[23]=fir[22]; fir[22]=fir[21]; fir[21]=fir[20]; fir[20]=fir[19];
+fir[19]=fir[18]; fir[18]=fir[17]; fir[17]=fir[16]; fir[16]=fir[15]; fir[15]=fir[14];
+fir[14]=fir[13]; fir[13]=fir[12]; fir[12]=fir[11]; fir[11]=fir[10]; fir[10]=fir[9];
+fir[9]=fir[8];   fir[8]=fir[7];   fir[7]=fir[6];   fir[6]=fir[5];   fir[5]=fir[4];
+fir[4]=fir[3];   fir[3]=fir[2];   fir[2]=fir[1];   fir[1]=fir[0];   fir[0]=spl0;
+
+
+i=1;
+fx0=0;
+loop(48,
+  fx0 += (fir[i]-fir[length-i]) * tap[hlength-i];
+  i+=2;
+);
+spl0 = fir[hlength];
+
+
+
+fir=2000;
+fir[196]=fir[195]; fir[195]=fir[194];
+fir[194]=fir[193]; fir[193]=fir[192]; fir[192]=fir[191]; fir[191]=fir[190]; fir[190]=fir[189];
+fir[189]=fir[188]; fir[188]=fir[187]; fir[187]=fir[186]; fir[186]=fir[185]; fir[185]=fir[184];
+fir[184]=fir[183]; fir[183]=fir[182]; fir[182]=fir[181]; fir[181]=fir[180]; fir[180]=fir[179];
+fir[179]=fir[178]; fir[178]=fir[177]; fir[177]=fir[176]; fir[176]=fir[175]; fir[175]=fir[174];
+fir[174]=fir[173]; fir[173]=fir[172]; fir[172]=fir[171]; fir[171]=fir[170]; fir[170]=fir[169];
+fir[169]=fir[168]; fir[168]=fir[167]; fir[167]=fir[166]; fir[166]=fir[165]; fir[165]=fir[164];
+fir[164]=fir[163]; fir[163]=fir[162]; fir[162]=fir[161]; fir[161]=fir[160]; fir[160]=fir[159];
+fir[159]=fir[158]; fir[158]=fir[157]; fir[157]=fir[156]; fir[156]=fir[155]; fir[155]=fir[154];
+fir[154]=fir[153]; fir[153]=fir[152]; fir[152]=fir[151]; fir[151]=fir[150]; fir[150]=fir[149];
+fir[149]=fir[148]; fir[148]=fir[147]; fir[147]=fir[146]; fir[146]=fir[145]; fir[145]=fir[144];
+fir[144]=fir[143]; fir[143]=fir[142]; fir[142]=fir[141]; fir[141]=fir[140]; fir[140]=fir[139];
+fir[139]=fir[138]; fir[138]=fir[137]; fir[137]=fir[136]; fir[136]=fir[135]; fir[135]=fir[134];
+fir[134]=fir[133]; fir[133]=fir[132]; fir[132]=fir[131]; fir[131]=fir[130]; fir[130]=fir[129];
+fir[129]=fir[128]; fir[128]=fir[127]; fir[127]=fir[126]; fir[126]=fir[125]; fir[125]=fir[124];
+fir[124]=fir[123]; fir[123]=fir[122]; fir[122]=fir[121]; fir[121]=fir[120]; fir[120]=fir[119];
+fir[119]=fir[118]; fir[118]=fir[117]; fir[117]=fir[116]; fir[116]=fir[115]; fir[115]=fir[114];
+fir[114]=fir[113]; fir[113]=fir[112]; fir[112]=fir[111]; fir[111]=fir[110]; fir[110]=fir[109];
+fir[109]=fir[108]; fir[108]=fir[107]; fir[107]=fir[106]; fir[106]=fir[105]; fir[105]=fir[104];
+fir[104]=fir[103]; fir[103]=fir[102]; fir[102]=fir[101]; fir[101]=fir[100]; fir[100]=fir[99];
+fir[99]=fir[98]; fir[98]=fir[97]; fir[97]=fir[96]; fir[96]=fir[95]; fir[95]=fir[94];
+fir[94]=fir[93]; fir[93]=fir[92]; fir[92]=fir[91]; fir[91]=fir[90]; fir[90]=fir[89];
+fir[89]=fir[88]; fir[88]=fir[87]; fir[87]=fir[86]; fir[86]=fir[85]; fir[85]=fir[84];
+fir[84]=fir[83]; fir[83]=fir[82]; fir[82]=fir[81]; fir[81]=fir[80]; fir[80]=fir[79];
+fir[79]=fir[78]; fir[78]=fir[77]; fir[77]=fir[76]; fir[76]=fir[75]; fir[75]=fir[74];
+fir[74]=fir[73]; fir[73]=fir[72]; fir[72]=fir[71]; fir[71]=fir[70]; fir[70]=fir[69];
+fir[69]=fir[68]; fir[68]=fir[67]; fir[67]=fir[66]; fir[66]=fir[65]; fir[65]=fir[64];
+fir[64]=fir[63]; fir[63]=fir[62]; fir[62]=fir[61]; fir[61]=fir[60]; fir[60]=fir[59];
+fir[59]=fir[58]; fir[58]=fir[57]; fir[57]=fir[56]; fir[56]=fir[55]; fir[55]=fir[54];
+fir[54]=fir[53]; fir[53]=fir[52]; fir[52]=fir[51]; fir[51]=fir[50]; fir[50]=fir[49];
+fir[49]=fir[48]; fir[48]=fir[47]; fir[47]=fir[46]; fir[46]=fir[45]; fir[45]=fir[44];
+fir[44]=fir[43]; fir[43]=fir[42]; fir[42]=fir[41]; fir[41]=fir[40]; fir[40]=fir[39];
+fir[39]=fir[38]; fir[38]=fir[37]; fir[37]=fir[36]; fir[36]=fir[35]; fir[35]=fir[34];
+fir[34]=fir[33]; fir[33]=fir[32]; fir[32]=fir[31]; fir[31]=fir[30]; fir[30]=fir[29];
+fir[29]=fir[28]; fir[28]=fir[27]; fir[27]=fir[26]; fir[26]=fir[25]; fir[25]=fir[24];
+fir[24]=fir[23]; fir[23]=fir[22]; fir[22]=fir[21]; fir[21]=fir[20]; fir[20]=fir[19];
+fir[19]=fir[18]; fir[18]=fir[17]; fir[17]=fir[16]; fir[16]=fir[15]; fir[15]=fir[14];
+fir[14]=fir[13]; fir[13]=fir[12]; fir[12]=fir[11]; fir[11]=fir[10]; fir[10]=fir[9];
+fir[9]=fir[8];   fir[8]=fir[7];   fir[7]=fir[6];   fir[6]=fir[5];   fir[5]=fir[4];
+fir[4]=fir[3];   fir[3]=fir[2];   fir[2]=fir[1];   fir[1]=fir[0];   fir[0]=spl1;
+
+i=1;
+fx1=0;
+loop(48,
+  fx1 += tap[hlength-i] * (fir[i]-fir[length-i]);
+  i+=2;
+);
+spl1 = fir[hlength];
+
+
+
+  overdB0 = sqrt(sqr(fx0)+sqr(spl0));
+  overdB1 = sqrt(sqr(fx1)+sqr(spl1));
+
+
+  overdB0 = gain_to_dB(overdB0);
+  overdB1 = gain_to_dB(overdB1);
+//Threshold
+  overdB0 =  overdB0+0.0015-Thr_db+rategain_dB;
+  overdB1 =  overdB1+0.0015-Thr_db+rategain_dB;
+//quicker for high values
+  overdB0 > 9 ? rel_lef = rel2 : rel_lef = rel1 ;
+  overdB1 > 9 ? rel_rig = rel2 : rel_rig = rel1 ;
+//knee
+  overdB0 =  overdB0 - overdB0/(1 - exp(8*overdB0/knee));
+  overdB1 =  overdB1 - overdB1/(1 - exp(8*overdB1/knee));
+  
+//release and attack
+  overdB0 = lef1.timing(overdB0,rel_lef);
+  overdB1 = rig1.timing(overdB1,rel_rig);
+  
+  over0 = dB_to_gain(-overdB0);//add Ceiling here
+  over1 = dB_to_gain(-overdB1);
+  
+  dry0 = spl0;
+  dry1 = spl1;
+//gain reduction
+  spl0 = spl0*over0;
+  spl1 = spl1*over1;
+  
+//for meters
+  foo = max(0.01 , rategain*718*max(abs(spl0),abs(spl1)));
+  bar = min(20*log10(foo) , bar*mdecay);
+  aveVUdB = VUdB + (aveVUdB-VUdB)*mdecay;
+  
+  lp0 = spl0 = (wmix*spl0 + dmix*dry0) + lp0*slewrate;
+  lp1 = spl1 = (wmix*spl1 + dmix*dry1) + lp1*slewrate;
+  
+  
+  spl0 = spl0+low0;
+  spl1 = spl1+low1;
+
+
+  foobar = bar - aveVUdb;
+  balance = foobar + (balance-foobar)*mdecay;
+  gr_meter = min( min(-overdB0,-overdB1) , lastmeter*mdecay);
+  lastmeter = slider10 = gr_meter;
+
+
+
+
+@gfx 0 100 // request horizontal/vertical heights (0 means dont care)
+
+  gr_meter = gr_meter;
+  gfx_r= log(-0.35*gr_meter);
+  gr_meter< -9 ? gfx_g=0.15 : gfx_g=0.45;
+  gfx_b=0.15;
+  gfx_a=0.8;
+  
+  meter_bot=12;
+  meter_h=min(gfx_h,48);
+  xscale=gfx_w/meter_bot;
+
+  gfx_y=0;
+  gfx_x=gfx_w + (gr_meter)*xscale;
+  gfx_rectto(gfx_w,meter_h);
+
+  gfx_r=gfx_g=gfx_b=1.0; gfx_a=0.6;
+  
+  gr_number = min(gr_meter , gr_number+0.04);
+  gfx_x=0; gfx_y=meter_h/2 - gfx_texth/2;
+  gfx_drawnumber((gr_number),1);
+  gfx_drawchar($'d');
+  gfx_drawchar($'B');
+  
+  
+  balance > 0 ? (gfx_r=1; gfx_b=gfx_g=0.15;) : (gfx_r=0; gfx_b=0.4; gfx_g=0.9;) ;
+  gfx_y = 100;
+  meter_bot=30;
+  meter_h=min(gfx_h,52);
+  xscale=gfx_w/meter_bot;
+  gfx_x=gfx_w*0.5;
+  gfx_rectto(0.5*gfx_w + (balance)*xscale,meter_h);
