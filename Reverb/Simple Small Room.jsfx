@@ -1,12 +1,13 @@
-version:0.5
+version:0.6
 desc:Simple Small Room
 author:Stephen Boyes
 about:
-  # Reverb testing
+  # FDN Reverb testing
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.5
+  - 0.6
+  - change scale of Early and Room controls (not compatable with v0.5) 
 //provides:
 
 
@@ -30,8 +31,8 @@ changelog:
 
 slider1:bal=0.5<0,1,0.01>Balance in
 slider2:gain_db=0<-50,0,0.2>Dry gain (dB)
-slider3:er_db=-8<-50,0,0.2>Early gain (dB)
-slider4:room_db=-8<-50,0,0.2>Room gain (dB)
+slider3:er_lvl=0.8<0,1,0.02>Early level
+slider4:room_lvl=0.8<0,1,0.02>Room level
 
 slider6:r60=1<0.4,1.8>Verb time
 
@@ -46,136 +47,115 @@ out_pin:right output
 @init
   last_bal = 0.5*bal*$pi;
   last_gain=10^(gain_db/20);
-  last_er=10^(er_db-11/20);
-  last_room=10^(room_db/20);
+  last_er  = 0.05*er_lvl + 0.95*er_lvl^5;
+  last_room= 0.05*room_lvl + 0.95*er_lvl^5;
   last_low_damp = exp(-1/(4*r60));
   last_high_damp = exp(-1/(6*r60));
 
 
-r1  = 0.0357;
-r2  = 0.3737;
-r3  = 0.9504;
+  r1  = 0.0357;
+  r2  = 0.3737;
+  r3  = 0.9504;
 
-r4  = 0.4771;
-r5  = 0.2513;
-r6  = 0.9581;
-r7  = 0.7344;
+  r4  = 0.4771;
+  r5  = 0.2513;
+  r6  = 0.9581;
+  r7  = 0.7344;
 
-r8  = 0.5081;
-r9  = 0.5726;
-r10 = 0.8054;
-r11 = 0.0899;
-//aaaa = rand();
-r12 = 0.3811;
-r13 = 0.3464;
-r14 = 0.4731;
-r15 = 0.8706;
+  r8  = 0.5081;
+  r9  = 0.5726;
+  r10 = 0.8054;
+  r11 = 0.0899;
 
-r16 = 0.1488;
-r17 = 0.3078;
-r18 = 0.7052;
-r19 = 0.1488;
-r20 = 0.0065;
-r21 = 0.5479;
+  r12 = 0.3811;
+  r13 = 0.3464;
+  r14 = 0.4731;
+  r15 = 0.8706;
 
-r22 = 0.9838;
-r23 = 0.4543;
-r24 = 0.1783;
-r25 = 0.8379;
-r26 = 0.1749;
-r27 = 0.5998;
-r28 = 0.3164;
+  r16 = 0.1488;
+  r17 = 0.3078;
+  r18 = 0.7052;
+  r19 = 0.1488;
+  r20 = 0.0065;
+  r21 = 0.5479;
 
-r29 = 0.4004;
-r30 = 0.6601;
-r31 = 0.5553;
-r32 = 0.1901;
-r33 = 0.9836;
-r34 = 0.5816;
-r35 = 0.8072;
+  r22 = 0.9838;
+  r23 = 0.4543;
+  r24 = 0.1783;
+  r25 = 0.8379;
+  r26 = 0.1749;
+  r27 = 0.5998;
+  r28 = 0.3164;
+
+  r29 = 0.4004;
+  r30 = 0.6601;
+  r31 = 0.5553;
+  r32 = 0.1901;
+  r33 = 0.9836;
+  r34 = 0.5816;
+  r35 = 0.8072;
 
 
 
 //diffuse one times
-density = srate/95; //ms window
-time01 = 0*density + density*r1;
-time02 = 1*density + density*r2;
-time03 = 2*density + density*r3;
+  density = srate/95; //ms window
+  time01 = 0*density + density*r1;
+  time02 = 1*density + density*r2;
+  time03 = 2*density + density*r3;
 
 //diffuse two times
-density2 = srate/80; //ms window
-time04 = 0*density2 + density2*r4;
-time05 = 1*density2 + density2*r5;
-time06 = 2*density2 + density2*r6;
-time07 = 3*density2 + density2*r7;
+  density2 = srate/80; //ms window
+  time04 = 0*density2 + density2*r4;
+  time05 = 1*density2 + density2*r5;
+  time06 = 2*density2 + density2*r6;
+  time07 = 3*density2 + density2*r7;
 
 //diffuse three times
-density3 = srate/65; //ms window
-time08 = 0*density3 + density3*r8;
-time09 = 1*density3 + density3*r9;
-time10 = 2*density3 + density3*r10;
-time11 = 3*density3 + density3*r11;
+  density3 = srate/65; //ms window
+  time08 = 0*density3 + density3*r8;
+  time09 = 1*density3 + density3*r9;
+  time10 = 2*density3 + density3*r10;
+  time11 = 3*density3 + density3*r11;
 
-time12 = 0*density3 + density3*r8;
-time13 = 1*density3 + density3*r12;
-time14 = 2*density3 + density3*r13;
-time15 = 3*density3 + density3*r14;
+  time12 = 0*density3 + density3*r8;
+  time13 = 1*density3 + density3*r12;
+  time14 = 2*density3 + density3*r13;
+  time15 = 3*density3 + density3*r14;
 
 //difuse four times
-density6 = srate/60;
-time100 = 0*density6 + density6*r29;
-time101 = 1*density6 + density6*r30;
-time102 = 2*density6 + density6*r31;
+  density6 = srate/60;
+  time100 = 0*density6 + density6*r29;
+  time101 = 1*density6 + density6*r30;
+  time102 = 2*density6 + density6*r31;
 
-time103 = 0*density6 + density6*r32;
-time104 = 1*density6 + density6*r32;
-time105 = 2*density6 + density6*r33;
+  time103 = 0*density6 + density6*r32;
+  time104 = 1*density6 + density6*r32;
+  time105 = 2*density6 + density6*r33;
 //time106 = 2*density6 + density6*r34;
 //time107 = 3*density6 + density6*r35;
 
 
 //FDN feedback times
-density4 = srate/41; //ms window
-time16 = 0*density4 + density3*r15;
-time17 = 1*density4 + density3*r16;
-time18 = 2*density4 + density3*r17;
-time19 = 3*density4 + density3*r18;
-time20 = 0*density4 + density3*r19;
-time21 = 1*density4 + density3*r20;
-time22 = 2*density4 + density3*r21;
-time23 = 3*density4 + density3*r22;
+  density4 = srate/41; //ms window
+  time16 = 0*density4 + density3*r15;
+  time17 = 1*density4 + density3*r16;
+  time18 = 2*density4 + density3*r17;
+  time19 = 3*density4 + density3*r18;
+  time20 = 0*density4 + density3*r19;
+  time21 = 1*density4 + density3*r20;
+  time22 = 2*density4 + density3*r21;
+  time23 = 3*density4 + density3*r22;
 
 //delay out
-density5 = srate/50; //ms window
-time24 = 0*density5 + density4*r23;
-time25 = 1*density5 + density4*r24;
-time26 = 2*density5 + density4*r25;
-time27 = 0*density5 + density4*r26;
-time28 = 1*density5 + density4*r27;
-time29 = 2*density5 + density4*r28;
+  density5 = srate/50; //ms window
+  time24 = 0*density5 + density4*r23;
+  time25 = 1*density5 + density4*r24;
+  time26 = 2*density5 + density4*r25;
+  time27 = 0*density5 + density4*r26;
+  time28 = 1*density5 + density4*r27;
+  time29 = 2*density5 + density4*r28;
 
 
-
-/*
-function allpass_delay_set(buffer,ms)
- instance (buf,size,pos)
-(
-  buf = buffer;
-  size = srate * ms * 0.001;
-  size = floor(size);
-);
-
-function allpass(in,co)
- instance (pos,buf,out,size,in,co)
-(
-  out = buf[pos];
-  in = (in - out*co);
-  buf[pos] = in;
-  pos += 1;
-  pos >= size ? pos -= size;
-  out + in*co
-);
-*/
 
 function max_delay_set(buffer,ms)
  instance(buf,size,pos)
@@ -336,10 +316,10 @@ H6.max_delay_set(4.8*srate,99);
 
 
 //speed
-adj = 2.0*$pi*1.8/srate;
+  adj = 2.0*$pi*1.8/srate;
 
+  spe = exp(-1/(1.25 * 0.001 * srate));
 
-spe = exp(-1/(1.25 * 0.001 * srate));
 
 function compsaturate(x)
 instance (x,x1,xx,y,z,f)
@@ -365,20 +345,8 @@ gain_db> -49.5 ? (
   next_gain = 0;
 );
 
-er_db > -49.5 ? (
-  next_er = 10^((er_db-11)/20);
-  ):(
-  next_er = 0;
-);
-
-
-
-room_db > -49.5 ? (
-  next_room = 10^((room_db)/20);
-  ):(
-  next_room = 0;
-);
-
+  next_er = 0.05*er_db + 0.95*er_db^5;
+  next_room = 0.05*room_lvl + 0.95*room_lvl^5;
 
 
   next_low_damp = exp(-1/(4*r60));
@@ -398,10 +366,10 @@ room_db > -49.5 ? (
 
 
 @sample
-low_damp = last_low_damp;
-high_damp = last_high_damp;
-last_low_damp += d_low_damp;
-last_high_damp += d_high_damp;
+  low_damp = last_low_damp;
+  high_damp = last_high_damp;
+  last_low_damp += d_low_damp;
+  last_high_damp += d_high_damp;
 
 //balance
 spl0 *= sroot2*cos(last_bal);
