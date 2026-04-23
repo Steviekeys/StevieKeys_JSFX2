@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="c3c705735e97239b2a63c4031900579c1f79a312">
+<index version="1" name="StevieKeys JSFX" commit="8a92c02da3f5ef0efdae5c1576d21fef9c9b16f2">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1101,6 +1101,11 @@
         <changelog><![CDATA[- 0.6
 - change scale of Early and Room controls (not compatable with v0.5) ]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/c3c705735e97239b2a63c4031900579c1f79a312/Reverb/Simple%20Small%20Room.jsfx</source>
+      </version>
+      <version name="0.7" author="Stephen Boyes" time="2026-04-23T22:28:23Z">
+        <changelog><![CDATA[- 0.7
+- fix bug in Early and Room controls (not compatable with v0.5) ]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/8a92c02da3f5ef0efdae5c1576d21fef9c9b16f2/Reverb/Simple%20Small%20Room.jsfx</source>
       </version>
     </reapack>
   </category>
