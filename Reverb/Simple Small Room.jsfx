@@ -1,4 +1,4 @@
-version:0.6
+version:0.7
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,8 +6,8 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.6
-  - change scale of Early and Room controls (not compatable with v0.5) 
+  - 0.7
+  - fix bug in Early and Room controls (not compatable with v0.5) 
 //provides:
 
 
@@ -48,7 +48,7 @@ out_pin:right output
   last_bal = 0.5*bal*$pi;
   last_gain=10^(gain_db/20);
   last_er  = 0.05*er_lvl + 0.95*er_lvl^5;
-  last_room= 0.05*room_lvl + 0.95*er_lvl^5;
+  last_room= 0.05*room_lvl + 0.95*room_lvl^5;
   last_low_damp = exp(-1/(4*r60));
   last_high_damp = exp(-1/(6*r60));
 
@@ -345,7 +345,7 @@ gain_db> -49.5 ? (
   next_gain = 0;
 );
 
-  next_er = 0.05*er_db + 0.95*er_db^5;
+  next_er = 0.05*er_lvl + 0.95*er_lvl^5;
   next_room = 0.05*room_lvl + 0.95*room_lvl^5;
 
 
