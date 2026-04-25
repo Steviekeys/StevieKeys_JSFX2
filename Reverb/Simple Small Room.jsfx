@@ -1,4 +1,4 @@
-version:0.8
+version:0.9
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,7 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.8
+  - 0.9
 //provides:
 
 
@@ -96,20 +96,20 @@ out_pin:right output
 
 
 //diffuse one times
-  density = srate/95; //ms window
+  density = srate/95; //10.5ms window
   time01 = 0*density + density*r1;
   time02 = 1*density + density*r2;
   time03 = 2*density + density*r3;
 
 //diffuse two times
-  density2 = srate/80; //ms window
+  density2 = srate/80; //12.5ms window
   time04 = 0*density2 + density2*r4;
   time05 = 1*density2 + density2*r5;
   time06 = 2*density2 + density2*r6;
   time07 = 3*density2 + density2*r7;
 
 //diffuse three times
-  density3 = srate/65; //ms window
+  density3 = srate/65; //15.4ms window
   time08 = 0*density3 + density3*r8;
   time09 = 1*density3 + density3*r9;
   time10 = 2*density3 + density3*r10;
@@ -121,7 +121,7 @@ out_pin:right output
   time15 = 3*density3 + density3*r14;
 
 //difuse four times
-  density6 = srate/60;
+  density6 = srate/60; //16.7ms window
   time100 = 0*density6 + density6*r15;
   time101 = 1*density6 + density6*r16;
   time102 = 2*density6 + density6*r17;
@@ -132,7 +132,7 @@ out_pin:right output
 
 
 //FDN feedback times
-  density4 = srate/41; //ms window
+  density4 = srate/41; //24.4ms window
   time16 = 0*density4 + density3*r21;
   time17 = 1*density4 + density3*r22;
   time18 = 2*density4 + density3*r23;
@@ -143,7 +143,7 @@ out_pin:right output
   time23 = 3*density4 + density3*r28;
 
 //delay out
-  density5 = srate/50; //ms window
+  density5 = srate/50; //20ms window
   time24 = 0*density5 + density4*r29;
   time25 = 1*density5 + density4*r30;
   time26 = 2*density5 + density4*r31;
