@@ -1,4 +1,4 @@
-version:0.7
+version:0.8
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,8 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.7
-  - fix bug in Early and Room controls (not compatable with v0.5) 
+  - 0.8
 //provides:
 
 
@@ -70,30 +69,29 @@ out_pin:right output
   r12 = 0.3811;
   r13 = 0.3464;
   r14 = 0.4731;
-  r15 = 0.8706;
 
-  r16 = 0.1488;
-  r17 = 0.3078;
-  r18 = 0.7052;
-  r19 = 0.1488;
-  r20 = 0.0065;
-  r21 = 0.5479;
+  r15 = 0.4004;
+  r16 = 0.6601;
+  r17 = 0.5553;
+  r18 = 0.1901;
+  r19 = 0.9836;
+  r20 = 0.5816;
 
-  r22 = 0.9838;
-  r23 = 0.4543;
-  r24 = 0.1783;
-  r25 = 0.8379;
-  r26 = 0.1749;
-  r27 = 0.5998;
-  r28 = 0.3164;
+  r21 = 0.8706;
+  r22 = 0.1488;
+  r23 = 0.3078;
+  r24 = 0.7052;
+  r25 = 0.1488;
+  r26 = 0.0065;
+  r27 = 0.5479;
+  r28 = 0.9838;
 
-  r29 = 0.4004;
-  r30 = 0.6601;
-  r31 = 0.5553;
-  r32 = 0.1901;
-  r33 = 0.9836;
-  r34 = 0.5816;
-  r35 = 0.8072;
+  r29 = 0.4543;
+  r30 = 0.1783;
+  r31 = 0.8379;
+  r32 = 0.1749;
+  r33 = 0.5998;
+  r34 = 0.3164;
 
 
 
@@ -124,36 +122,34 @@ out_pin:right output
 
 //difuse four times
   density6 = srate/60;
-  time100 = 0*density6 + density6*r29;
-  time101 = 1*density6 + density6*r30;
-  time102 = 2*density6 + density6*r31;
+  time100 = 0*density6 + density6*r15;
+  time101 = 1*density6 + density6*r16;
+  time102 = 2*density6 + density6*r17;
 
-  time103 = 0*density6 + density6*r32;
-  time104 = 1*density6 + density6*r32;
-  time105 = 2*density6 + density6*r33;
-//time106 = 2*density6 + density6*r34;
-//time107 = 3*density6 + density6*r35;
+  time103 = 0*density6 + density6*r18;
+  time104 = 1*density6 + density6*r19;
+  time105 = 2*density6 + density6*r20;
 
 
 //FDN feedback times
   density4 = srate/41; //ms window
-  time16 = 0*density4 + density3*r15;
-  time17 = 1*density4 + density3*r16;
-  time18 = 2*density4 + density3*r17;
-  time19 = 3*density4 + density3*r18;
-  time20 = 0*density4 + density3*r19;
-  time21 = 1*density4 + density3*r20;
-  time22 = 2*density4 + density3*r21;
-  time23 = 3*density4 + density3*r22;
+  time16 = 0*density4 + density3*r21;
+  time17 = 1*density4 + density3*r22;
+  time18 = 2*density4 + density3*r23;
+  time19 = 3*density4 + density3*r24;
+  time20 = 0*density4 + density3*r25;
+  time21 = 1*density4 + density3*r26;
+  time22 = 2*density4 + density3*r27;
+  time23 = 3*density4 + density3*r28;
 
 //delay out
   density5 = srate/50; //ms window
-  time24 = 0*density5 + density4*r23;
-  time25 = 1*density5 + density4*r24;
-  time26 = 2*density5 + density4*r25;
-  time27 = 0*density5 + density4*r26;
-  time28 = 1*density5 + density4*r27;
-  time29 = 2*density5 + density4*r28;
+  time24 = 0*density5 + density4*r29;
+  time25 = 1*density5 + density4*r30;
+  time26 = 2*density5 + density4*r31;
+  time27 = 0*density5 + density4*r32;
+  time28 = 1*density5 + density4*r33;
+  time29 = 2*density5 + density4*r34;
 
 
 
