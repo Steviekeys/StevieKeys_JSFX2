@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="d0237873cfe5f478aec5f72fbe0cdd5cf6c30bd0">
+<index version="1" name="StevieKeys JSFX" commit="72b2080b9a27ad4fa5b541e28e0869291882e691">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1118,6 +1118,10 @@
       <version name="0.10" author="Stephen Boyes" time="2026-04-26T16:22:39Z">
         <changelog><![CDATA[- 0.10]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/d0237873cfe5f478aec5f72fbe0cdd5cf6c30bd0/Reverb/Simple%20Small%20Room.jsfx</source>
+      </version>
+      <version name="0.11" author="Stephen Boyes" time="2026-04-26T17:00:12Z">
+        <changelog><![CDATA[- 0.11]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/72b2080b9a27ad4fa5b541e28e0869291882e691/Reverb/Simple%20Small%20Room.jsfx</source>
       </version>
     </reapack>
   </category>
