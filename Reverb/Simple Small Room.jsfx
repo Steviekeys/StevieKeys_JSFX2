@@ -1,4 +1,4 @@
-version:0.11
+version:0.12
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,7 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.11
+  - 0.12
 //provides:
 
 
@@ -46,8 +46,8 @@ out_pin:right output
 @init
   last_bal = 0.5*bal*$pi;
   last_gain=10^(gain_db/20);
-  last_er  = 0.05*er_lvl + 0.95*er_lvl^5;
-  last_room= 0.05*room_lvl + 0.95*room_lvl^5;
+  last_er  = 0.05*max(0,min(1,er_lvl)) + 0.95*max(0,min(1,er_lvl))^4;
+  last_room= 0.05*max(0,min(1,room_lvl)) + 0.95*max(0,min(1,room_lvl))^4;
   last_low_damp = exp(-1/(4*r60));
   last_high_damp = exp(-1/(6*r60));
 
@@ -341,8 +341,8 @@ gain_db> -49.5 ? (
   next_gain = 0;
 );
 
-  next_er = 0.05*er_lvl + 0.95*er_lvl^5;
-  next_room = 0.05*room_lvl + 0.95*room_lvl^5;
+  next_er = 0.05*max(0,min(1,er_lvl)) + 0.95*max(0,min(1,er_lvl))^4;
+  next_room = 0.05*max(0,min(1,room_lvl)) + 0.95*max(0,min(1,room_lvl))^4;
 
 
   next_low_damp = exp(-1/(4*r60));
