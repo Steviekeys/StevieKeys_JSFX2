@@ -1,4 +1,4 @@
-version:0.12
+version:0.13
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,7 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.12
+  - 0.13
 //provides:
 
 
@@ -29,7 +29,7 @@ changelog:
 
 
 slider1:bal=0.5<0,1,0.01>Balance in
-slider2:gain_db=0<-50,0,0.2>Dry gain (dB)
+slider2:gain_lvl=1<0,1,0.02>Dry level
 slider3:er_lvl=0.8<0,1,0.02>Early level
 slider4:room_lvl=0.8<0,1,0.02>Room level
 
@@ -40,43 +40,47 @@ slider6:r60=1<0.4,1.8>Verb time
 
 in_pin:left input
 in_pin:right input
+//in_pin:2left input
+//in_pin:2right input
 out_pin:left output
 out_pin:right output
 
 @init
   last_bal = 0.5*bal*$pi;
-  last_gain=10^(gain_db/20);
-  last_er  = 0.05*max(0,min(1,er_lvl)) + 0.95*max(0,min(1,er_lvl))^4;
-  last_room= 0.05*max(0,min(1,room_lvl)) + 0.95*max(0,min(1,room_lvl))^4;
+  last_gain= 0.1*max(0,min(1,gain_lvl)) + 0.9*max(0,min(1,gain_lvl))^3;
+  last_er  = 0.1*max(0,min(1,er_lvl)) + 0.9*max(0,min(1,er_lvl))^3;
+  last_room= 0.1*max(0,min(1,room_lvl)) + 0.9*max(0,min(1,room_lvl))^3;
   last_low_damp = exp(-1/(4*r60));
   last_high_damp = exp(-1/(6*r60));
 
-
-  r1  = 0.4906;
-  r2  = 0.3737;
-  r3  = 0.9504;
-
+//one a
+  r1a  = 0.4906;
+  r2a  = 0.3737;
+  r3a  = 0.9504;
+  r1b  = 0.4468;
+  r2b  = 0.3183;
+  r3b  = 0.9231;
+//two
   r4  = 0.4771;
   r5  = 0.2513;
   r6  = 0.9581;
   r7  = 0.7344;
-
+//three
   r8  = 0.5081;
   r9  = 0.5726;
   r10 = 0.8054;
   r11 = 0.0899;
-
   r12 = 0.3811;
   r13 = 0.3464;
   r14 = 0.4731;
-
+//four
   r15 = 0.4004;
   r16 = 0.6601;
   r17 = 0.5553;
   r18 = 0.1901;
   r19 = 0.9836;
   r20 = 0.5816;
-
+//FDN
   r21 = 0.8706;
   r22 = 0.1488;
   r23 = 0.3078;
@@ -85,7 +89,7 @@ out_pin:right output
   r26 = 0.0065;
   r27 = 0.5479;
   r28 = 0.9838;
-
+//out
   r29 = 0.4543;
   r30 = 0.1783;
   r31 = 0.8379;
@@ -97,9 +101,12 @@ out_pin:right output
 
 //diffuse one times
   density = srate/95; //10.5ms window
-  time01 = 0*density + density*r1;
-  time02 = 1*density + density*r2;
-  time03 = 2*density + density*r3;
+  time01a = 0*density + density*r1a;
+  time02a = 1*density + density*r2a;
+  time03a = 2*density + density*r3a;
+  time01b = 0*density + density*r1b;
+  time02b = 1*density + density*r2b;
+  time03b = 2*density + density*r3b;
 
 //diffuse two times
   density2 = srate/80; //12.5ms window
@@ -132,24 +139,25 @@ out_pin:right output
 
 
 //FDN feedback times
-  density6 = srate/41; //24.4ms window
-  time16 = 0*density6 + density6*r21;
-  time17 = 1*density6 + density6*r22;
-  time18 = 2*density6 + density6*r23;
-  time19 = 3*density6 + density6*r24;
-  time20 = 0*density6 + density6*r25;
-  time21 = 1*density6 + density6*r26;
-  time22 = 2*density6 + density6*r27;
-  time23 = 3*density6 + density6*r28;
+  density5 = srate/41; //24.4ms window
+  time16 = 0*density5 + density5*r21;
+  time17 = 1*density5 + density5*r22;
+  time18 = 2*density5 + density5*r23;
+  time19 = 3*density5 + density5*r24;
+  time20 = 0*density5 + density5*r25;
+  time21 = 1*density5 + density5*r26;
+  time22 = 2*density5 + density5*r27;
+  time23 = 3*density5 + density5*r28;
 
 //delay out
-  density5 = srate/50; //20ms window
-  time24 = 0*density5 + density5*r29;
-  time25 = 1*density5 + density5*r30;
-  time26 = 2*density5 + density5*r31;
-  time27 = 0*density5 + density5*r32;
-  time28 = 1*density5 + density5*r33;
-  time29 = 2*density5 + density5*r34;
+  density6 = srate/50; //20ms window
+  density7 = srate/70; //14ms window
+  time24 = 0*density6 + density6*r29;
+  time25 = 1*density6 + density6*r30;
+  time26 = 2*density6 + density6*r31;
+  time27 = 0*density7 + density7*r32;
+  time28 = 1*density7 + density7*r33;
+  time29 = 2*density7 + density7*r34;
 
 
 
@@ -309,7 +317,8 @@ F6.max_delay_set(7.6*srate,199);
 G6.max_delay_set(7.8*srate,199);
 H6.max_delay_set(8.0*srate,199);
 
-
+EX1.max_delay_set(9.0*srate,199);
+EX2.max_delay_set(9.2*srate,199);
 
 //speed
   adj = 2.0*$pi*1.8/srate;
@@ -333,16 +342,11 @@ instance (x,x1,xx,y,z,f)
 
 
 @slider
-next_bal = 0.5*bal*$pi;
+  next_bal = 0.5*bal*$pi;
 
-gain_db> -49.5 ? (
-  next_gain=10^(gain_db/20);
-  ):(
-  next_gain = 0;
-);
-
-  next_er = 0.05*max(0,min(1,er_lvl)) + 0.95*max(0,min(1,er_lvl))^4;
-  next_room = 0.05*max(0,min(1,room_lvl)) + 0.95*max(0,min(1,room_lvl))^4;
+  next_gain =  0.1*max(0,min(1,gain_lvl)) + 0.9*max(0,min(1,gain_lvl))^3;
+  next_er = 0.1*max(0,min(1,er_lvl)) + 0.9*max(0,min(1,er_lvl))^3;
+  next_room = 0.1*max(0,min(1,room_lvl)) + 0.9*max(0,min(1,room_lvl))^3;
 
 
   next_low_damp = exp(-1/(4*r60));
@@ -383,13 +387,27 @@ spl1 += noise;
 ER1.write_delay(spl0);
 ER2.write_delay(spl1);
 Ain = +1.5*spl0;
-Bin = +1.2495*ER1.read_delay_buffer(time01);
-Cin = -0.8994*ER1.read_delay_buffer(time02);
-Din = +0.5*ER1.read_delay_buffer(time03);
+Bin = +1.2495*ER1.read_delay_buffer(time01a);
+Cin = -0.8994*ER1.read_delay_buffer(time02a);
+Din = +0.5*ER1.read_delay_buffer(time03a);
 Ein = +1.5*spl1;
-Fin = +1.2495*ER2.read_delay_buffer(time01);
-Gin = -0.8994*ER2.read_delay_buffer(time02);
-Hin = -0.5*ER2.read_delay_buffer(time03);
+Fin = +1.2495*ER2.read_delay_buffer(time01a);
+Gin = -0.8994*ER2.read_delay_buffer(time02a);
+Hin = -0.5*ER2.read_delay_buffer(time03a);
+/*
+//extra input
+EX1.write_delay(spl2);
+EX2.write_delay(spl3);
+Ain += +1.5*spl2;
+Bin += +1.2495*EX1.read_delay_buffer(time01b);
+Cin += -0.8994*EX1.read_delay_buffer(time02b);
+Din += +0.5*EX1.read_delay_buffer(time03b);
+Ein += +1.5*spl3;
+Fin += +1.2495*EX2.read_delay_buffer(time01b);
+Gin += -0.8994*EX2.read_delay_buffer(time02b);
+Hin += -0.5*EX2.read_delay_buffer(time03b);
+*/
+
 
 Aout = Ain + Bin + Cin + Din;
 Bout = Ain - Bin + Cin - Din;
@@ -585,8 +603,8 @@ G5.write_delay(Gout);  Gout = G5.read_delay_buffer(time28);
 H5.write_delay(Hout);  Hout = H5.read_delay_buffer(time29);
 
 
-RM0 = (0.04*Aout+0.0282*Bout+0.02*Cout+0.01414*Hout);
-RM1 = (0.04*Eout+0.0282*Fout+0.02*Gout+0.01414*Dout);
+RM0 = (0.04*Aout+0.0282*Bout+0.02*Gout+0.01414*Hout);
+RM1 = (0.04*Eout+0.0282*Fout+0.02*Cout+0.01414*Dout);
 
 
 ER0 *= last_er;
