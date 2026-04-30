@@ -1,4 +1,4 @@
-version:0.16
+version:0.17
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,8 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.16
-  - multiple inputs
+  - 0.17
 //provides:
 
 
@@ -444,13 +443,13 @@ dist1 == 2 ? (
   ER1.write_delay(spl0);
   ER2.write_delay(spl1);
   Ain = +1.5*spl0;
-  Bin = +1.2495*ER1.read_delay_buffer(1.15*time01a);
-  Cin = -0.8994*ER1.read_delay_buffer(1.15*time02a);
-  Din = +0.5*ER1.read_delay_buffer(1.15*time03a);
+  Bin = +1.1597*ER1.read_delay_buffer(1.15*time01a);
+  Cin = -0.7298*ER1.read_delay_buffer(1.15*time02a);
+  Din = +0.3192*ER1.read_delay_buffer(1.15*time03a);
   Ein = +1.5*spl1;
-  Fin = +1.2495*ER2.read_delay_buffer(1.15*time01a);
-  Gin = -0.8994*ER2.read_delay_buffer(1.15*time02a);
-  Hin = -0.5*ER2.read_delay_buffer(1.15*time03a);
+  Fin = +1.1597*ER2.read_delay_buffer(1.15*time01a);
+  Gin = -0.7298*ER2.read_delay_buffer(1.15*time02a);
+  Hin = -0.3192*ER2.read_delay_buffer(1.15*time03a);
 );
 
 //inputs 3+4
@@ -487,13 +486,13 @@ dist2 == 2 ? (
 EX1.write_delay(spl2);
 EX2.write_delay(spl3);
 Ain += +1.5*spl2;
-Bin += +1.2495*EX1.read_delay_buffer(1.15*time01b);
-Cin += -0.8994*EX1.read_delay_buffer(1.15*time02b);
-Din += +0.5*EX1.read_delay_buffer(1.15*time03b);
+Bin += +1.1867*EX1.read_delay_buffer(1.15*time01b);
+Cin += -0.7513*EX1.read_delay_buffer(1.15*time02b);
+Din += +0.3239*EX1.read_delay_buffer(1.15*time03b);
 Ein += +1.5*spl3;
-Fin += +1.2495*EX2.read_delay_buffer(1.15*time01b);
-Gin += -0.8994*EX2.read_delay_buffer(1.15*time02b);
-Hin += -0.5*EX2.read_delay_buffer(1.15*time03b);
+Fin += +1.1867*EX2.read_delay_buffer(1.15*time01b);
+Gin += -0.7513*EX2.read_delay_buffer(1.15*time02b);
+Hin += -0.3239*EX2.read_delay_buffer(1.15*time03b);
 );
 
 //inputs 5+6
@@ -530,13 +529,13 @@ dist2 == 2 ? (
 EX3.write_delay(spl4);
 EX4.write_delay(spl5);
 Ain += +1.5*spl4;
-Bin += +1.2495*EX3.read_delay_buffer(1.15*time01b);
-Cin += -0.8994*EX3.read_delay_buffer(1.15*time02b);
-Din += +0.5*EX3.read_delay_buffer(1.15*time03b);
+Bin += +1.1692*EX3.read_delay_buffer(1.15*time01b);
+Cin += -0.7540*EX3.read_delay_buffer(1.15*time02b);
+Din += +0.3273*EX3.read_delay_buffer(1.15*time03b);
 Ein += +1.5*spl5;
-Fin += +1.2495*EX4.read_delay_buffer(1.15*time01b);
-Gin += -0.8994*EX4.read_delay_buffer(1.15*time02b);
-Hin += -0.5*EX4.read_delay_buffer(1.15*time03b);
+Fin += +1.1692*EX4.read_delay_buffer(1.15*time01b);
+Gin += -0.7540*EX4.read_delay_buffer(1.15*time02b);
+Hin += -0.3273*EX4.read_delay_buffer(1.15*time03b);
 );
 
 
