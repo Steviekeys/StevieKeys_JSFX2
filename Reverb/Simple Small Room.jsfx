@@ -1,4 +1,4 @@
-version:0.13
+version:0.14
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,7 +6,8 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.13
+  - 0.14
+  - multiple inputs
 //provides:
 
 
@@ -30,18 +31,22 @@ changelog:
 
 slider1:bal=0.5<0,1,0.01>Balance in
 slider2:gain_lvl=1<0,1,0.02>Dry level
-slider3:er_lvl=0.8<0,1,0.02>Early level
-slider4:room_lvl=0.8<0,1,0.02>Room level
+slider3:er_lvl=0.7<0,1,0.02>Early level
+slider4:room_lvl=0.7<0,1,0.02>Room level
 
 slider6:r60=1<0.4,1.8>Verb time
 
+slider8:dist1=0<0,2,1{Close,Mid,Far}>Distance 1+2
+slider9:dist2=0<0,2,1{Close,Mid,Far}>Distance 3+4
+slider10:dist3=0<0,2,1{Close,Mid,Far}>Distance 5+6
 
 
-
-in_pin:left input
-in_pin:right input
-//in_pin:2left input
-//in_pin:2right input
+in_pin:left  input 1
+in_pin:right input 2
+in_pin:left  input 3
+in_pin:right input 4
+in_pin:left  input 5
+in_pin:right input 6
 out_pin:left output
 out_pin:right output
 
@@ -60,6 +65,9 @@ out_pin:right output
   r1b  = 0.4468;
   r2b  = 0.3183;
   r3b  = 0.9231;
+  r1c  = 0.4751;
+  r2c  = 0.3115;
+  r3c  = 0.9030;
 //two
   r4  = 0.4771;
   r5  = 0.2513;
@@ -101,9 +109,14 @@ out_pin:right output
 
 //diffuse one times
   density = srate/95; //10.5ms window
+  pre_close = 14*srate/1000;
+  pre_mid   = 8*srate/1000;
   time01a = 0*density + density*r1a;
   time02a = 1*density + density*r2a;
   time03a = 2*density + density*r3a;
+  time01b = 0*density + density*r1b;
+  time02b = 1*density + density*r2b;
+  time03b = 2*density + density*r3b;
   time01b = 0*density + density*r1b;
   time02b = 1*density + density*r2b;
   time03b = 2*density + density*r3b;
@@ -319,6 +332,13 @@ H6.max_delay_set(8.0*srate,199);
 
 EX1.max_delay_set(9.0*srate,199);
 EX2.max_delay_set(9.2*srate,199);
+EX3.max_delay_set(9.4*srate,199);
+EX4.max_delay_set(9.6*srate,199);
+
+
+
+
+
 
 //speed
   adj = 2.0*$pi*1.8/srate;
@@ -351,7 +371,7 @@ instance (x,x1,xx,y,z,f)
 
   next_low_damp = exp(-1/(4*r60));
   next_high_damp = exp(-1/(6*r60));
-  minus22bit = 2^-22;
+  minus24bit = 2^-24;
   sroot2 = sqrt(2);
 
 
@@ -359,7 +379,7 @@ instance (x,x1,xx,y,z,f)
   d_bal  = (next_bal  - last_bal )/samplesblock;
   d_gain = (next_gain - last_gain)/samplesblock;
   d_er = (next_er - last_er)/samplesblock;
-  d_plate = (next_plate - last_plate)/samplesblock;
+  //d_plate = (next_plate - last_plate)/samplesblock;
   d_room = (next_room - last_room)/samplesblock;
   d_low_damp = (next_low_damp - last_low_damp)/samplesblock;
   d_high_damp = (next_high_damp - last_high_damp)/samplesblock;
@@ -374,39 +394,150 @@ instance (x,x1,xx,y,z,f)
 //balance
 spl0 *= sroot2*cos(last_bal);
 spl1 *= sroot2*sin(last_bal);
+spl2 *= sroot2*cos(last_bal);
+spl3 *= sroot2*sin(last_bal);
+spl4 *= sroot2*cos(last_bal);
+spl5 *= sroot2*sin(last_bal);
 last_bal += d_bal;
 
-noise = (rand(2)-1)*minus22bit;
-spl0 += noise;
-spl1 += noise;
+noise0 = (rand(2)-1)*minus24bit;
+noise1 = (rand(2)-1)*minus24bit;
+noise2 = (rand(2)-1)*minus24bit;
+spl0 += noise0;
+spl1 -= noise0;
+spl2 += noise1;
+spl3 -= noise1;
+spl4 += noise2;
+spl5 -= noise2;
 
-
-
-
+//inputs 1+2
+dist1 == 0 ? (
 //Diffuse one
-ER1.write_delay(spl0);
-ER2.write_delay(spl1);
-Ain = +1.5*spl0;
-Bin = +1.2495*ER1.read_delay_buffer(time01a);
-Cin = -0.8994*ER1.read_delay_buffer(time02a);
-Din = +0.5*ER1.read_delay_buffer(time03a);
-Ein = +1.5*spl1;
-Fin = +1.2495*ER2.read_delay_buffer(time01a);
-Gin = -0.8994*ER2.read_delay_buffer(time02a);
-Hin = -0.5*ER2.read_delay_buffer(time03a);
-/*
+  ER1.write_delay(spl0);
+  ER2.write_delay(spl1);
+  Ain = +1.5*ER1.read_delay_buffer(pre_close);
+  Bin = +1.2495*ER1.read_delay_buffer(0.88*time01a+pre_close);
+  Cin = -0.8994*ER1.read_delay_buffer(0.88*time02a+pre_close);
+  Din = +0.5*ER1.read_delay_buffer(0.88*time03a+pre_close);
+  Ein = +1.5*ER2.read_delay_buffer(pre_close);
+  Fin = +1.2495*ER2.read_delay_buffer(0.88*time01a+pre_close);
+  Gin = -0.8994*ER2.read_delay_buffer(0.88*time02a+pre_close);
+  Hin = -0.5*ER2.read_delay_buffer(0.88*time03a+pre_close);
+);
+
+dist1 == 1 ? (
+//Diffuse one
+  ER1.write_delay(spl0);
+  ER2.write_delay(spl1);
+  Ain = +1.5*ER1.read_delay_buffer(pre_mid);
+  Bin = +1.2495*ER1.read_delay_buffer(time01a+pre_mid);
+  Cin = -0.8994*ER1.read_delay_buffer(time02a+pre_mid);
+  Din = +0.5*ER1.read_delay_buffer(time03a+pre_mid);
+  Ein = +1.5*ER2.read_delay_buffer(pre_mid);
+  Fin = +1.2495*ER2.read_delay_buffer(time01a+pre_mid);
+  Gin = -0.8994*ER2.read_delay_buffer(time02a+pre_mid);
+  Hin = -0.5*ER2.read_delay_buffer(time03a+pre_mid);
+);
+
+dist1 == 2 ? (
+//Diffuse one far
+  ER1.write_delay(spl0);
+  ER2.write_delay(spl1);
+  Ain = +1.5*spl0;
+  Bin = +1.2495*ER1.read_delay_buffer(1.15*time01a);
+  Cin = -0.8994*ER1.read_delay_buffer(1.15*time02a);
+  Din = +0.5*ER1.read_delay_buffer(1.15*time03a);
+  Ein = +1.5*spl1;
+  Fin = +1.2495*ER2.read_delay_buffer(1.15*time01a);
+  Gin = -0.8994*ER2.read_delay_buffer(1.15*time02a);
+  Hin = -0.5*ER2.read_delay_buffer(1.15*time03a);
+);
+
+//inputs 3+4
+dist2 == 0 ? (
+//extra input
+EX1.write_delay(spl2);
+EX2.write_delay(spl3);
+Ain += +1.5*EX1.read_delay_buffer(pre_close);
+Bin += +1.2495*EX1.read_delay_buffer(0.88*time01b+pre_close);
+Cin += -0.8994*EX1.read_delay_buffer(0.88*time02b+pre_close);
+Din += +0.5*EX1.read_delay_buffer(0.88*time03b+pre_close);
+Ein += +1.5*EX2.read_delay_buffer(pre_close);
+Fin += +1.2495*EX2.read_delay_buffer(0.88*time01b+pre_close);
+Gin += -0.8994*EX2.read_delay_buffer(0.88*time02b+pre_close);
+Hin += -0.5*EX2.read_delay_buffer(0.88*time03b+pre_close);
+);
+
+dist2 == 1 ? (
+//extra input
+EX1.write_delay(spl2);
+EX2.write_delay(spl3);
+Ain += +1.5*EX1.read_delay_buffer(pre_mid);
+Bin += +1.2495*EX1.read_delay_buffer(time01b+pre_mid);
+Cin += -0.8994*EX1.read_delay_buffer(time02b+pre_mid);
+Din += +0.5*EX1.read_delay_buffer(time03b+pre_mid);
+Ein += +1.5*EX2.read_delay_buffer(pre_mid);
+Fin += +1.2495*EX2.read_delay_buffer(time01b+pre_mid);
+Gin += -0.8994*EX2.read_delay_buffer(time02b+pre_mid);
+Hin += -0.5*EX2.read_delay_buffer(time03b+pre_mid);
+);
+
+dist2 == 2 ? (
 //extra input
 EX1.write_delay(spl2);
 EX2.write_delay(spl3);
 Ain += +1.5*spl2;
-Bin += +1.2495*EX1.read_delay_buffer(time01b);
-Cin += -0.8994*EX1.read_delay_buffer(time02b);
-Din += +0.5*EX1.read_delay_buffer(time03b);
+Bin += +1.2495*EX1.read_delay_buffer(1.15*time01b);
+Cin += -0.8994*EX1.read_delay_buffer(1.15*time02b);
+Din += +0.5*EX1.read_delay_buffer(1.15*time03b);
 Ein += +1.5*spl3;
-Fin += +1.2495*EX2.read_delay_buffer(time01b);
-Gin += -0.8994*EX2.read_delay_buffer(time02b);
-Hin += -0.5*EX2.read_delay_buffer(time03b);
-*/
+Fin += +1.2495*EX2.read_delay_buffer(1.15*time01b);
+Gin += -0.8994*EX2.read_delay_buffer(1.15*time02b);
+Hin += -0.5*EX2.read_delay_buffer(1.15*time03b);
+);
+
+//inputs 5+6
+dist2 == 0 ? (
+//extra input
+EX3.write_delay(spl4);
+EX4.write_delay(spl5);
+Ain += +1.5*EX3.read_delay_buffer(pre_close);
+Bin += +1.2495*EX3.read_delay_buffer(0.88*time01b+pre_close);
+Cin += -0.8994*EX3.read_delay_buffer(0.88*time02b+pre_close);
+Din += +0.5*EX3.read_delay_buffer(0.88*time03b+pre_close);
+Ein += +1.5*EX4.read_delay_buffer(pre_close);
+Fin += +1.2495*EX4.read_delay_buffer(0.88*time01b+pre_close);
+Gin += -0.8994*EX4.read_delay_buffer(0.88*time02b+pre_close);
+Hin += -0.5*EX4.read_delay_buffer(0.88*time03b+pre_close);
+);
+
+dist2 == 1 ? (
+//extra input
+EX3.write_delay(spl4);
+EX4.write_delay(spl5);
+Ain += +1.5*EX3.read_delay_buffer(pre_mid);
+Bin += +1.2495*EX3.read_delay_buffer(time01b+pre_mid);
+Cin += -0.8994*EX3.read_delay_buffer(time02b+pre_mid);
+Din += +0.5*EX3.read_delay_buffer(time03b+pre_mid);
+Ein += +1.5*EX4.read_delay_buffer(pre_mid);
+Fin += +1.2495*EX4.read_delay_buffer(time01b+pre_mid);
+Gin += -0.8994*EX4.read_delay_buffer(time02b+pre_mid);
+Hin += -0.5*EX4.read_delay_buffer(time03b+pre_mid);
+);
+
+dist2 == 2 ? (
+//extra input
+EX3.write_delay(spl4);
+EX4.write_delay(spl5);
+Ain += +1.5*spl4;
+Bin += +1.2495*EX3.read_delay_buffer(1.15*time01b);
+Cin += -0.8994*EX3.read_delay_buffer(1.15*time02b);
+Din += +0.5*EX3.read_delay_buffer(1.15*time03b);
+Ein += +1.5*spl5;
+Fin += +1.2495*EX4.read_delay_buffer(1.15*time01b);
+Gin += -0.8994*EX4.read_delay_buffer(1.15*time02b);
+Hin += -0.5*EX4.read_delay_buffer(1.15*time03b);
+);
 
 
 Aout = Ain + Bin + Cin + Din;
@@ -619,11 +750,15 @@ last_room += d_room;
 
 spl0 *= last_gain;
 spl1 *= last_gain;
+spl2 *= last_gain;
+spl3 *= last_gain;
+spl4 *= last_gain;
+spl5 *= last_gain;
 last_gain += d_gain;
 
 //
-spl0 = spl0 + out0.highpass(ERL.highpass(ER0) + RM0);
-spl1 = spl1 + out1.highpass(ERR.highpass(ER1) + RM1);
+spl0 = spl0 + spl2 + spl4 + out0.highpass(ERL.highpass(ER0) + RM0);
+spl1 = spl1 + spl3 + spl5 + out1.highpass(ERR.highpass(ER1) + RM1);
 
 
 
