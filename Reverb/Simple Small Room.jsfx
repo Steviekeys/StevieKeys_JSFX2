@@ -1,4 +1,4 @@
-version:0.18
+version:0.19
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,7 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.18
+  - 0.19
   - bug fixes
 //provides:
 
@@ -432,11 +432,11 @@ dist1 == 1 ? (
   Ain = +1.5*ER1.read_delay_buffer(pre_mid);
   Bin = +1.1993*ER1.read_delay_buffer(time01a+pre_mid);
   Cin = -0.8017*ER1.read_delay_buffer(time02a+pre_mid);
-  Din = +0.3906*ER1.read_delay_buffer(time03a+pre_mid);
+  Din = -0.3906*ER1.read_delay_buffer(time03a+pre_mid);
   Ein = +1.5*ER2.read_delay_buffer(pre_mid);
   Fin = +1.1993*ER2.read_delay_buffer(time01a+pre_mid);
   Gin = -0.8017*ER2.read_delay_buffer(time02a+pre_mid);
-  Hin = -0.3906*ER2.read_delay_buffer(time03a+pre_mid);
+  Hin = +0.3906*ER2.read_delay_buffer(time03a+pre_mid);
 );
 
 dist1 == 2 ? (
@@ -444,12 +444,12 @@ dist1 == 2 ? (
   ER1.write_delay(spl0+noise0);
   ER2.write_delay(spl1+noise1);
   Ain = +1.5*spl0;
-  Bin = +1.1597*ER1.read_delay_buffer(1.15*time01a);
-  Cin = -0.7298*ER1.read_delay_buffer(1.15*time02a);
+  Bin = -1.1597*ER1.read_delay_buffer(1.15*time01a);
+  Cin = +0.7298*ER1.read_delay_buffer(1.15*time02a);
   Din = +0.3192*ER1.read_delay_buffer(1.15*time03a);
   Ein = +1.5*spl1;
-  Fin = +1.1597*ER2.read_delay_buffer(1.15*time01a);
-  Gin = -0.7298*ER2.read_delay_buffer(1.15*time02a);
+  Fin = -1.1597*ER2.read_delay_buffer(1.15*time01a);
+  Gin = +0.7298*ER2.read_delay_buffer(1.15*time02a);
   Hin = -0.3192*ER2.read_delay_buffer(1.15*time03a);
 );
 
@@ -475,11 +475,11 @@ EX2.write_delay(spl3+noise2);
 Ain += +1.5*EX1.read_delay_buffer(pre_mid);
 Bin += +1.2235*EX1.read_delay_buffer(time01b+pre_mid);
 Cin += -0.8223*EX1.read_delay_buffer(time02b+pre_mid);
-Din += +0.3955*EX1.read_delay_buffer(time03b+pre_mid);
+Din += -0.3955*EX1.read_delay_buffer(time03b+pre_mid);
 Ein += +1.5*EX2.read_delay_buffer(pre_mid);
 Fin += +1.2235*EX2.read_delay_buffer(time01b+pre_mid);
 Gin += -0.8223*EX2.read_delay_buffer(time02b+pre_mid);
-Hin += -0.3955*EX2.read_delay_buffer(time03b+pre_mid);
+Hin += +0.3955*EX2.read_delay_buffer(time03b+pre_mid);
 );
 
 dist2 == 2 ? (
@@ -487,12 +487,12 @@ dist2 == 2 ? (
 EX1.write_delay(spl2+noise1);
 EX2.write_delay(spl3+noise2);
 Ain += +1.5*spl2;
-Bin += +1.1867*EX1.read_delay_buffer(1.15*time01b);
-Cin += -0.7513*EX1.read_delay_buffer(1.15*time02b);
+Bin += -1.1867*EX1.read_delay_buffer(1.15*time01b);
+Cin += +0.7513*EX1.read_delay_buffer(1.15*time02b);
 Din += +0.3239*EX1.read_delay_buffer(1.15*time03b);
 Ein += +1.5*spl3;
-Fin += +1.1867*EX2.read_delay_buffer(1.15*time01b);
-Gin += -0.7513*EX2.read_delay_buffer(1.15*time02b);
+Fin += -1.1867*EX2.read_delay_buffer(1.15*time01b);
+Gin += +0.7513*EX2.read_delay_buffer(1.15*time02b);
 Hin += -0.3239*EX2.read_delay_buffer(1.15*time03b);
 );
 
@@ -518,11 +518,11 @@ EX4.write_delay(spl5+noise0);
 Ain += +1.5*EX3.read_delay_buffer(pre_mid);
 Bin += +1.2078*EX3.read_delay_buffer(time01b+pre_mid);
 Cin += -0.8248*EX3.read_delay_buffer(time02b+pre_mid);
-Din += +0.3991*EX3.read_delay_buffer(time03b+pre_mid);
+Din += -0.3991*EX3.read_delay_buffer(time03b+pre_mid);
 Ein += +1.5*EX4.read_delay_buffer(pre_mid);
 Fin += +1.2078*EX4.read_delay_buffer(time01b+pre_mid);
 Gin += -0.8248*EX4.read_delay_buffer(time02b+pre_mid);
-Hin += -0.3991*EX4.read_delay_buffer(time03b+pre_mid);
+Hin += +0.3991*EX4.read_delay_buffer(time03b+pre_mid);
 );
 
 dist2 == 2 ? (
@@ -530,12 +530,12 @@ dist2 == 2 ? (
 EX3.write_delay(spl4+noise2);
 EX4.write_delay(spl5+noise0);
 Ain += +1.5*spl4;
-Bin += +1.1692*EX3.read_delay_buffer(1.15*time01b);
-Cin += -0.7540*EX3.read_delay_buffer(1.15*time02b);
+Bin += -1.1692*EX3.read_delay_buffer(1.15*time01b);
+Cin += +0.7540*EX3.read_delay_buffer(1.15*time02b);
 Din += +0.3273*EX3.read_delay_buffer(1.15*time03b);
 Ein += +1.5*spl5;
-Fin += +1.1692*EX4.read_delay_buffer(1.15*time01b);
-Gin += -0.7540*EX4.read_delay_buffer(1.15*time02b);
+Fin += -1.1692*EX4.read_delay_buffer(1.15*time01b);
+Gin += +0.7540*EX4.read_delay_buffer(1.15*time02b);
 Hin += -0.3273*EX4.read_delay_buffer(1.15*time03b);
 );
 
