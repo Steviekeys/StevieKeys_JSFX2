@@ -1,4 +1,4 @@
-version:0.20
+version:0.21
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,9 +6,8 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.20
-  - bug fixes
-  - lowpass
+  - 0.21
+
 //provides:
 
 
@@ -391,17 +390,16 @@ instance (x,x1,xx,y,z,f)
   next_high_damp = exp(-1/(6*r60));
   minus25bit = 2^-25;
   sroot2 = sqrt(2);
-
+  denorm = 1*10^-15;
 
 @block
   d_bal  = (next_bal  - last_bal )/samplesblock;
   d_gain = (next_gain - last_gain)/samplesblock;
   d_er = (next_er - last_er)/samplesblock;
-  //d_plate = (next_plate - last_plate)/samplesblock;
   d_room = (next_room - last_room)/samplesblock;
   d_low_damp = (next_low_damp - last_low_damp)/samplesblock;
   d_high_damp = (next_high_damp - last_high_damp)/samplesblock;
-
+  denorm = -denorm;
 
 @sample
   low_damp = last_low_damp;
@@ -778,6 +776,6 @@ last_gain += d_gain;
 spl0 = spl0 + spl2 + spl4 + out0.highpass(ERL.highpass(ER0) + RM0);
 spl1 = spl1 + spl3 + spl5 + out1.highpass(ERR.highpass(ER1) + RM1);
 
-
+spl2 = spl3 = spl4 = spl5 = 0;
 
 @gfx
