@@ -1,4 +1,4 @@
-version:0.22
+version:0.23
 desc:Simple Small Room
 author:Stephen Boyes
 about:
@@ -6,9 +6,7 @@ about:
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
 changelog:
-  - 0.22
-
-//provides:
+  - 0.23
 
 
 
@@ -123,8 +121,8 @@ out_pin:right output
 
 //diffuse one times
   density = srate/95; //10.5ms window
-  pre_close = 15.9*srate/1000;
-  pre_mid   = 8.7*srate/1000;
+  pre_close = 18.7*srate/1000;
+  pre_mid   = 8.9*srate/1000;
   time01a = 0*density + density*r1a;
   time02a = 1*density + density*r2a;
   time03a = 2*density + density*r3a;
