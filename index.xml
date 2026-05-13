@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="cde4c70bf62a3f2887834558f19ba70eccf7ab00">
+<index version="1" name="StevieKeys JSFX" commit="1520a8b257418cc88af094434d9dd063a197a5a8">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1084,8 +1084,8 @@
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
 \widowctrl\hyphauto
 
-{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 FDN Reverb testing\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 small/medium room inspired by the Geraint Luff artical, Let,s Write a Reverb\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 FDN Reverb\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 small/medium room inspired by the Geraint Luff artical, Let,s Write a Reverb Three stereo inputs, with control over percieved distance\par}
 }
 ]]></description>
       </metadata>
@@ -1177,6 +1177,10 @@
       <version name="0.23" author="Stephen Boyes" time="2026-05-07T14:53:28Z">
         <changelog><![CDATA[- 0.23]]></changelog>
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/cde4c70bf62a3f2887834558f19ba70eccf7ab00/Reverb/Simple%20Small%20Room.jsfx</source>
+      </version>
+      <version name="1.0" author="Stephen Boyes" time="2026-05-13T12:52:19Z">
+        <changelog><![CDATA[- 1.0]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/1520a8b257418cc88af094434d9dd063a197a5a8/Reverb/Simple%20Small%20Room.jsfx</source>
       </version>
     </reapack>
   </category>
