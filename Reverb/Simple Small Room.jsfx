@@ -1,12 +1,13 @@
-version:0.23
+version:1.0
 desc:Simple Small Room
 author:Stephen Boyes
 about:
-  # FDN Reverb testing
+  # FDN Reverb
     small/medium room
     inspired by the Geraint Luff artical, Let,s Write a Reverb
+    Three stereo inputs, with control over percieved distance
 changelog:
-  - 0.23
+  - 1.0
 
 
 
