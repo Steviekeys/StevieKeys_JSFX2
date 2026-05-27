@@ -1,10 +1,10 @@
-version:1.1.1
+version:1.1.2
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
   # Highpass Lowpass 12dB
 Changelog:
-  - minor HQ mode adjustments
+  - latency bugfix
 
 slider1:highp=2<2,500,2>Highpass (Hz)
 slider2:highselect=2<0,3,1{Off,Q=0.5  (Smooth Step Response),Bessel  (Smooth Phase Response),Butterworth (smooth freq response)}>Select Highpass
@@ -229,15 +229,18 @@ lowselect != 0 ? (
     bufR[i] = outR.thfilter(bufR[i]);
     );
   ):(
-  spl0 = lfil.svf_lowp(spl0,smoothfreq2,LQ);
-  spl1 = rfil.svf_lowp(spl1,smoothfreq2,LQ);
-  bufL[1] = dlyl.delay(spl0);
-  bufR[1] = dlyr.delay(spl1);
+  bufL[1] = lfil.svf_lowp(spl0,smoothfreq2,LQ);
+  bufR[1] = rfil.svf_lowp(spl1,smoothfreq2,LQ);
   );
 );
 
-spl0 = bufL[1];
-spl1 = bufR[1];
+lowselect < 4 ? (
+  bufL[1] = dlyl.delay(bufL[1]);
+  bufR[1] = dlyr.delay(bufR[1]);
+);
+
+  spl0 = bufL[1];
+  spl1 = bufR[1];
 
 highselect != 0 ? (
   spl0 = lhp.svf_highp(spl0,smoothfreq1,HQ);
