@@ -1,11 +1,10 @@
-version:1.1.0
+version:1.1.1
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
   # Highpass Lowpass 12dB
 Changelog:
-  - HQ mode
-  - Cutoff frequency smoothing
+  - minor HQ mode adjustments
 
 slider1:highp=2<2,500,2>Highpass (Hz)
 slider2:highselect=2<0,3,1{Off,Q=0.5  (Smooth Step Response),Bessel  (Smooth Phase Response),Butterworth (smooth freq response)}>Select Highpass
@@ -31,14 +30,12 @@ instance (pos,fre)
 (
   nd_amnt = 12;
   pos > 0 ? sm = sin(fre*$pi*pos)/(fre*$pi*pos): sm=1 ;
-  smer5 = -252*(1-pos/nd_amnt)^11
-  +1386*(1-pos/nd_amnt)^10
-  -3080*(1-pos/nd_amnt)^9
-  +3465*(1-pos/nd_amnt)^8
-  -1980*(1-pos/nd_amnt)^7
-  +462*(1-pos/nd_amnt)^6;
-  sm *= 0.5719478;
-  sm *= smer5;
+  smer3 = -20*(1-pos/nd_amnt)^7
+  +70*(1-pos/nd_amnt)^6
+  -84*(1-pos/nd_amnt)^5
+  +35*(1-pos/nd_amnt)^4;
+  sm *= 0.5706;
+  sm *= smer3;
 );
 
 //windowed sinc upsample coef halfband
@@ -174,11 +171,11 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
 @slider
   freq1 = highp;
   highselect == 1 ? HQ = 0.5;
-  highselect == 2 ? HQ = 0.57735026919; 
-  highselect == 3 ? HQ = 0.70710678119;
+  highselect == 2 ? HQ = 0.577350269; 
+  highselect == 3 ? HQ = 0.707106781;
   highselect == 4 ? HQ = 0.5;
-  highselect == 5 ? HQ = 0.57735026919; 
-  highselect == 6 ? HQ = 0.70710678119;
+  highselect == 5 ? HQ = 0.577350269; 
+  highselect == 6 ? HQ = 0.707106781;
 lowselect > 3 ? (
   oversample = 4;
 ):(
@@ -186,11 +183,11 @@ lowselect > 3 ? (
 );
   freq2 = lowp*1000/oversample;
   lowselect == 1 ? LQ = 0.5;
-  lowselect == 2 ? LQ = 0.57735026919; 
-  lowselect == 3 ? LQ = 0.70710678119;
+  lowselect == 2 ? LQ = 0.577350269; 
+  lowselect == 3 ? LQ = 0.707106781;
   lowselect == 4 ? LQ = 0.5;
-  lowselect == 5 ? LQ = 0.57735026919; 
-  lowselect == 6 ? LQ = 0.70710678119;
+  lowselect == 5 ? LQ = 0.577350269; 
+  lowselect == 6 ? LQ = 0.707106781;
 
 @block
   adj1 = (freq1-smoothfreq1)/samplesblock;
