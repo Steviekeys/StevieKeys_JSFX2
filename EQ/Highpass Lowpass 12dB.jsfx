@@ -1,10 +1,11 @@
-version:1.1.2
+version:1.1.3
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
   # Highpass Lowpass 12dB
 Changelog:
-  - latency bugfix
+  - Improve HQ Oversampling Filter
+  - Reduce HQ CPU
 
 slider1:highp=2<2,500,2>Highpass (Hz)
 slider2:highselect=2<0,3,1{Off,Q=0.5  (Smooth Step Response),Bessel  (Smooth Phase Response),Butterworth (smooth freq response)}>Select Highpass
@@ -23,54 +24,85 @@ out_pin:right output
   pdc_top_ch=2;
   bufL=0;
   bufR=4;
+  foo = 24;
+  //bar = 18;
 
 
-function smootherstep(pos,fre)
-instance (pos,fre)
+function smootherstep(pos,fre,nd_amnt)
+instance (pos,fre,nd_amnt)
 (
-  nd_amnt = 12;
+  //nd_amnt = 17;
   pos > 0 ? sm = sin(fre*$pi*pos)/(fre*$pi*pos): sm=1 ;
+  smer2 = (6*(1-pos/nd_amnt)^5 - 15*(1-pos/nd_amnt)^4 + 10*(1-pos/nd_amnt)^3)*0.9975;
   smer3 = -20*(1-pos/nd_amnt)^7
   +70*(1-pos/nd_amnt)^6
   -84*(1-pos/nd_amnt)^5
   +35*(1-pos/nd_amnt)^4;
-  sm *= 0.5706;
-  sm *= smer3;
+  sm *= 0.62*smer2+0.38*smer3;
 );
 
 //windowed sinc upsample coef halfband
-c0 = smootherstep(0,0.25);
-c1 = smootherstep(1,0.25);
-c2 = smootherstep(2,0.25);
-c3 = smootherstep(3,0.25);
-c4 = smootherstep(4,0.25);
-c5 = smootherstep(5,0.25);
-c6 = smootherstep(6,0.25);
-c7 = smootherstep(7,0.25);
-c8 = smootherstep(8,0.25);
-c9 = smootherstep(9,0.25);
-c10= smootherstep(10,0.25);
-c11= smootherstep(11,0.25);
-c12= smootherstep(12,0.25);
+c0 = smootherstep(0,0.25,foo);
+c1 = smootherstep(1,0.25,foo);
+c2 = smootherstep(2,0.25,foo);
+c3 = smootherstep(3,0.25,foo);
+c4 = smootherstep(4,0.25,foo);
+c5 = smootherstep(5,0.25,foo);
+c6 = smootherstep(6,0.25,foo);
+c7 = smootherstep(7,0.25,foo);
+c8 = smootherstep(8,0.25,foo);
+c9 = smootherstep(9,0.25,foo);
+c10= smootherstep(10,0.25,foo);
+c11= smootherstep(11,0.25,foo);
+c12= smootherstep(12,0.25,foo);
+c13= smootherstep(13,0.25,foo);
+c14= smootherstep(14,0.25,foo);
+c15= smootherstep(15,0.25,foo);
+c16= smootherstep(16,0.25,foo);
+c17= smootherstep(17,0.25,foo);
+c18= smootherstep(18,0.25,foo);
+c19= smootherstep(19,0.25,foo);
+c20= smootherstep(20,0.25,foo);
+c21= smootherstep(21,0.25,foo);
+c22= smootherstep(22,0.25,foo);
+c23= smootherstep(23,0.25,foo);
 
-//fir sinc filter coef
-cc0 = smootherstep(0,1/3);
-cc1 = smootherstep(1,1/3);
-cc2 = smootherstep(2,1/3);
-cc3 = smootherstep(3,1/3);
-cc4 = smootherstep(4,1/3);
-cc5 = smootherstep(5,1/3);
-cc6 = smootherstep(6,1/3);
-cc7 = smootherstep(7,1/3);
-cc8 = smootherstep(8,1/3);
-cc9 = smootherstep(9,1/3);
-cc10= smootherstep(10,1/3);
-cc11= smootherstep(11,1/3);
-cc12= smootherstep(12,1/3);
+
+/*
+function ezbuffer(in)
+instance()
+(
+  length=64;
+  delay=48;
+  write+=1;
+  read=11;
+  write >= length ? write=0;
+  buf[write]=buf[write+64]=in;
+  out=buf[write+read];
+  out
+);
+*/
 
 function qfilter(x)
-instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19,x20,x21,x22,x23)
+instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,
+x9,x10,x11,x12,x13,x14,x15,x16,
+x17,x18,x19,x20,x21,x22,x23,x24,
+x25,x26,x27,x28,x29,x30,x31,x32,
+x33,x34,x35,x36,x37,x38,x39,x40,
+x41,x42,x43,x44,x45,x46,x47)
 (
+  x47 = x46;  x46 = x45;
+  x45 = x44;  x44 = x43;
+  x43 = x42;  x42 = x41;
+  x41 = x40;  x40 = x39;
+  x39 = x38;  x38 = x37;
+  x37 = x36;  x36 = x35;
+  x35 = x34;  x34 = x33;
+  x33 = x32;  x32 = x31;
+  x31 = x30;  x30 = x29;
+  x29 = x28;  x28 = x27;
+  x27 = x26;  x26 = x25;
+  x25 = x24;  x24 = x23;
   x23 = x22;  x22 = x21;
   x21 = x20;  x20 = x19;
   x19 = x18;  x18 = x17;
@@ -83,26 +115,15 @@ instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19,x
   x5 = x4;  x4 = x3;
   x3 = x2;  x2 = x1;
   x1 = x0;  x0 = x;
-  (x1+x23)*c11+(x2+x22)*c10+(x3+x21)*c9 + (x5+x19)*c7+(x6+x18)*c6+(x7+x17)*c5 + (x9+x15)*c3+(x10+x14)*c2+(x11+x13)*c1+(x12)*c0
+  (x1+x47)*c23+(x2+x46)*c22+(x3+x45)*c21
++ (x5+x43)*c19+(x6+x42)*c18+(x7+x41)*c17
++ (x9+x39)*c15+(x10+x38)*c14+(x11+x37)*c13
++ (x13+x35)*c11+(x14+x34)*c10+(x15+x33)*c9
++ (x17+x31)*c7+(x18+x30)*c6+(x19+x29)*c5
++ (x21+x27)*c3+(x22+x26)*c2+(x23+x25)*c1
++ (x24)*c0
 );
 
-function thfilter(x)
-instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19,x20,x21,x22,x23)
-(
-  x23 = x22;  x22 = x21;
-  x21 = x20;  x20 = x19;
-  x19 = x18;  x18 = x17;
-  x17 = x16;  x16 = x15;
-  x15 = x14;  x14 = x13;
-  x13 = x12;  x12 = x11;
-  x11 = x10;  x10 = x9;
-  x9 = x8;  x8 = x7;
-  x7 = x6;  x6 = x5;
-  x5 = x4;  x4 = x3;
-  x3 = x2;  x2 = x1;
-  x1 = x0;  x0 = x;
-  (x1+x23)*cc11+(x2+x22)*cc10 + (x4+x20)*cc8+(x5+x19)*cc7 + (x7+x17)*cc5+(x8+x16)*cc4 + (x10+x14)*cc2+(x11+x13)*cc1+(x12)*cc0
-);
 
 function delay(x)
 instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)
@@ -133,7 +154,7 @@ instance(seed)
 
 
 function svf_highp(v0,cutoff,Q)
-instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m1,m2)
 (
  g = tan($pi*cutoff/srate);
  k = 1/q;
@@ -150,14 +171,19 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,m0,m1,m2)
  v0+m1*v1+m2*v2
 );
 
-function svf_lowp(v0,cutoff,Q)
-instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k,mo,m1,m2)
+function set_svf_lowpass(cutoff,Q)
+instance(cuttoff,Q,a1,a2,a3,g,k)
 (
- g = tan($pi*cutoff/srate);
- k = 1/Q;
- a1 = 1/(1+g*(g+k));
- a2 = g*a1;
- a3 = g*a2;
+  this.g = tan($pi*cutoff/srate);
+  this.k = 1/Q;
+  this.a1 = 1/(1+ this.g * (this.g + this.k));
+  this.a2 = this.g * this.a1;
+  this.a3 = this.g * this.a2;
+);
+
+function svf_lowp(v0,cutoff,Q)
+instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k)
+(
  v3 = v0-ic2eq;
  v1 = a1*ic1eq+a2*v3;
  v2 = ic2eq+a2*ic1eq+a3*v3;
@@ -198,6 +224,9 @@ lowselect > 3 ? (
   smoothfreq1 += adj1;
   smoothfreq2 += adj2;
 
+  lfil.set_svf_lowpass(smoothfreq2,LQ);
+  rfil.set_svf_lowpass(smoothfreq2,LQ);
+
   cdnom = adnom;  adnom = adnom.RPDF();
   ddnom = bdnom;  bdnom = bdnom.RPDF();
   spl0 += adnom + ddnom;
@@ -225,8 +254,8 @@ lowselect != 0 ? (
     bufL[i] = lfil.svf_lowp(bufL[i],smoothfreq2,LQ);
     bufR[i] = rfil.svf_lowp(bufR[i],smoothfreq2,LQ);
     //extra fir
-    bufL[i] = outL.thfilter(bufL[i]);
-    bufR[i] = outR.thfilter(bufR[i]);
+    //bufL[i] = outL.qfilter(bufL[i]);
+    //bufR[i] = outR.qfilter(bufR[i]);
     );
   ):(
   bufL[1] = lfil.svf_lowp(spl0,smoothfreq2,LQ);
