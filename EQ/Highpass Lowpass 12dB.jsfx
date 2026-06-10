@@ -1,11 +1,12 @@
-version:1.1.3
+version:1.1.4
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
   # Highpass Lowpass 12dB
 Changelog:
-  - Improve HQ Oversampling Filter
-  - Reduce HQ CPU
+  - Reduce HQ CPU (3x oversample)
+  - Less passband ripple in HQ
+
 
 slider1:highp=2<2,500,2>Highpass (Hz)
 slider2:highselect=2<0,3,1{Off,Q=0.5  (Smooth Step Response),Bessel  (Smooth Phase Response),Butterworth (smooth freq response)}>Select Highpass
@@ -19,71 +20,64 @@ out_pin:left output
 out_pin:right output
 
 @init
-  pdc_delay =6;
+  pdc_delay =8;
   pdc_bot_ch=0;
   pdc_top_ch=2;
   bufL=0;
   bufR=4;
   foo = 24;
-  //bar = 18;
+
 
 
 function smootherstep(pos,fre,nd_amnt)
 instance (pos,fre,nd_amnt)
 (
-  //nd_amnt = 17;
+  pos2 = nd_amnt - pos;
   pos > 0 ? sm = sin(fre*$pi*pos)/(fre*$pi*pos): sm=1 ;
-  smer2 = (6*(1-pos/nd_amnt)^5 - 15*(1-pos/nd_amnt)^4 + 10*(1-pos/nd_amnt)^3)*0.9975;
+  smer2 = (6*(1-pos/nd_amnt)^5 - 15*(1-pos/nd_amnt)^4 + 10*(1-pos/nd_amnt)^3)*0.9986;
   smer3 = -20*(1-pos/nd_amnt)^7
   +70*(1-pos/nd_amnt)^6
   -84*(1-pos/nd_amnt)^5
   +35*(1-pos/nd_amnt)^4;
-  sm *= 0.62*smer2+0.38*smer3;
+  fltp = 0.21557895
+    - 0.41663158*cos($pi*pos2/nd_amnt)
+    + 0.277263158*cos(2*$pi*pos2/nd_amnt)
+    - 0.083578947*cos(3*$pi*pos2/nd_amnt)
+    + 0.006947368*cos(4*$pi*pos2/nd_amnt);
+  sm *= 0.15*smer2+0.15*smer3+0.7*fltp; 
+  sm
 );
 
 //windowed sinc upsample coef halfband
-c0 = smootherstep(0,0.25,foo);
-c1 = smootherstep(1,0.25,foo);
-c2 = smootherstep(2,0.25,foo);
-c3 = smootherstep(3,0.25,foo);
-c4 = smootherstep(4,0.25,foo);
-c5 = smootherstep(5,0.25,foo);
-c6 = smootherstep(6,0.25,foo);
-c7 = smootherstep(7,0.25,foo);
-c8 = smootherstep(8,0.25,foo);
-c9 = smootherstep(9,0.25,foo);
-c10= smootherstep(10,0.25,foo);
-c11= smootherstep(11,0.25,foo);
-c12= smootherstep(12,0.25,foo);
-c13= smootherstep(13,0.25,foo);
-c14= smootherstep(14,0.25,foo);
-c15= smootherstep(15,0.25,foo);
-c16= smootherstep(16,0.25,foo);
-c17= smootherstep(17,0.25,foo);
-c18= smootherstep(18,0.25,foo);
-c19= smootherstep(19,0.25,foo);
-c20= smootherstep(20,0.25,foo);
-c21= smootherstep(21,0.25,foo);
-c22= smootherstep(22,0.25,foo);
-c23= smootherstep(23,0.25,foo);
+c0 = smootherstep(0,1/3,foo);
+c1 = smootherstep(1,1/3,foo);
+c2 = smootherstep(2,1/3,foo);
+c3 = smootherstep(3,1/3,foo);
+c4 = smootherstep(4,1/3,foo);
+c5 = smootherstep(5,1/3,foo);
+c6 = smootherstep(6,1/3,foo);
+c7 = smootherstep(7,1/3,foo);
+c8 = smootherstep(8,1/3,foo);
+c9 = smootherstep(9,1/3,foo);
+c10= smootherstep(10,1/3,foo);
+c11= smootherstep(11,1/3,foo);
+c12= smootherstep(12,1/3,foo);
+c13= smootherstep(13,1/3,foo);
+c14= smootherstep(14,1/3,foo);
+c15= smootherstep(15,1/3,foo);
+c16= smootherstep(16,1/3,foo);
+c17= smootherstep(17,1/3,foo);
+c18= smootherstep(18,1/3,foo);
+c19= smootherstep(19,1/3,foo);
+c20= smootherstep(20,1/3,foo);
+c21= smootherstep(21,1/3,foo);
+c22= smootherstep(22,1/3,foo);
+c23= smootherstep(23,1/3,foo);
+c24= smootherstep(24,1/3,foo);
 
 
-/*
-function ezbuffer(in)
-instance()
-(
-  length=64;
-  delay=48;
-  write+=1;
-  read=11;
-  write >= length ? write=0;
-  buf[write]=buf[write+64]=in;
-  out=buf[write+read];
-  out
-);
-*/
 
-function qfilter(x)
+function firfilter(x)
 instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,
 x9,x10,x11,x12,x13,x14,x15,x16,
 x17,x18,x19,x20,x21,x22,x23,x24,
@@ -115,12 +109,14 @@ x41,x42,x43,x44,x45,x46,x47)
   x5 = x4;  x4 = x3;
   x3 = x2;  x2 = x1;
   x1 = x0;  x0 = x;
-  (x1+x47)*c23+(x2+x46)*c22+(x3+x45)*c21
-+ (x5+x43)*c19+(x6+x42)*c18+(x7+x41)*c17
-+ (x9+x39)*c15+(x10+x38)*c14+(x11+x37)*c13
-+ (x13+x35)*c11+(x14+x34)*c10+(x15+x33)*c9
-+ (x17+x31)*c7+(x18+x30)*c6+(x19+x29)*c5
-+ (x21+x27)*c3+(x22+x26)*c2+(x23+x25)*c1
+  (x1+x47)*c23 + (x2+x46)*c22
++ (x4+x44)*c20 + (x5+x43)*c19
++ (x7+x41)*c17 + (x8+x40)*c16
++ (x10+x38)*c14+ (x11+x37)*c13
++ (x13+x35)*c11+ (x14+x34)*c10
++ (x16+x32)*c8 + (x17+x31)*c7
++ (x19+x29)*c5 + (x20+x28)*c4
++ (x22+x26)*c2 + (x23+x25)*c1
 + (x24)*c0
 );
 
@@ -137,7 +133,7 @@ instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)
   x2 = x1;
   x1 = x0;
   x0 = x;
-  (x6)
+  (x8)
 );
 
 
@@ -203,7 +199,7 @@ instance (ic1eq,ic2eq,v0,v1,v2,v3,a1,a2,a3,g,k)
   highselect == 5 ? HQ = 0.577350269; 
   highselect == 6 ? HQ = 0.707106781;
 lowselect > 3 ? (
-  oversample = 4;
+  oversample = 3;
 ):(
   oversample = 1;
 );
@@ -240,22 +236,19 @@ lowselect != 0 ? (
     i=0;
     bufL[2]=0;
     bufL[3]=0;
-    bufL[4]=0;
+    //bufL[4]=0;
     bufR[2]=0;
     bufR[3]=0;
-    bufR[4]=0;    
+    //bufR[4]=0;    
     
-    loop(4,
+    loop(3,
     i+=1;
     //fir
-    bufL[i] = inL.qfilter(bufL[i]);
-    bufR[i] = inR.qfilter(bufR[i]);
+    bufL[i] = inL.firfilter(bufL[i]);
+    bufR[i] = inR.firfilter(bufR[i]);
     //lp filter
     bufL[i] = lfil.svf_lowp(bufL[i],smoothfreq2,LQ);
     bufR[i] = rfil.svf_lowp(bufR[i],smoothfreq2,LQ);
-    //extra fir
-    //bufL[i] = outL.qfilter(bufL[i]);
-    //bufR[i] = outR.qfilter(bufR[i]);
     );
   ):(
   bufL[1] = lfil.svf_lowp(spl0,smoothfreq2,LQ);
