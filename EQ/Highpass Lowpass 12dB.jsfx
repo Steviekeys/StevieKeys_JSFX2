@@ -1,11 +1,11 @@
-version:1.1.4
+version:1.1.5
 desc:Highpass Lowpass 12dB
 author:Stephen Boyes
 about:
   # Highpass Lowpass 12dB
 Changelog:
-  - Reduce HQ CPU (3x oversample)
-  - Less passband ripple in HQ
+  - small changes to fir
+
 
 
 slider1:highp=2<2,500,2>Highpass (Hz)
@@ -44,7 +44,7 @@ instance (pos,fre,nd_amnt)
     + 0.277263158*cos(2*$pi*pos2/nd_amnt)
     - 0.083578947*cos(3*$pi*pos2/nd_amnt)
     + 0.006947368*cos(4*$pi*pos2/nd_amnt);
-  sm *= 0.15*smer2+0.15*smer3+0.7*fltp; 
+  sm *= 0.09*smer2+0.12*smer3+0.79*fltp; 
   sm
 );
 
