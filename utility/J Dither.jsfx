@@ -1,0 +1,290 @@
+version:0.8
+desc:J Dither
+author: Stephen Boyes
+about:
+  # Normal TPDF dither???
+  Features
+  special shaped rectangular dither noise (x2 for TPDF).
+  this magic dither uses one random bit, filtered to produce RPDF with a smooth
+  and slightly tilted frequency responce, like a more subtle high pass dither.
+  also fetures optional gental noise shaping.
+changelog:
+   - 0.8
+
+
+// J dither
+// Featuring magic TPDF Dither
+//
+// 2026 Stephen Boyes
+//
+// Noise shaping coeficiant calculations... RBJ and Hydrogen Audio    
+//
+
+
+slider2:bits=2<0,4,1{Off,8,16,24,32,FLOAT 32 (experimental)}>Bit - Depth
+slider4:shape=1<0,1,1{OFF,ON}>Noise Shape
+
+
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+  ext_nodenorm = 1;
+
+  bitdepth = bits*8;
+  bits == 0 ? bypass = 1: bypass = 0;
+  one_minus_bypass = 1-bypass;
+
+bits == 5 ? (
+  clipthresh = 2^24 *16384;
+  up_a = 2^53;
+  down_a = 1/2^53;
+  up_b = 2^(25-1);
+  down_b = 1/2^(25-1);
+  ):(
+  clipthresh = 2^(bitdepth-1) -1;
+  up_a = 2^(bitdepth+15);
+  down_a = 1/2^(bitdepth+15);
+  up_b = 2^(bitdepth-1);
+  down_b = 1/2^(bitdepth-1);
+);
+
+
+  up_a = 2^(bitdepth+15);
+  down_a = 1/2^(bitdepth+15);
+  up_b = 2^(bitdepth-1);
+  down_b = 1/2^(bitdepth-1);
+  dith_level = 2^-16;
+  e0=e1=0;
+  FPmin = 2^-126;
+  FPmax = (2-2^-23) *(2^127);
+  Dnlvl = 2^-71;  
+  log_ten_2 = log10(2);
+
+
+function magic_filt(x)
+instance(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,y)
+(
+  x15 = x14;
+  x14 = x13;
+  x13 = x12;
+  x12 = x11;
+  x11 = x10;
+  x10 = x9;
+  x9 = x8;
+  x8 = x7;
+  x7 = x6;
+  x6 = x5;
+  x5 = x4;
+  x4 = x3;
+  x3 = x2;
+  x2 = x1;
+  x1 = x0;
+  x0 = x;
+  y  = x0 -(1/2)*x1 +(1/4)*x2 -(1/8)*x3 +(1/16)*x4 -(1/32)*x5 +(1/64)*x6 -(1/128)*x7
+  +(1/256)*x8 -(1/512)*x9 +(1/1024)*x10 -(1/2048)*x11 +(1/4096)*x12 -(1/8192)*x13
+  +(1/16384)*x14 -(1/32768)*x15 -10922.5;
+
+  y
+);
+  
+  bits > 2 ? noisegain = -10 : noisegain = -18.06;
+  dBgain = noisegain;//eq gain
+  A = 10^(dBgain/40);//(peaking)and shelving
+srate > 50000 ? (
+  freq = 21000;
+):(
+  freq = 16000;
+);
+  omega = 2*$pi*(freq/srate);
+
+  cos_omega = cos(omega);
+  sin_omega = sin(omega);
+
+  Q = 1.25;
+  alpha = sin_omega/(2*Q);
+  beta = sqrt(A)/Q;
+
+
+
+//low shelf
+b0ls =    A*((A+1)-(A-1)*cos_omega + beta*sin_omega);
+b1ls = 2*A*((A-1)-(A+1)*cos_omega                 );
+b2ls =   A*((A+1)-(A-1)*cos_omega - beta*sin_omega);
+a0ls =      (A+1)+(A-1)*cos_omega + beta*sin_omega;
+a1ls =  -2*((A-1)+(A+1)*cos_omega                 );
+a2ls =      (A+1)+(A-1)*cos_omega - beta*sin_omega;
+c0ls = a1ls/a0ls-b1ls/b0ls;
+c1ls = a2ls/a0ls-b2ls/b0ls;
+c2ls = a3ls/a0ls-c3ls/b0ls;
+
+
+
+
+function feedback_filter_low(x)
+instance(x,x1,x2,y,y1,y2)
+(
+  x2 = x1;
+  x1 = x;
+  y = ((c0ls)*x1 + (c1ls)*x2 - (a1ls/a0ls)*y1 - (a2ls/a0ls)*y2);
+  y2 = y1;
+  y1 = y;
+  y
+);
+
+
+function flush_demorm(x)
+(
+  abs(x) < FPmin ? 0 : x;
+);
+
+
+
+@slider
+
+  bitdepth = bits*8;
+  bits == 0 ? bypass = 1: bypass = 0;
+  one_minus_bypass = 1-bypass;
+
+bits == 5 ? (
+  clipthresh = 2^24 *16384;
+  up_a = 2^53;
+  down_a = 1/2^53;
+  up_b = 2^(25-1);
+  down_b = 1/2^(25-1);
+  ):(
+  clipthresh = 2^(bitdepth-1) -1;
+  up_a = 2^(bitdepth+15);
+  down_a = 1/2^(bitdepth+15);
+  up_b = 2^(bitdepth-1);
+  down_b = 1/2^(bitdepth-1);
+);
+
+
+  e0=e1=0;
+
+  bits > 2 ? noisegain = -10 : noisegain = -18.06;
+  dBgain = noisegain;//eq gain
+  A = 10^(dBgain/40);//(peaking)and shelving
+srate > 50000 ? (
+  freq = 21000;
+):(
+  freq = 16000;
+);
+  omega = 2*$pi*(freq/srate);//1000Hz
+
+  cos_omega = cos(omega);
+  sin_omega = sin(omega);
+
+  Q = 1.25;
+  alpha = sin_omega/(2*Q);
+  beta = sqrt(A)/Q;
+
+
+
+//low shelf
+  b0ls =   A*((A+1)-(A-1)*cos_omega + beta*sin_omega);
+  b1ls = 2*A*((A-1)-(A+1)*cos_omega                 );
+  b2ls =   A*((A+1)-(A-1)*cos_omega - beta*sin_omega);
+  a0ls =      (A+1)+(A-1)*cos_omega + beta*sin_omega;
+  a1ls =  -2*((A-1)+(A+1)*cos_omega                 );
+  a2ls =      (A+1)+(A-1)*cos_omega - beta*sin_omega;
+
+  c0ls = a1ls/a0ls-b1ls/b0ls;
+  c1ls = a2ls/a0ls-b2ls/b0ls;
+  c2ls = a3ls/a0ls-c3ls/b0ls;
+
+
+  two_pow_15 = 2^15;
+
+@block
+
+
+@sample
+
+  dry0 = spl0;
+  dry1 = spl1;
+
+  Dnormal <= 0 ? Dnormal = Dnlvl+Dnlvl : Dnormal = -Dnlvl;
+
+  bit_a = floor(rand(2))*two_pow_15;
+  bit_b = floor(rand(2))*two_pow_15;
+  bit_c = floor(rand(2))*two_pow_15;
+  bit_d = floor(rand(2))*two_pow_15;
+
+  noise_a = one.magic_filt(bit_a)*dith_level;
+  noise_b = two.magic_filt(bit_b)*dith_level;
+  noise_c = thr.magic_filt(bit_c)*dith_level;
+  noise_d = fou.magic_filt(bit_d)*dith_level;
+
+
+//remove 32FP denormals
+  spl0 = flush_demorm(spl0);
+  spl1 = flush_demorm(spl1);
+
+
+  scale_l = 1;
+  scale_r = 1;
+  
+
+bits == 5 ? (
+  spl0_log2 = log10( max(FPmin,abs(spl0)) ) /log_ten_2;
+  spl0_log2 = ceil(spl0_log2 +0.000000001);
+  spl0_log2 = min(127,max(-126,spl0_log2));
+  scale_l = 2^spl0_log2;
+
+  spl1_log2 = log10( max(FPmin,abs(spl1)) ) /log_ten_2;
+  spl1_log2 = ceil(spl1_log2 +0.000000001);
+  spl1_log2 = min(127,max(-126,spl1_log2));
+  scale_r = 2^spl1_log2;
+):(
+//convert to a high fixed point
+  spl0 *= up_a;
+  spl1 *= up_a;
+  spl0 = floor(spl0 +noise_a +noise_b +0.5) *down_a;
+  spl1 = floor(spl1 +noise_a -noise_b +0.5) *down_a;
+);
+
+
+
+//add dither
+  spl0 *= up_b/scale_l;
+  spl1 *= up_b/scale_r;
+shape == 1 ? (
+  e0 = Lls.feedback_filter_low(e0);
+  e1 = Rls.feedback_filter_low(e1);
+  spl0 -= e0;
+  spl1 -= e1;
+);
+  in0 = spl0;
+  in1 = spl1;
+  spl0 += (noise_c + noise_d);
+  spl1 += (noise_c - noise_d);
+//clip
+  spl0 = min(clipthresh,max(-clipthresh,spl0));
+  spl1 = min(clipthresh,max(-clipthresh,spl1));
+  spl0 = floor(spl0+0.5);
+  spl1 = floor(spl1+0.5);
+  e0 = spl0-in0;
+  e1 = spl1-in1;
+
+  spl0 *= down_b*scale_l;
+  spl1 *= down_b*scale_r;
+
+
+
+//clip to 32 bit float!
+  spl0 = min(FPmax,max(-FPmax,spl0));
+  spl1 = min(FPmax,max(-FPmax,spl1));
+
+
+
+  spl0 = bypass*dry0 + (one_minus_bypass)*spl0;
+  spl1 = bypass*dry1 + (one_minus_bypass)*spl1;
+
+    
+@gfx
