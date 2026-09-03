@@ -9,7 +9,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Blue Vocal Compressor (beta)
 * Perfect Mono
 * J Clip
-* J Dither
+* J Dither (beta)
 * Retro Punch Comp
 * Dirt EQ
 * Retro-Q V3
