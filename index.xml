@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="961b405766941ada889af4cbf5edc6c3fa26ec23">
+<index version="1" name="StevieKeys JSFX" commit="3fb775a0f9e34fc354f9463332f87f194ef76b64">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1430,6 +1430,22 @@
       </metadata>
       <version name="0.8.0" author="Stephen Boyes" time="2024-02-01T14:44:52Z">
         <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/305947d2d19417ccd2f8546b82f42584a63d2dcc/utility/Dual%20360%20Pan.jsfx</source>
+      </version>
+    </reapack>
+    <reapack name="J Dither.jsfx" type="effect" desc="J Dither">
+      <metadata>
+        <description><![CDATA[{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Normal TPDF dither???\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Features special shaped rectangular dither noise (x2 for TPDF). this magic dither uses one random bit, filtered to produce RPDF with a smooth and slightly tilted frequency responce, like a more subtle high pass dither. also fetures optional gental noise shaping.\par}
+}
+]]></description>
+      </metadata>
+      <version name="0.8" author="Stephen Boyes" time="2026-09-03T11:50:54Z">
+        <changelog><![CDATA[- 0.8]]></changelog>
+        <source>https://github.com/Steviekeys/StevieKeys_JSFX2/raw/3fb775a0f9e34fc354f9463332f87f194ef76b64/utility/J%20Dither.jsfx</source>
       </version>
     </reapack>
     <reapack name="Maximum Resolution Dither.jsfx" type="effect" desc="Maximum Resolution Dither">
