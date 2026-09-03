@@ -9,8 +9,8 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Blue Vocal Compressor (beta)
 * Perfect Mono
 * J Clip
+* J Dither
 * Retro Punch Comp
-* Trapezoid PDF Dither
 * Dirt EQ
 * Retro-Q V3
 * Retro Fuzz
@@ -34,6 +34,7 @@ A collection of JSFX by StevieKeys aka Stevie Boyes
 * Retro Mod A Exciter
 * Octave Fuzz
 * Live Limit
+* Trapezoid PDF Dither
 * Maximum Resolution Dither
 * Odd saturation
 * Odd n Even saturation
