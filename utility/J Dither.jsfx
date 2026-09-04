@@ -16,7 +16,7 @@ changelog:
 //  Featuring magic TPDF Dither
 //
 //  Noise shaping coeficiant calculations... RBJ and Hydrogen Audio
-//  FLOAT 32 setting inspired by Airwindows Float Dither (this version uses all original code)
+//  FLOAT 32 setting inspired by Airwindows DitherFloat (this version uses all original code)
 //
 //   The MIT License (MIT)
 //  Copyright © 2026 Stephen Andrew Boyes
