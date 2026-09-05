@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<index version="1" name="StevieKeys JSFX" commit="1c97ac6beb3730b4e978770ce605638fec80bf0f">
+<index version="1" name="StevieKeys JSFX" commit="9f284d093917f1a30ff2c5cc0fdcf1950b0b3143">
   <category name="Bass">
     <reapack name="Bass X.jsfx" type="effect" desc="Bass X">
       <metadata>
@@ -1439,7 +1439,7 @@
 \widowctrl\hyphauto
 
 {\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 Normal TPDF dither???\par}
-{\pard \ql \f0 \sa180 \li0 \fi0 Features special shaped rectangular dither noise (x2 for TPDF). this magic dither uses one random bit, filtered to produce RPDF with a smooth and slightly tilted frequency response, like a more subtle high pass dither. also fetures optional gental noise shaping.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Features special shaped rectangular dither noise (x2 for TPDF). this magic dither uses one random bit, filtered to produce RPDF with a smooth and slightly tilted frequency response, like a more subtle high pass dither. also features optional gentle noise shaping.\par}
 }
 ]]></description>
       </metadata>
