@@ -7,7 +7,7 @@ about:
   special shaped rectangular dither noise (x2 for TPDF).
   this magic dither uses one random bit, filtered to produce RPDF with a smooth
   and slightly tilted frequency response, like a more subtle high pass dither.
-  also fetures optional gental noise shaping.
+  also features optional gentle noise shaping.
 changelog:
    - release as version 1.0
 
