@@ -1,4 +1,4 @@
-version:0.9
+version:1.0
 desc:J Dither
 author: Stephen Boyes
 about:
@@ -9,7 +9,7 @@ about:
   and slightly tilted frequency response, like a more subtle high pass dither.
   also fetures optional gental noise shaping.
 changelog:
-   - 0.9 less CPU
+   - release as version 1.0
 
 
 //   J dither
