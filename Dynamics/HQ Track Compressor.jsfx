@@ -1,4 +1,4 @@
-version:0.5.7beta
+version:0.5.8beta
 desc:HQ Track Compressor (beta)
 author:Stephen Boyes
 provides:
@@ -10,7 +10,7 @@ about:
   Featuring Anti-Derivative Anti-Aliaising sidechain elements, this is well suited to
   to the rectifing and hard knee compression components.
 Changelog:
-  - reformat header
+  - Optimise CPU use
 
 
 slider1:drive=0<0,31,1>Input Saturation
@@ -74,12 +74,12 @@ function AA_abs_square(x0)
 instance (f0,f0n1,x0,x1)
 (
   abs(x0-x1) < 2^-19 ? (
-    x0 >= 0 ? f0 = 0.5*x0^2;
-    x0 <= 0 ? f0 = -0.5*x0^2;
+    x0 >= 0 ? f0 = 0.5*x0*x0;
+    x0 <= 0 ? f0 = -0.5*x0*x0;
     out = abs(x0+x1)*0.5;
     ):(
-    x0 >= 0 ? f0 = 0.5*x0^2;
-    x0 <= 0 ? f0 = -0.5*x0^2;
+    x0 >= 0 ? f0 = 0.5*x0*x0;
+    x0 <= 0 ? f0 = -0.5*x0*x0;
     out = (f0-f0n1)/(x0-x1);
   );
   x1 = x0;
@@ -248,8 +248,8 @@ noise1 = svf_bandp(noise1,6.21,2.16);
   spl0 = spl0*leftinsat1.gainshaper_smoother(foo_0);
   spl1 = spl1*righinsat1.gainshaper_smoother(foo_1);
 
-  aspl0 = sqrt(0.004+spl0^2) - sqrt(0.004);
-  aspl1 = sqrt(0.004+spl1^2) - sqrt(0.004);
+  aspl0 = sqrt(0.004+spl0*spl0) - sqrt(0.004);
+  aspl1 = sqrt(0.004+spl1*spl1) - sqrt(0.004);
   FM0 = 0.07*aspl0 + spl0*0.05;
   FM1 = 0.07*aspl1 + spl1*0.05;
   spl0 = in.left.svf_highp(spl0,5 + r1 + FM0*SAT + 0.16*spl0,0.77);
@@ -257,8 +257,8 @@ noise1 = svf_bandp(noise1,6.21,2.16);
 
   foo_0 = leftinsat2.gainshaper_detector(drive2*spl0);
   foo_1 = righinsat2.gainshaper_detector(drive2*spl1);
-spl0 *= 1.0;
-spl1 *= 1.0;
+//spl0 *= 1.0;
+//spl1 *= 1.0;
 ////shift gain into fixed threshold////
   spl0 /= last_thresh;
   spl1 /= last_thresh;
